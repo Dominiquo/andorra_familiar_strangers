@@ -34,14 +34,14 @@ def initialize_towers(filename,limit=0):
 		for row in CDR_data:
 			tower = row[6]
 			if tower not in towers_dict:
-				towers_dict[tower] = 0
+				towers_dict[tower] = 1
 			else:
 				towers_dict[tower] += 1
 			current += 1
 			if current > count_limit:
 				break
 	csvfile.close()
-	return read_rows
+	return towers_dict
 
 def filter_data(data,indices):
 	return map(lambda d: [d[i] for i in indices],data[1:])
