@@ -24,6 +24,25 @@ def read_csv(filename,count=0):
 	csvfile.close()
 	return read_rows
 
+
+def initialize_towers(filename,limit=0):
+	count_limit = limit
+	towers_dict = {}
+	with open(filename,'rb') as csvfile:
+		CDR_data = csv.reader(csvfile,delimiter=';')
+		current = 0
+		for row in CDR_data:
+			tower = row[6]
+			if tower not in towers_dict:
+				towers_dict[tower] = 0
+			else:
+				towers_dict[tower] += 1
+			current += 1
+			if current > count_limit:
+				break
+	csvfile.close()
+	return read_rows
+
 def filter_data(data,indices):
 	return map(lambda d: [d[i] for i in indices],data[1:])
 
