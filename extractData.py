@@ -9,6 +9,7 @@ most_recent = '../data_repository/datasets/telecom/cdr/201607-AndorraTelecom-CDR
 towers = '../workspace/yleng/towers1.csv'
 
 START_TIME = 3
+CELL_TOWER = 6
 
 def read_csv(filename,count=0):
 	count_limit = count
