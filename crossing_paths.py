@@ -19,12 +19,10 @@ def partition_users_by_tower(filename,limit=float('inf')):
 		current_row = 0
 		print 'will now read', limit, 'rows'
 		for row in data_csv:
-			if current_row == 0:
-				continue
 			tower_id = row[TOWER_INDEX]
-			# TODO: remove print statements
-			print "current id is", tower_id
-			tower_file = tower_file_prefix + str(tower_id) + csv_suffix
+			if tower_id == 'ID_CELLA_INI':
+				continue
+			tower_file = tower_file_prefix + tower_id + csv_suffix
 			tower_path = tower_path_prefix + tower_file
 			if tower_file in current_towers:
 				tower_file_obj = open(tower_path, 'a')
@@ -79,7 +77,7 @@ def main():
 	data_filename = ex.most_recent
 	print "retrieving data from",data_filename
 	print "partitioning data by tower name..."
-	partition_users_by_tower(data_filename,limit = 10)
+	partition_users_by_tower(data_filename)
 	print "partitioning complete"
 
 main()
