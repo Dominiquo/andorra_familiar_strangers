@@ -1,6 +1,6 @@
 import csv
 import os
-# import extractData as ex
+import extractData as ex
 
 START_TIME_INDEX = 3
 TOWER_INDEX = 6
@@ -23,7 +23,11 @@ def partition_users_by_tower(filename,limit=float('inf')):
 			tower_id = row[TOWER_INDEX]
 			tower_file = tower_file_prefix + str(tower_id) + csv_suffix
 			tower_path = tower_path_prefix + tower_file
-			tower_file_obj = open(tower_path, 'a')
+			if tower_file in current_towers:
+				tower_file_obj = open(tower_path, 'a')
+			else:
+				tower_file_obj = open(tower_path,'wb')
+
 			tower_file_csv = csv.writer(tower_file_obj,delimiter=';')
 			tower_file_csv.writerow(row)
 			tower_file_obj.close()
@@ -67,3 +71,12 @@ def users_met(cdr_user_1,cdr_user_2,time_range=1):
 		return True
 	else:
 		return False
+
+def main():
+	data_filename = ex.most_recent
+	print "retrieving data from",data_filename
+	print "partitioning data by tower name..."
+	partition_users_by_tower(data_filename,limit = 10)
+	print "partitioning complete"
+
+main()

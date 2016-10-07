@@ -13,6 +13,8 @@
 # Command Line History (newest to oldest):
 :wq
 :q
+:WQ
+:q!
 
 # Search String History (newest to oldest):
 ? \<plt\>
@@ -25,7 +27,7 @@
 # Input Line History (newest to oldest):
 
 # Registers:
-""1	LINE	0
+"1	LINE	0
 		return [dt.strptime(val,datetime_format_string) for val in data]
 "2	LINE	0
 	print read_csv(larger_file,1)
@@ -37,158 +39,246 @@
 		count_limit = 5
 "6	LINE	0
 			li
-"-	CHAR	0
-	 
+""-	CHAR	0
+		
 
 # File marks:
-'0  1  0  ~/extractData.py
-'1  1  38  ~/niquo_data/example_data.txt
-'2  1  10  ~/.gitignore
-'3  1  14  ~/gitignore.txt
-'4  5  6  ~/random_sample_creator.py
-'5  45  0  ~/extractData.py
-'6  32  8  ~/extractData.py
-'7  31  20  ~/extractData.py
-'8  39  31  ~/extractData.py
-'9  3  30  ~/extractData.py
+'0  1  5  ~/crossing_paths.py
+'1  82  5  ~/crossing_paths.py
+'2  21  11  ~/crossing_paths.py
+'3  80  0  ~/crossing_paths.py
+'4  37  25  ~/extractData.py
+'5  44  18  ~/extractData.py
+'6  1  0  ~/extractData.py
+'7  18  1  ~/extractData.py
+'8  9  40  ~/extractData.py
+'9  1  0  /home/workspace/yleng/towers1.csv
 
 # Jumplist (newest first):
+-'  1  5  ~/crossing_paths.py
+-'  82  5  ~/crossing_paths.py
+-'  21  11  ~/crossing_paths.py
+-'  80  0  ~/crossing_paths.py
+-'  3  23  ~/crossing_paths.py
+-'  73  2  ~/crossing_paths.py
+-'  37  25  ~/extractData.py
+-'  2  0  ~/extractData.py
 -'  1  0  ~/extractData.py
+-'  44  18  ~/extractData.py
+-'  18  1  ~/extractData.py
+-'  9  40  ~/extractData.py
+-'  1  0  /home/workspace/yleng/towers1.csv
 -'  1  38  ~/niquo_data/example_data.txt
 -'  1  10  ~/.gitignore
 -'  1  14  ~/gitignore.txt
 -'  5  6  ~/random_sample_creator.py
 -'  1  0  ~/random_sample_creator.py
--'  45  0  ~/extractData.py
--'  41  0  ~/extractData.py
+-'  46  0  ~/extractData.py
 -'  42  0  ~/extractData.py
+-'  43  0  ~/extractData.py
+-'  36  0  ~/extractData.py
 -'  35  0  ~/extractData.py
--'  34  0  ~/extractData.py
+-'  29  0  ~/extractData.py
 -'  28  0  ~/extractData.py
--'  27  0  ~/extractData.py
--'  25  0  ~/extractData.py
--'  36  7  ~/extractData.py
--'  39  22  ~/extractData.py
--'  32  8  ~/extractData.py
--'  31  20  ~/extractData.py
+-'  26  0  ~/extractData.py
+-'  40  22  ~/extractData.py
+-'  33  8  ~/extractData.py
+-'  32  20  ~/extractData.py
 -'  3  30  ~/extractData.py
--'  30  0  ~/extractData.py
+-'  31  0  ~/extractData.py
 -'  4  0  ~/extractData.py
--'  29  11  ~/extractData.py
--'  24  0  ~/extractData.py
--'  46  5  ~/extractData.py
--'  23  16  ~/extractData.py
--'  12  15  ~/extractData.py
--'  15  43  ~/extractData.py
--'  16  12  ~/extractData.py
--'  19  16  ~/extractData.py
+-'  30  11  ~/extractData.py
+-'  25  0  ~/extractData.py
+-'  47  5  ~/extractData.py
+-'  24  16  ~/extractData.py
+-'  13  15  ~/extractData.py
+-'  16  43  ~/extractData.py
+-'  17  12  ~/extractData.py
+-'  20  16  ~/extractData.py
 -'  7  51  ~/extractData.py
--'  22  13  ~/extractData.py
--'  20  43  ~/extractData.py
--'  14  5  ~/extractData.py
--'  11  16  ~/extractData.py
+-'  23  13  ~/extractData.py
+-'  21  43  ~/extractData.py
+-'  15  5  ~/extractData.py
+-'  12  16  ~/extractData.py
 -'  6  16  ~/extractData.py
--'  17  17  ~/extractData.py
--'  21  15  ~/extractData.py
--'  47  0  ~/extractData.py
--'  13  5  ~/extractData.py
--'  18  14  ~/extractData.py
--'  10  15  ~/extractData.py
--'  9  16  ~/extractData.py
+-'  22  15  ~/extractData.py
+-'  48  0  ~/extractData.py
+-'  14  5  ~/extractData.py
+-'  19  14  ~/extractData.py
+-'  11  15  ~/extractData.py
 -'  5  16  ~/extractData.py
 -'  8  16  ~/extractData.py
--'  37  22  ~/extractData.py
--'  38  18  ~/extractData.py
--'  33  0  ~/extractData.py
--'  40  13  ~/extractData.py
+-'  38  22  ~/extractData.py
+-'  39  18  ~/extractData.py
+-'  34  0  ~/extractData.py
+-'  41  13  ~/extractData.py
 -'  5  6  ~/random_sample_creator.py
 -'  1  0  ~/random_sample_creator.py
+-'  1  38  ~/niquo_data/example_data.txt
+-'  1  10  ~/.gitignore
+-'  1  14  ~/gitignore.txt
+-'  5  6  ~/random_sample_creator.py
+-'  1  0  ~/random_sample_creator.py
+-'  1  0  /home/workspace/yleng/towers1.csv
+-'  1  38  ~/niquo_data/example_data.txt
+-'  1  10  ~/.gitignore
+-'  1  14  ~/gitignore.txt
+-'  5  6  ~/random_sample_creator.py
+-'  1  0  ~/random_sample_creator.py
+-'  1  0  /home/workspace/yleng/towers1.csv
+-'  1  38  ~/niquo_data/example_data.txt
+-'  1  10  ~/.gitignore
+-'  1  14  ~/gitignore.txt
+-'  5  6  ~/random_sample_creator.py
+-'  1  0  ~/random_sample_creator.py
+-'  1  0  /home/workspace/yleng/towers1.csv
+-'  1  38  ~/niquo_data/example_data.txt
+-'  1  10  ~/.gitignore
+-'  1  14  ~/gitignore.txt
+-'  5  6  ~/random_sample_creator.py
+-'  1  0  ~/random_sample_creator.py
+-'  1  0  /home/workspace/yleng/towers1.csv
+-'  1  38  ~/niquo_data/example_data.txt
+-'  1  10  ~/.gitignore
+-'  1  14  ~/gitignore.txt
+-'  5  6  ~/random_sample_creator.py
+-'  1  0  ~/random_sample_creator.py
+-'  37  25  ~/extractData.py
+-'  2  0  ~/extractData.py
+-'  1  0  ~/extractData.py
+-'  44  18  ~/extractData.py
+-'  18  1  ~/extractData.py
+-'  9  40  ~/extractData.py
+-'  1  0  /home/workspace/yleng/towers1.csv
+-'  1  38  ~/niquo_data/example_data.txt
+-'  1  10  ~/.gitignore
 
 # History of marks within files (newest to oldest):
 
+> ~/crossing_paths.py
+	"	1	5
+	^	1	6
+	.	1	5
+	+	4	0
+	+	76	0
+	+	3	24
+	+	3	23
+	+	4	0
+	+	76	20
+	+	79	52
+	+	80	29
+	+	77	43
+	+	78	41
+	+	82	5
+	+	24	62
+	+	25	46
+	+	26	33
+	+	27	3
+	+	31	2
+	+	32	2
+	+	33	2
+	+	31	3
+	+	32	3
+	+	33	3
+	+	29	42
+	+	24	0
+	+	26	34
+	+	23	30
+	+	24	0
+	+	1	0
+	+	79	50
+	+	1	5
+
 > ~/extractData.py
-	"	1	0
-	^	45	0
-	.	44	12
+	"	37	25
+	^	37	26
+	.	37	25
 	+	1	10
-	+	14	91
-	+	20	7
-	+	11	3
-	+	14	0
-	+	15	1
-	+	17	1
-	+	19	2
+	+	15	91
+	+	21	7
+	+	12	3
+	+	15	0
+	+	16	1
+	+	18	1
 	+	20	2
-	+	11	7
+	+	21	2
+	+	12	7
 	+	5	45
-	+	11	22
-	+	14	18
-	+	46	17
-	+	17	0
-	+	12	15
-	+	15	46
-	+	16	12
-	+	20	28
-	+	20	36
-	+	19	14
+	+	12	22
+	+	15	18
+	+	47	17
+	+	18	0
+	+	13	15
+	+	16	46
+	+	17	12
+	+	21	28
+	+	21	36
+	+	20	14
 	+	7	48
 	+	5	74
 	+	6	76
-	+	14	5
-	+	12	0
+	+	15	5
+	+	13	0
 	+	7	52
-	+	46	18
-	+	14	5
-	+	20	28
-	+	21	15
-	+	21	9
-	+	22	13
-	+	46	21
-	+	46	0
+	+	47	18
+	+	15	5
+	+	21	28
+	+	22	15
+	+	22	9
+	+	23	13
+	+	47	21
+	+	47	0
 	+	7	51
-	+	12	15
-	+	19	16
-	+	16	12
-	+	12	15
-	+	15	43
-	+	12	16
-	+	11	28
-	+	12	19
-	+	46	21
-	+	19	0
-	+	13	14
-	+	17	22
-	+	18	23
-	+	22	7
-	+	23	16
-	+	46	0
+	+	13	15
+	+	20	16
+	+	17	12
+	+	13	15
+	+	16	43
+	+	13	16
+	+	12	28
+	+	13	19
+	+	47	21
+	+	20	0
+	+	14	14
+	+	18	22
+	+	19	23
+	+	23	7
+	+	24	16
+	+	47	0
 	+	9	13
-	+	28	3
-	+	26	53
-	+	29	11
+	+	29	3
+	+	27	53
+	+	30	11
 	+	2	28
-	+	28	36
-	+	29	45
-	+	30	65
-	+	30	0
-	+	39	18
+	+	29	36
+	+	30	45
+	+	31	65
+	+	31	0
+	+	40	18
 	+	3	0
-	+	30	17
-	+	32	15
-	+	31	27
-	+	33	11
-	+	32	23
-	+	31	20
-	+	30	28
-	+	32	8
-	+	35	15
-	+	43	0
-	+	36	0
+	+	31	17
+	+	33	15
+	+	32	27
+	+	34	11
+	+	33	23
+	+	32	20
+	+	31	28
+	+	33	8
+	+	36	15
+	+	44	0
 	+	37	0
 	+	38	0
 	+	39	0
 	+	40	0
-	+	44	12
+	+	41	0
+	+	45	12
+	+	9	0
+	+	18	2
+	+	44	18
+	+	37	25
+
+> /home/workspace/yleng/towers1.csv
+	"	1	0
 
 > ~/niquo_data/example_data.txt
 	"	1	38
