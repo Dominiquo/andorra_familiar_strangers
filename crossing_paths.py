@@ -14,13 +14,16 @@ def partition_users_by_tower(filename,limit=float('inf')):
 	current_towers = set(os.listdir(tower_path_prefix))
 
 	with open(filename,'rb') as csvfile:
+		print 'opening file to read from as a csv...'
 		data_csv = csv.reader(csvfile,delimiter=';')
 		current_row = 0
+		print 'will now read', limit, 'rows'
 		for row in data_csv:
 			if current_row == 0:
 				continue
-
 			tower_id = row[TOWER_INDEX]
+			# TODO: remove print statements
+			print "current id is", tower_id
 			tower_file = tower_file_prefix + str(tower_id) + csv_suffix
 			tower_path = tower_path_prefix + tower_file
 			if tower_file in current_towers:
