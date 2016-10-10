@@ -39,7 +39,7 @@ def partition_users_by_tower(filename,limit=float('inf')):
 
 
 def identify_users_that_met(file_directory):
-	data_dir = "niquo_data/"
+	data_dir = "../niquo_data/"
 	towers_dir = "partitioned_towers/"
 	tower_file_prefix = "cdr_tower_"
 	tower_path_prefix = data_dir + towers_dir
