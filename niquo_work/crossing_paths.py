@@ -43,7 +43,7 @@ def partition_users_by_tower(filename,limit=float('inf')):
 	print 'created', len(os.listdir(tower_path_prefix)),'new files of towers.'
 
 def create_pair_users_obj(towers_directory,destination_path,file_limit=float('inf')):
-	"finding pairs of met callers for", file_limit, "files..."
+	print "finding pairs of met callers for", file_limit, "files..."
 	pairs_dictionary = pair_users_from_towers(towers_directory,file_limit)
 	pickle.dump(pairs_dictionary,open(destination_path,'wb'))
 	print 'created object of paired users'
@@ -51,18 +51,18 @@ def create_pair_users_obj(towers_directory,destination_path,file_limit=float('in
 
 def pair_users_from_towers(towers_directory,limit = float('inf')):
 	all_tower_files = set(os.listdir(towers_directory))
-	"total count of available tower files:",len(all_tower_files)
+	print "total count of available tower files:",len(all_tower_files)
 	inf = float('inf')
 	pair_map = {}
 	current = 0
 	for tower_name in all_tower_files:
-		"checking file", tower_name,"for users that met..."
+		print "checking file", tower_name,"for users that met..."
 		if current > limit:
 			break
 		tower_path = towers_directory + tower_name
 		all_callers = ex.read_csv(tower_path,inf)
 		pairs = find_collisions_from_tower(all_callers)
-		"found",len(pairs),"of callers that met"
+		print "found",len(pairs),"of callers that met"
 		for first,second in pairs:
 			first_number = first[CALLER_INDEX]
 			second_number = second[CALLER_INDEX]
