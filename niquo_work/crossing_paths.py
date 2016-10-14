@@ -1,9 +1,13 @@
 import csv
 import os
 import extractData as ex
+import pickle
+import itertools
 
 START_TIME_INDEX = 3
 TOWER_INDEX = 6
+CALLER_INDEX = 0
+RECEIVER_INDEX = 16
 
 def partition_users_by_tower(filename,limit=float('inf')):
 	data_dir = "../niquo_data/"
@@ -36,20 +40,48 @@ def partition_users_by_tower(filename,limit=float('inf')):
 			if current_row > limit:
 				break
 			current_row += 1
-	print 'created', len(os.listdir(tower_path_prefix)),'new files of towers.'		
+	print 'created', len(os.listdir(tower_path_prefix)),'new files of towers.'
 
-
-def identify_users_that_met(file_directory):
-	data_dir = "../niquo_data/"
-	towers_dir = "partitioned_towers/"
-	tower_file_prefix = "cdr_tower_"
-	tower_path_prefix = data_dir + towers_dir
-	csv_suffix = ".csv"
-	current_towers = set(os.listdir(tower_path_prefix))
-
-	# TODO: check through each file of users and find pairs of users that met and when
-
+def create_pair_users_obj(towers_directory,destination_path,file_limit=float('inf')):
+	pairs_dictionary = pair_users_from_towers(towers_directory,file_limit)
+	pickle.dump(pairs_dictionary,open(destination_path,'wb'))
+	print 'created object of paired users'
 	return True
+
+def pair_users_from_towers(towers_directory,limit = float('inf')):
+	all_tower_files = set(os.listdir(towers_directory))
+	pairs_path = '../niquo_data/'
+	inf = float('inf')
+	pair_map = {}
+	current = 0
+	for tower_name in all_tower_files:
+		if current > limit:
+			break
+		tower_path = towers_directory + tower_name
+		all_callers = ex.read_csv(tower_path,inf)
+		pairs = find_collisions_from_tower(all_callers)
+		for first,second in pairs:
+			first_number = first[CALLER_INDEX]
+			second_number = second[CALLER_INDEX]
+			if first_number in pair_map:
+				pair_map[first_number].add(second)
+			else:
+				pair_map[first_number] = set([second])
+			if second_number in pair_map:
+				pair_map[second_number].add(first)
+			else:
+				pair_map[second_number] = set([first])
+	return pair_map
+
+
+def find_collisions_from_tower(tower_rows):
+	collision_pairs = set([])
+	# TODO: find cheaper way of making all comparisons
+	for first_caller, second_caller in itertools.combinations(tower_rows,2):
+		if users_met(first_caller,second_caller):
+			collision_pairs.add((first_caller,second_caller))
+	return collision_pairs
+
 
 def users_met(cdr_user_1,cdr_user_2,time_range=1):
 	time_1 = cdr_user_1[START_TIME_INDEX]
@@ -75,10 +107,13 @@ def users_met(cdr_user_1,cdr_user_2,time_range=1):
 		return False
 
 def main():
-	data_filename = ex.most_recent
-	print "retrieving data from",data_filename
-	print "partitioning data by tower name..."
-	partition_users_by_tower(data_filename)
-	print "partitioning complete"
+	# data_filename = ex.most_recent
+	# print "retrieving data from",data_filename
+	# print "partitioning data by tower name..."
+	# partition_users_by_tower(data_filename)
+	# print "partitioning complete"
+	towers_directory = '../niquo_data/partitioned_towers'
+	destination_path = '../niquo_data/paired_callers/paired_dict.p'
+	create_pair_users_obj(towers_directory,destination_path,file_limit=2)
 
 main()
