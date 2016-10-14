@@ -40,13 +40,12 @@ def partition_users_by_tower(filename,limit=float('inf')):
 			if current_row > limit:
 				break
 			current_row += 1
+			current_towers.add(tower_file)
 	print 'created', len(os.listdir(tower_path_prefix)),'new files of towers.'
 
 def create_pair_users_obj(towers_directory,destination_path,file_limit=float('inf')):
-	print "finding pairs of met callers for", file_limit, "files..."
 	pairs_dictionary = pair_users_from_towers(towers_directory,file_limit)
 	pickle.dump(pairs_dictionary,open(destination_path,'wb'))
-	print 'created object of paired users'
 	return True
 
 def pair_users_from_towers(towers_directory,limit = float('inf')):
@@ -56,14 +55,11 @@ def pair_users_from_towers(towers_directory,limit = float('inf')):
 	pair_map = {}
 	current = 0
 	for tower_name in all_tower_files:
-		print "checking file", tower_name,"for users that met..."
 		if current > limit:
 			break
 		tower_path = towers_directory + tower_name
 		all_callers = ex.read_csv(tower_path,inf)
-		print len(all_callers),"callers found in file:",tower_name
 		pairs = find_collisions_from_tower(all_callers)
-		print "found",len(pairs),"of callers that met"
 		for first,second in pairs:
 			first_number = first[CALLER_INDEX]
 			second_number = second[CALLER_INDEX]
@@ -112,13 +108,13 @@ def users_met(cdr_user_1,cdr_user_2,time_range=1):
 		return False
 
 def main():
-	# data_filename = ex.most_recent
-	# print "retrieving data from",data_filename
-	# print "partitioning data by tower name..."
-	# partition_users_by_tower(data_filename)
-	# print "partitioning complete"
+	data_filename = ex.most_recent
+	print "retrieving data from",data_filename
+	print "partitioning data by tower name..."
+	partition_users_by_tower(data_filename)
+	print "partitioning complete"
 	towers_directory = '../niquo_data/partitioned_towers/'
 	destination_path = '../niquo_data/paired_callers/paired_dict.p'
-	create_pair_users_obj(towers_directory,destination_path,file_limit=100)
+	create_pair_users_obj(towers_directory,destination_path)
 
 main()
