@@ -6,7 +6,7 @@ START_TIME_INDEX = 3
 TOWER_INDEX = 6
 
 def partition_users_by_tower(filename,limit=float('inf')):
-	data_dir = "niquo_data/"
+	data_dir = "../niquo_data/"
 	towers_dir = "partitioned_towers/"
 	tower_file_prefix = "cdr_tower_"
 	tower_path_prefix = data_dir + towers_dir
@@ -36,6 +36,7 @@ def partition_users_by_tower(filename,limit=float('inf')):
 			if current_row > limit:
 				break
 			current_row += 1
+	print 'created', len(os.listdir(tower_path_prefix)),'new files of towers.'		
 
 
 def identify_users_that_met(file_directory):
