@@ -50,7 +50,6 @@ def create_pair_users_obj(towers_directory,destination_path,file_limit=float('in
 
 def pair_users_from_towers(towers_directory,limit = float('inf')):
 	all_tower_files = set(os.listdir(towers_directory))
-	pairs_path = '../niquo_data/'
 	inf = float('inf')
 	pair_map = {}
 	current = 0
@@ -71,6 +70,7 @@ def pair_users_from_towers(towers_directory,limit = float('inf')):
 				pair_map[second_number].add(first)
 			else:
 				pair_map[second_number] = set([first])
+		current += 1
 	return pair_map
 
 
@@ -112,7 +112,7 @@ def main():
 	# print "partitioning data by tower name..."
 	# partition_users_by_tower(data_filename)
 	# print "partitioning complete"
-	towers_directory = '../niquo_data/partitioned_towers'
+	towers_directory = '../niquo_data/partitioned_towers/'
 	destination_path = '../niquo_data/paired_callers/paired_dict.p'
 	create_pair_users_obj(towers_directory,destination_path,file_limit=2)
 
