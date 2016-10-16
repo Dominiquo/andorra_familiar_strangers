@@ -16,6 +16,7 @@ def partition_users_by_tower(filename,limit=float('inf')):
 	tower_path_prefix = data_dir + towers_dir
 	csv_suffix = ".csv"
 	current_towers = set(os.listdir(tower_path_prefix))
+	day_1 = "2016.07.01"
 
 	with open(filename,'rb') as csvfile:
 		print 'opening file to read from as a csv...'
@@ -24,6 +25,12 @@ def partition_users_by_tower(filename,limit=float('inf')):
 		print 'will now read', limit, 'rows'
 		for row in data_csv:
 			tower_id = row[TOWER_INDEX]
+			call_time = row[START_TIME_INDEX]
+			# TODO: remove when using all data
+			# only partition calls from the first of the month
+			if not call_time.startswith(day_1):
+				break
+			# Skip the first row or csv
 			if tower_id == 'ID_CELLA_INI':
 				continue
 			tower_file = tower_file_prefix + tower_id + csv_suffix
@@ -59,6 +66,7 @@ def pair_users_from_towers(towers_directory,limit = float('inf')):
 			break
 		tower_path = towers_directory + tower_name
 		all_callers = ex.read_csv(tower_path,inf)
+		all_callers.sort(key=lambda val:val[START_TIME_INDEX])
 		pairs = find_collisions_from_tower(all_callers)
 		for first,second in pairs:
 			first_number = first[CALLER_INDEX]
@@ -77,10 +85,17 @@ def pair_users_from_towers(towers_directory,limit = float('inf')):
 
 def find_collisions_from_tower(tower_rows):
 	collision_pairs = set([])
-	# TODO: find cheaper way of making all comparisons
-	for first_caller, second_caller in itertools.combinations(tower_rows,2):
-		if users_met(first_caller,second_caller):
-			collision_pairs.add((first_caller,second_caller))
+	total_size = len(tower_rows)
+	lower_edge = 0
+	higher_edge = 0
+	for lower_index in range(len(tower_rows)):
+		for upper_index in range(lower_index+1,len(tower_rows)):
+			lower_row = tower_rows[lower_index]
+			upper_row = tower_rows[upper_index]
+			if users_met(lower_row,upper_index):
+				collision_pairs.add((lower_row,upper_row))
+			else:
+				break
 	return collision_pairs
 
 
@@ -107,12 +122,15 @@ def users_met(cdr_user_1,cdr_user_2,time_range=1):
 	else:
 		return False
 
+def 
+
+
 def main():
-	data_filename = ex.most_recent
-	print "retrieving data from",data_filename
-	print "partitioning data by tower name..."
-	partition_users_by_tower(data_filename)
-	print "partitioning complete"
+	# data_filename = ex.most_recent
+	# print "retrieving data from",data_filename
+	# print "partitioning data by tower name..."
+	# partition_users_by_tower(data_filename)
+	# print "partitioning complete"
 	towers_directory = '../niquo_data/partitioned_towers/'
 	destination_path = '../niquo_data/paired_callers/paired_dict.p'
 	create_pair_users_obj(towers_directory,destination_path)
