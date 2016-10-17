@@ -17,7 +17,6 @@ def partition_users_by_tower(filename,limit=float('inf')):
 	csv_suffix = ".csv"
 	current_towers = set(os.listdir(tower_path_prefix))
 	day_1 = "2016.07.01"
-
 	with open(filename,'rb') as csvfile:
 		print 'opening file to read from as a csv...'
 		data_csv = csv.reader(csvfile,delimiter=';')
@@ -26,13 +25,13 @@ def partition_users_by_tower(filename,limit=float('inf')):
 		for row in data_csv:
 			tower_id = row[TOWER_INDEX]
 			call_time = row[START_TIME_INDEX]
+			#skip the first row
+			if tower_id == 'ID_CELLA_INI':
+				continue
 			# TODO: remove when using all data
 			# only partition calls from the first of the month
 			if not call_time.startswith(day_1):
 				break
-			# Skip the first row or csv
-			if tower_id == 'ID_CELLA_INI':
-				continue
 			tower_file = tower_file_prefix + tower_id + csv_suffix
 			tower_path = tower_path_prefix + tower_file
 			if tower_file in current_towers:
@@ -60,8 +59,10 @@ def pair_users_from_towers(towers_directory,limit = float('inf')):
 	print "total count of available tower files:",len(all_tower_files)
 	inf = float('inf')
 	pair_map = {}
-	current = 0
+	current = 1
+	total_towers = len(all_tower_files)
 	for tower_name in all_tower_files:
+		print "checking tower",current,"of",total_towers
 		if current > limit:
 			break
 		tower_path = towers_directory + tower_name
@@ -70,15 +71,18 @@ def pair_users_from_towers(towers_directory,limit = float('inf')):
 		pairs = find_collisions_from_tower(all_callers)
 		for first,second in pairs:
 			first_number = first[CALLER_INDEX]
+			first_call_time = first[START_TIME_INDEX]
 			second_number = second[CALLER_INDEX]
+			second_call_time = second[START_TIME_INDEX]
+			tower_id = first[TOWER_INDEX]
 			if first_number in pair_map:
-				pair_map[first_number].add(second)
+				pair_map[first_number].add((second_number,second_call_time,tower_id))
 			else:
-				pair_map[first_number] = set([second])
+				pair_map[first_number] = set([(second_number,second_call_time,tower_id)])
 			if second_number in pair_map:
-				pair_map[second_number].add(first)
+				pair_map[second_number].add((first_number,second_call_time,tower_id))
 			else:
-				pair_map[second_number] = set([first])
+				pair_map[second_number] = set([(first_number,second_call_time,tower_id)])
 		current += 1
 	return pair_map
 
@@ -92,8 +96,8 @@ def find_collisions_from_tower(tower_rows):
 		for upper_index in range(lower_index+1,len(tower_rows)):
 			lower_row = tower_rows[lower_index]
 			upper_row = tower_rows[upper_index]
-			if users_met(lower_row,upper_index):
-				collision_pairs.add((lower_row,upper_row))
+			if users_met(lower_row,upper_row):
+				collision_pairs.add((tuple(lower_row),tuple(upper_row)))
 			else:
 				break
 	return collision_pairs
@@ -120,17 +124,15 @@ def users_met(cdr_user_1,cdr_user_2,time_range=1):
 	if abs(t1_hour - t2_hour) <= time_range:
 		return True
 	else:
-		return False
-
-def 
+		return False 
 
 
 def main():
-	# data_filename = ex.most_recent
-	# print "retrieving data from",data_filename
-	# print "partitioning data by tower name..."
-	# partition_users_by_tower(data_filename)
-	# print "partitioning complete"
+	#data_filename = ex.most_recent
+	#print "retrieving data from",data_filename
+	#print "partitioning data by tower name..."
+	#partition_users_by_tower(data_filename)
+	#print "partitioning complete"
 	towers_directory = '../niquo_data/partitioned_towers/'
 	destination_path = '../niquo_data/paired_callers/paired_dict.p'
 	create_pair_users_obj(towers_directory,destination_path)
