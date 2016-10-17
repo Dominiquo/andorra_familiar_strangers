@@ -127,6 +127,36 @@ def users_met(cdr_user_1,cdr_user_2,time_range=1):
 		return False 
 
 
+def analyze_pairings_dict(filename,meetings):
+	all_remeet_times = []
+	encounters_dict = pickle.load(open(filename,'rb'))
+	for call_id,encounters in encounters_dict.iteritems():
+		all_remeet_times += find_times(encounters,meetings)
+	return all_remeet_times
+
+
+
+def find_times(encouters_set,num_encounters):
+	times = []
+	encounter_map = {}
+	for encouter in encouters_set:
+		user_id = encouter[0]
+		time = encouter[1]
+		if user_id in encouter:
+			encounter_map[user_id].append(time)
+		else:
+			encounter_map[user_id] = [time]
+	for user,met_times in encounter_map.iteritems():
+		if len(met_times) > num_encounters:
+			times.append(get_time_sum(met_times))
+	return times
+
+
+def get_time_sum(meeting_times):
+	# TODO: define how we want to value this.
+	return -1
+
+
 def main():
 	#data_filename = ex.most_recent
 	#print "retrieving data from",data_filename
