@@ -72,7 +72,7 @@ def partition_users_by_tower(filename,limit=float('inf')):
 
 			tower_file = tower_file_prefix + tower_id + csv_suffix
 			tower_path = date_path + tower_file
-			if tower_file in current_towers:
+			if tower_path in current_towers:
 				tower_file_obj = open(tower_path, 'a')
 			else:	
 				files_count += 1
@@ -85,7 +85,7 @@ def partition_users_by_tower(filename,limit=float('inf')):
 			if current_row > limit:
 				break
 			current_row += 1
-			current_towers.add(tower_file)
+			current_towers.add(tower_path)
 	print 'number of entries not entered',unfound_count
 	print 'could not find towers',unfound_towers
 	print 'created',files_count,'new files of towers.'
