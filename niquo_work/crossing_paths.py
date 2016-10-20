@@ -9,7 +9,7 @@ TOWER_INDEX = 6
 CALLER_INDEX = 0
 RECEIVER_INDEX = 16
 
-def create_tower_mapping(filepath,pickle_path=None):
+def create_tower_mapping(filepath=ex.towers,pickle_path=None):
 	geo_map = {}
 	tower_map = {}
 	lat = 2
@@ -39,27 +39,32 @@ def partition_users_by_tower(filename,limit=float('inf')):
 	data_dir = "../niquo_data/"
 	towers_dir = "partitioned_towers/"
 	tower_file_prefix = "cdr_tower_"
+	tower_map = create_tower_mapping()
 	tower_path_prefix = data_dir + towers_dir
 	csv_suffix = ".csv"
-	current_towers = set(os.listdir(tower_path_prefix))
-	day_1 = "2016.07.01"
+	current_towers = set([])
+	days = ["2016.07.0" + str(d) if d<10 else "2016.07." + str(d) for d in range(1,32)]
+	data_index = 10
+
 	with open(filename,'rb') as csvfile:
 		print 'opening file to read from as a csv...'
 		data_csv = csv.reader(csvfile,delimiter=';')
 		current_row = 0
 		print 'will now read', limit, 'rows'
 		for row in data_csv:
-			tower_id = row[TOWER_INDEX]
+			tower_id = tower_map[row[TOWER_INDEX]]
 			call_time = row[START_TIME_INDEX]
+			call_date = call_time[:data_index]
+			date_path = data_dir + towers_dir + call_date + '/'
 			#skip the first row
 			if tower_id == 'ID_CELLA_INI':
 				continue
-			# TODO: remove when using all data
-			# only partition calls from the first of the month
-			if not call_time.startswith(day_1):
-				break
+			# check if the path for the date exists yet
+			if not os.path.exists(date_path):
+				os.makedirs(date_path)
+
 			tower_file = tower_file_prefix + tower_id + csv_suffix
-			tower_path = tower_path_prefix + tower_file
+			tower_path = date_path + tower_file
 			if tower_file in current_towers:
 				tower_file_obj = open(tower_path, 'a')
 			else:
@@ -191,13 +196,13 @@ def get_time_sum(meeting_times):
 
 
 def main():
-	#data_filename = ex.most_recent
-	#print "retrieving data from",data_filename
-	#print "partitioning data by tower name..."
-	#partition_users_by_tower(data_filename)
-	#print "partitioning complete"
-	towers_directory = '../niquo_data/partitioned_towers/'
-	destination_path = '../niquo_data/paired_callers/paired_dict.p'
-	create_pair_users_obj(towers_directory,destination_path)
+	data_filename = ex.most_recent
+	print "retrieving data from",data_filename
+	print "partitioning data by tower name..."
+	partition_users_by_tower(data_filename,100)
+	print "partitioning complete"
+	# towers_directory = '../niquo_data/partitioned_towers/'
+	# destination_path = '../niquo_data/paired_callers/paired_dict.p'
+	# create_pair_users_obj(towers_directory,destination_path)
 
 main()
