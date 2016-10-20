@@ -16,16 +16,16 @@ def create_tower_mapping(filepath,pickle_path=None):
 	lon = 3
 	with open(filepath) as tower_file:
 		print 'opening file to read from CSV...'
-		towers_data = [row for row in csv.reader(f.read().splitlines())]
+		towers_data = [row for row in csv.reader(tower_file.read().splitlines())]
 
-	for i,tower in towers_data:
+	for i,tower in enumerate(towers_data):
 		if i == 0:
 			continue
 		t_lat = tower[lat]
 		t_lon = tower[lon]
 		tower_id = int(tower[0])
 		lat_lon = (t_lat,t_lon)
-   		if lat_lon in t_map:
+   		if lat_lon in geo_map:
    			tower_map[tower_id] = geo_map[lat_lon]
 		else:
 			geo_map[lat_lon] = tower_id

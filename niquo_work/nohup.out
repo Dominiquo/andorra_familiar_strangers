@@ -1,0 +1,19 @@
+retrieving data from ../../data_repository/datasets/telecom/cdr/201607-AndorraTelecom-CDR.csv
+partitioning data by tower name...
+opening file to read from as a csv...
+will now read inf rows
+created 419 new files of towers.
+partitioning complete
+total count of available tower files: 419
+Traceback (most recent call last):
+  File "crossing_paths.py", line 120, in <module>
+    main()
+  File "crossing_paths.py", line 118, in main
+    create_pair_users_obj(towers_directory,destination_path)
+  File "crossing_paths.py", line 47, in create_pair_users_obj
+    pairs_dictionary = pair_users_from_towers(towers_directory,file_limit)
+  File "crossing_paths.py", line 62, in pair_users_from_towers
+    pairs = find_collisions_from_tower(all_callers)
+  File "crossing_paths.py", line 83, in find_collisions_from_tower
+    collision_pairs.add((first_caller,second_caller))
+TypeError: unhashable type: 'list'
