@@ -15,7 +15,6 @@ def create_tower_mapping(filepath=ex.towers,pickle_path=None):
 	lat = 2
 	lon = 3
 	with open(filepath) as tower_file:
-		print 'opening file to read from CSV...'
 		towers_data = [row for row in csv.reader(tower_file.read().splitlines())]
 
 	for i,tower in enumerate(towers_data):
@@ -23,7 +22,7 @@ def create_tower_mapping(filepath=ex.towers,pickle_path=None):
 			continue
 		t_lat = tower[lat]
 		t_lon = tower[lon]
-		tower_id = int(tower[0])
+		tower_id = tower[1]
 		lat_lon = (t_lat,t_lon)
    		if lat_lon in geo_map:
    			tower_map[tower_id] = geo_map[lat_lon]
@@ -44,7 +43,10 @@ def partition_users_by_tower(filename,limit=float('inf')):
 	csv_suffix = ".csv"
 	current_towers = set([])
 	days = ["2016.07.0" + str(d) if d<10 else "2016.07." + str(d) for d in range(1,32)]
-	data_index = 10
+	date_index = 10
+	unfound_towers = set([])
+	unfound_count = 0
+	files_count = 1
 
 	with open(filename,'rb') as csvfile:
 		print 'opening file to read from as a csv...'
@@ -52,13 +54,18 @@ def partition_users_by_tower(filename,limit=float('inf')):
 		current_row = 0
 		print 'will now read', limit, 'rows'
 		for row in data_csv:
-			tower_id = tower_map[row[TOWER_INDEX]]
-			call_time = row[START_TIME_INDEX]
-			call_date = call_time[:data_index]
-			date_path = data_dir + towers_dir + call_date + '/'
 			#skip the first row
-			if tower_id == 'ID_CELLA_INI':
+			if row[TOWER_INDEX]== 'ID_CELLA_INI':
 				continue
+			pre_funnel_id = row[TOWER_INDEX]
+			if pre_funnel_id not in tower_map:
+				unfound_count += 1
+				unfound_towers.add(pre_funnel_id)
+				continue
+			tower_id = tower_map[pre_funnel_id]
+			call_time = row[START_TIME_INDEX]
+			call_date = call_time[:date_index]
+			date_path = data_dir + towers_dir + call_date + '/'
 			# check if the path for the date exists yet
 			if not os.path.exists(date_path):
 				os.makedirs(date_path)
@@ -67,7 +74,8 @@ def partition_users_by_tower(filename,limit=float('inf')):
 			tower_path = date_path + tower_file
 			if tower_file in current_towers:
 				tower_file_obj = open(tower_path, 'a')
-			else:
+			else:	
+				files_count += 1
 				tower_file_obj = open(tower_path,'wb')
 
 			tower_file_csv = csv.writer(tower_file_obj,delimiter=';')
@@ -78,7 +86,9 @@ def partition_users_by_tower(filename,limit=float('inf')):
 				break
 			current_row += 1
 			current_towers.add(tower_file)
-	print 'created', len(os.listdir(tower_path_prefix)),'new files of towers.'
+	print 'number of entries not entered',unfound_count
+	print 'could not find towers',unfound_towers
+	print 'created',files_count,'new files of towers.'
 
 def create_pair_users_obj(towers_directory,destination_path,file_limit=float('inf')):
 	pairs_dictionary = pair_users_from_towers(towers_directory,file_limit)
