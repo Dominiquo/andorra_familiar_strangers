@@ -9,6 +9,32 @@ TOWER_INDEX = 6
 CALLER_INDEX = 0
 RECEIVER_INDEX = 16
 
+def create_tower_mapping(filepath,pickle_path=None):
+	geo_map = {}
+	tower_map = {}
+	lat = 2
+	lon = 3
+	with open(filepath) as tower_file:
+		print 'opening file to read from CSV...'
+		towers_data = [row for row in csv.reader(f.read().splitlines())]
+
+	for i,tower in towers_data:
+		if i == 0:
+			continue
+		t_lat = tower[lat]
+		t_lon = tower[lon]
+		tower_id = int(tower[0])
+		lat_lon = (t_lat,t_lon)
+   		if lat_lon in t_map:
+   			tower_map[tower_id] = geo_map[lat_lon]
+		else:
+			geo_map[lat_lon] = tower_id
+			tower_map[tower_id] = tower_id
+	if pickle_path:
+		pickle.dump(tower_map,open(pickle_path,'wb'))
+
+	return tower_map
+
 def partition_users_by_tower(filename,limit=float('inf')):
 	data_dir = "../niquo_data/"
 	towers_dir = "partitioned_towers/"
@@ -79,12 +105,17 @@ def pair_users_from_towers(towers_directory,limit = float('inf')):
 				pair_map[first_number].add((second_number,second_call_time,tower_id))
 			else:
 				pair_map[first_number] = set([(second_number,second_call_time,tower_id)])
-			if second_number in pair_map:
-				pair_map[second_number].add((first_number,second_call_time,tower_id))
-			else:
-				pair_map[second_number] = set([(first_number,second_call_time,tower_id)])
+			# TODO: check to make sure this is valid and stores all information
+			# if second_number in pair_map:
+			# 	pair_map[second_number].add((first_number,second_call_time,tower_id))
+			# else:
+			# 	pair_map[second_number] = set([(first_number,second_call_time,tower_id)])
 		current += 1
 	return pair_map
+
+def combine_tower_mappings(filepath):
+
+	return -1
 
 
 def find_collisions_from_tower(tower_rows):
@@ -137,6 +168,8 @@ def analyze_pairings_dict(filename,meetings):
 
 
 def find_times(encouters_set,num_encounters):
+	# TODO: update later if we want to change criterion
+	# difference between first time met and last time met
 	times = []
 	encounter_map = {}
 	for encouter in encouters_set:
