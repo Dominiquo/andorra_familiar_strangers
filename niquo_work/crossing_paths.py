@@ -209,7 +209,7 @@ def main():
 	data_filename = ex.most_recent
 	print "retrieving data from",data_filename
 	print "partitioning data by tower name..."
-	partition_users_by_tower(data_filename,100)
+	partition_users_by_tower(data_filename)
 	print "partitioning complete"
 	# towers_directory = '../niquo_data/partitioned_towers/'
 	# destination_path = '../niquo_data/paired_callers/paired_dict.p'
