@@ -90,46 +90,55 @@ def partition_users_by_tower(filename,limit=float('inf')):
 	print 'could not find towers',unfound_towers
 	print 'created',files_count,'new files of towers.'
 
-def create_pair_users_obj(towers_directory,destination_path,file_limit=float('inf')):
-	pairs_dictionary = pair_users_from_towers(towers_directory,file_limit)
-	pickle.dump(pairs_dictionary,open(destination_path,'wb'))
-	return True
-
-def pair_users_from_towers(towers_directory,limit = float('inf')):
-	all_tower_files = set(os.listdir(towers_directory))
-	print "total count of available tower files:",len(all_tower_files)
+def pair_users_from_towers(towers_directory,destination_path,limit = float('inf')):
+	all_dates_dirs = set(os.listdir(towers_directory))
+	print "total count of available date files:",len(all_dates_dirs)
 	inf = float('inf')
-	pair_map = {}
-	current = 1
-	total_towers = len(all_tower_files)
-	for tower_name in all_tower_files:
-		print "checking tower",current,"of",total_towers
-		if current > limit:
-			break
-		tower_path = towers_directory + tower_name
-		all_callers = ex.read_csv(tower_path,inf)
-		all_callers.sort(key=lambda val:val[START_TIME_INDEX])
-		pairs = find_collisions_from_tower(all_callers)
-		for first,second in pairs:
-			first_number = first[CALLER_INDEX]
-			first_call_time = first[START_TIME_INDEX]
-			second_number = second[CALLER_INDEX]
-			second_call_time = second[START_TIME_INDEX]
-			tower_id = first[TOWER_INDEX]
-			if first_number in pair_map:
-				pair_map[first_number].add((second_number,second_call_time,tower_id))
-			else:
-				pair_map[first_number] = set([(second_number,second_call_time,tower_id)])
-			# TODO: check to make sure this is valid and stores all information
-			# if second_number in pair_map:
-			# 	pair_map[second_number].add((first_number,second_call_time,tower_id))
-			# else:
-			# 	pair_map[second_number] = set([(first_number,second_call_time,tower_id)])
-		current += 1
+	total_dates = len(all_dates_dirs)
+
+	for date_dir in all_dates_dirs:
+		print "checking towers from", date_dir
+		date_path = towers_directory + date_dir + '/'
+		tower_files = set(os.listdir(date_path))
+		dest_date_dir = destination_path + date_dir + '/'
+		if not os.path.exists(date_path):
+			os.makedirs(date_path)	
+
+		for tower_name in tower_files:
+			print 'checking tower',tower_name 
+			tower_path = date_path + tower_name
+			dest_pickle_file = dest_date_dir + tower_name.split('.')[0] + '.p'
+			prit 'creating map to be stored in ', dest_pickle_file
+			all_callers = ex.read_csv(tower_path,inf)
+			all_callers.sort(key=lambda val:val[START_TIME_INDEX])
+			pairs = find_collisions_from_tower(all_callers)
+			pair_map = {}
+			for first,second in pairs:
+				first_number = first[CALLER_INDEX]
+				first_call_time = first[START_TIME_INDEX]
+				second_number = second[CALLER_INDEX]
+				second_call_time = second[START_TIME_INDEX]
+				avg_call_time = average_call_times(first_call_time,second_call_time)
+				tower_id = first[TOWER_INDEX]
+				if first_number in pair_map:
+					first_num_dict = pair_map[first_number]
+					if second_number in first_num_dict:
+						first_num_dict[second_number].add(avg_call_time)
+					else:
+						first_num_dict[second_number] = set([avg_call_time])
+				else:
+					pair_map[first_number] = {second_number:set([avg_call_time])}
+
+			pickle.dump(pair_map,open(dest_pickle_file,'wb'))
+			return True
+
 	return pair_map
 
 def combine_tower_mappings(filepath):
 
+	return -1
+
+def average_call_times(time1,time2):
 	return -1
 
 
@@ -206,13 +215,11 @@ def get_time_sum(meeting_times):
 
 
 def main():
-	data_filename = ex.most_recent
-	print "retrieving data from",data_filename
-	print "partitioning data by tower name..."
-	partition_users_by_tower(data_filename)
-	print "partitioning complete"
-	# towers_directory = '../niquo_data/partitioned_towers/'
-	# destination_path = '../niquo_data/paired_callers/paired_dict.p'
-	# create_pair_users_obj(towers_directory,destination_path)
+	# print "partitioning data by tower name..."
+	# partition_users_by_tower(data_filename,100)
+	# print "partitioning complete"
+	towers_directory = '../niquo_data/partitioned_towers/'
+	destination_path = '../niquo_data/paired_callers/'
+	pair_users_from_towers(towers_directory,destination_path)
 
 main()
