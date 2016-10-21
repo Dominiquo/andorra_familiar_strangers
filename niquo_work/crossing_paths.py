@@ -101,14 +101,13 @@ def pair_users_from_towers(towers_directory,destination_path,limit = float('inf'
 		date_path = towers_directory + date_dir + '/'
 		tower_files = set(os.listdir(date_path))
 		dest_date_dir = destination_path + date_dir + '/'
-		if not os.path.exists(date_path):
-			os.makedirs(date_path)	
+		if not os.path.exists(dest_date_dir):
+			print 'made directory',dest_date_dir
+			os.makedirs(dest_date_dir)	
 
 		for tower_name in tower_files:
-			print 'checking tower',tower_name 
 			tower_path = date_path + tower_name
 			dest_pickle_file = dest_date_dir + tower_name.split('.')[0] + '.p'
-			prit 'creating map to be stored in ', dest_pickle_file
 			all_callers = ex.read_csv(tower_path,inf)
 			all_callers.sort(key=lambda val:val[START_TIME_INDEX])
 			pairs = find_collisions_from_tower(all_callers)
@@ -130,7 +129,6 @@ def pair_users_from_towers(towers_directory,destination_path,limit = float('inf'
 					pair_map[first_number] = {second_number:set([avg_call_time])}
 
 			pickle.dump(pair_map,open(dest_pickle_file,'wb'))
-			return True
 
 	return pair_map
 
