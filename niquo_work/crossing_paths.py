@@ -235,11 +235,11 @@ def find_times(encouters_set,num_encounters):
 
 def main():
 	print "partitioning data by tower name..."
-	filename = '../../data_repository/datasets/telecom/cdr/201607-AndorraTelecom-CDR.csv'
+	data_filename = '../../data_repository/datasets/telecom/cdr/201607-AndorraTelecom-CDR.csv'
 	partition_users_by_tower(data_filename)
 	print "partitioning complete"
-	towers_directory = '../niquo_data/partitioned_towers/'
-	destination_path = '../niquo_data/paired_callers/'
-	pair_users_from_towers(towers_directory,destination_path)
+	#towers_directory = '../niquo_data/partitioned_towers/'
+	#destination_path = '../niquo_data/paired_callers/'
+	#pair_users_from_towers(towers_directory,destination_path)
 
-# main()
+main()
