@@ -283,9 +283,13 @@ def main():
 	#data_filename = '../../data_repository/datasets/telecom/cdr/201607-AndorraTelecom-CDR.csv'
 	#partition_users_by_tower(data_filename)
 	#print "partitioning complete"
-	towers_directory = '../niquo_data/partitioned_towers/'
+	#towers_directory = '../niquo_data/partitioned_towers/'
 	destination_path = '../niquo_data/paired_callers/'
-	pair_users_from_towers(towers_directory,destination_path)
+	#pair_users_from_towers(towers_directory,destination_path)
+	deltas_2enc_file = '../niquo_data/encounter_n_2.csv'
+	find_next_meeting(destination_path,deltas_2enc_file,2)
+	print 'completed finding encounter time difference for n=2'
+
 
 
 main()
