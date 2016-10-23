@@ -160,7 +160,7 @@ def average_call_times(time_stamp_1,time_stamp_2):
 	return head + ' ' + str(avgh) + ':' + str(avgm) + ':' + str(avgs)
 
 
-def find_collisions_from_tower(tower_rows,time_range=2):
+def find_collisions_from_tower(tower_rows,time_range=1):
 	collision_pairs = set([])
 	total_size = len(tower_rows)
 	lower_edge = 0
@@ -177,7 +177,7 @@ def find_collisions_from_tower(tower_rows,time_range=2):
 	return collision_pairs
 
 
-def users_met(cdr_user_1,cdr_user_2,time_range=2):
+def users_met(cdr_user_1,cdr_user_2,time_range=1):
 	"""ASSUMES SECOND NUMBER IS ALWAYS LATER THAN FIRST"""
 	time_1 = cdr_user_1[START_TIME_INDEX]
 	time_2 = cdr_user_2[START_TIME_INDEX]
