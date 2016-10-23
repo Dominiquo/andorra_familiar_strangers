@@ -169,23 +169,35 @@ def search_next_encounter(meetings_path, user, encountered_user, tower_init,last
 		towers_dir = meetings_path + '/' + date
 		all_towers = os.listdir(towers_dir)
 		for tower in all_towers:
-			# TODO: add recursion step here for finding those after this
-			if tower == tower_init:
-				continue
 			tower_file = towers_dir + "/" + tower
-			tower_pair_map = pickle.load(open(tower_file,'rb'))
-			users_encounters = tower_pair_map.get(user,None)
-			if not users_encounters: continue
-			times_list = users_encounters.get(encountered_user,None)
-			if not times_list: continue
-			min_time_met = times_list[0]
-			if min_time_met > last_encounter:
-				return time_difference(last_encounter,min_time_met)
+			if (num_encounters - current_encounters_count) == 1:
+				# skip this tower since we want meetings in a different tower
+				if tower == tower_init: continue
+				min_time_met = open_file_find_nearest_time(tower_file,user,encountered_user,last_encounter)
+				delta_h,delta_s = time_difference(last_encounter,min_time_met)
 			else:
-				for min_time_met in times_list:
-					if min_time_met > last_encounter:
-						return time_difference(last_encounter,min_time_met)
+				if tower != tower_init: continue
+				min_time_met = open_file_find_nearest_time(tower_file,user, encountered_user, last_encounter)
+				new_encounter_count = current_encounters_count + 1
+				delta_h,delta_s = search_next_encounter(meetings_path,user,encountered_user,tower_init,min_time_met,new_encounter_count,num_encounters)
+				return delta_h,delta_s
 	return None,None
+
+
+def open_file_find_nearest_time(tower_file,user,encountered_user,last_encounter):
+	tower_pair_map = pickle.load(open(tower_file,'rb'))
+	users_encounters = tower_pair_map.get(user,None)
+	if not users_encounters: continue
+	times_list = users_encounters.get(encountered_user,None)
+	if not times_list: continue
+	min_time_met = times_list[0]
+	if min_time_met > last_encounter:
+		return min_time_met
+	else:
+		for min_time_met in times_list:
+			if min_time_met > last_encounter:
+				return min_time_met
+	return None
 
 def time_difference(first_time,second_time):
 	format_string = "%Y.%m.%d %H:%M:%S"
