@@ -91,8 +91,6 @@ def pair_users_from_towers(towers_directory,destination_path,limit = float('inf'
 	all_dates_dirs = set(os.listdir(towers_directory))
 	print "total count of available date files:",len(all_dates_dirs)
 	inf = float('inf')
-	total_dates = len(all_dates_dirs)
-
 	for date_dir in all_dates_dirs:
 		print "checking towers from", date_dir
 		date_path = towers_directory + date_dir + '/'
@@ -101,8 +99,11 @@ def pair_users_from_towers(towers_directory,destination_path,limit = float('inf'
 		if not os.path.exists(dest_date_dir):
 			print 'made directory',dest_date_dir
 			os.makedirs(dest_date_dir)	
-
+		tower_count = 1
 		for tower_name in tower_files:
+			total_towers = len(tower_files)
+			print 'creating pair map object', tower_count, '/', total_towers,'for day',date_dir
+			tower_count += 1
 			tower_path = date_path + tower_name
 			dest_pickle_file = dest_date_dir + tower_name.split('.')[0] + '.p'
 			all_callers = ex.read_csv(tower_path,inf)
@@ -270,9 +271,9 @@ def main():
 	#data_filename = '../../data_repository/datasets/telecom/cdr/201607-AndorraTelecom-CDR.csv'
 	#partition_users_by_tower(data_filename)
 	#print "partitioning complete"
-	# towers_directory = '../niquo_data/partitioned_towers/'
-	# destination_path = '../niquo_data/paired_callers/'
-	# pair_users_from_towers(towers_directory,destination_path)
+	towers_directory = '../niquo_data/partitioned_towers/'
+	destination_path = '../niquo_data/paired_callers/'
+	pair_users_from_towers(towers_directory,destination_path)
 
 
 main()
