@@ -134,14 +134,17 @@ def pair_users_from_towers(towers_directory,destination_path,limit = float('inf'
 def find_next_meeting(meetings_path, destination_path, num_encounters=2, limit=float('inf')):
 	all_dates = sorted(os.listdir(meetings_path))
 	destination_file = open(destination_path,'wb')
-	encounter_times_csv = csv.writer(dest_pickle_file,delimiter=';')
+	encounter_times_csv = csv.writer(destination_file,delimiter=';')
 	for date in all_dates:
+		print 'checking',len(all_dates),'dates'
 		towers_path = meetings_path + "/" + date
 		all_towers = sorted(os.listdir(towers_path))
 		for tower in all_towers:
-			pair_map_path
+			print 'checking', len(all_towers),'on day:',date
+			pair_map_path = towers_path + "/" + tower
 			user_pair_map = pickle.load(open(pair_map_path,'rb'))
-			for user,encounters_dict in user_pair_map.iteritems:
+			print 'checking users from', pair_map_path
+			for user,encounters_dict in user_pair_map.iteritems():
 				for encountered_user,encounters_set in encounters_dict.iteritems():
 					# ignore case when person 'encounters' themselves
 					if encountered_user == user:
@@ -155,6 +158,7 @@ def find_next_meeting(meetings_path, destination_path, num_encounters=2, limit=f
 					encounter_times_csv.writerow(row)
 					print row
 					print 'found a collision'
+					print 'user:',user,'met with user:',encountered_user,num_encounters,'times with deltas:',delta_days,delta_seconds
 					print '******************'
 					return False
 	return True
@@ -175,11 +179,15 @@ def search_next_encounter(meetings_path, user, encountered_user, tower_init,last
 				if tower == tower_init:
 					continue
 				min_time_met = open_file_find_nearest_time(tower_file,user,encountered_user,last_encounter)
+				if not min_time_met:
+					continue
 				delta_h,delta_s = time_difference(last_encounter,min_time_met)
 			else:
 				if tower != tower_init:
 					continue
 				min_time_met = open_file_find_nearest_time(tower_file,user, encountered_user, last_encounter)
+				if not min_time_met:
+					continue
 				new_encounter_count = current_encounters_count + 1
 				delta_h,delta_s = search_next_encounter(meetings_path,user,encountered_user,tower_init,min_time_met,new_encounter_count,num_encounters)
 				return delta_h,delta_s
@@ -190,10 +198,10 @@ def open_file_find_nearest_time(tower_file,user,encountered_user,last_encounter)
 	tower_pair_map = pickle.load(open(tower_file,'rb'))
 	users_encounters = tower_pair_map.get(user,None)
 	if not users_encounters:
-		continue
+		return None
 	times_list = users_encounters.get(encountered_user,None)
 	if not times_list:
-		continue
+		return None
 	min_time_met = times_list[0]
 	if min_time_met > last_encounter:
 		return min_time_met
@@ -288,7 +296,7 @@ def main():
 	#partition_users_by_tower(data_filename)
 	#print "partitioning complete"
 	#towers_directory = '../niquo_data/partitioned_towers/'
-	destination_path = '../niquo_data/paired_callers/'
+	destination_path = '../niquo_data/paired_callers'
 	#pair_users_from_towers(towers_directory,destination_path)
 	deltas_2enc_file = '../niquo_data/encounter_n_2.csv'
 	find_next_meeting(destination_path,deltas_2enc_file,2)
