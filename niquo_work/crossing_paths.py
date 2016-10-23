@@ -8,6 +8,7 @@ START_TIME_INDEX = 3
 TOWER_INDEX = 6
 CALLER_INDEX = 0
 RECEIVER_INDEX = 16
+DATE_INDEX = 10
 
 def create_tower_mapping(filepath=ex.towers,pickle_path=None):
 	geo_map = {}
@@ -42,10 +43,8 @@ def partition_users_by_tower(filename,limit=float('inf')):
 	tower_path_prefix = data_dir + towers_dir
 	csv_suffix = ".csv"
 	current_towers = set([])
-	days = ["2016.07.0" + str(d) if d<10 else "2016.07." + str(d) for d in range(1,32)]
-	date_index = 10
-	unfound_towers = set([])
-	unfound_count = 0
+	# JULY_MONTH = 7
+	# days = get_dates_for_month(JULY_MONTH)
 	files_count = 1
 
 	with open(filename,'rb') as csvfile:
@@ -59,12 +58,11 @@ def partition_users_by_tower(filename,limit=float('inf')):
 				continue
 			pre_funnel_id = row[TOWER_INDEX]
 			if pre_funnel_id not in tower_map:
-				unfound_count += 1
-				unfound_towers.add(pre_funnel_id)
-				continue
-			tower_id = tower_map[pre_funnel_id]
+				tower_id = pre_funnel_id
+			else:
+				tower_id = tower_map[pre_funnel_id]
 			call_time = row[START_TIME_INDEX]
-			call_date = call_time[:date_index]
+			call_date = call_time[:DATE_INDEX]
 			date_path = data_dir + towers_dir + call_date + '/'
 			# check if the path for the date exists yet
 			if not os.path.exists(date_path):
@@ -86,8 +84,6 @@ def partition_users_by_tower(filename,limit=float('inf')):
 				break
 			current_row += 1
 			current_towers.add(tower_path)
-	print 'number of entries not entered',unfound_count
-	print 'could not find towers',unfound_towers
 	print 'created',files_count,'new files of towers.'
 
 def pair_users_from_towers(towers_directory,destination_path,limit = float('inf')):
@@ -132,36 +128,64 @@ def pair_users_from_towers(towers_directory,destination_path,limit = float('inf'
 
 	return pair_map
 
-def combine_tower_mappings(filepath):
 
-	return -1
+def find_next_meeting(meetings_path,destination_path,limit=float('inf')):
+	# TODO: PARALLELIZE THIS
+#	dates
+# 	towers
+# 	destination ecounter times
+#	 for every encounteree for every encounterer for each tower in each date
+# 		find the nearest date/time in a different tower that those two encountered
+# 			store the encounter time difference in csv file
+# 	
+# 
+# 	
+	return True
 
-def average_call_times(time1,time2):
-	return -1
 
 
-def find_collisions_from_tower(tower_rows):
+def average_call_times(time_stamp_1,time_stamp_2):
+	hour_s = 11
+	hour_f = 13
+	min_s = 14
+	min_f = 16
+	sec_s = 17
+	sec_f = 19
+	head = time_stamp_1[:DATE_INDEX]
+	time1 = time_stamp_1[hour_s:]
+	time2 = time_stamp_2[hour_s:]
+	avgh = (int(time1[hour_s:hour_f]) + int(time2[hour_s:hour_f]))/2
+	avgm = (int(time1[min_s:min_f]) + int(time2[min_s:min_f]))/2
+	avgs = (int(time1[sec_s:sec_f]) + int(time2[sec_s:sec_f]))/2
+	return head + ' ' + str(avgh) + ':' + str(avgm) + ':' + str(avgs)
+
+
+def find_collisions_from_tower(tower_rows,time_range=2):
 	collision_pairs = set([])
 	total_size = len(tower_rows)
 	lower_edge = 0
 	higher_edge = 0
+	print 'starting the comparision'
 	for lower_index in range(len(tower_rows)):
 		for upper_index in range(lower_index+1,len(tower_rows)):
 			lower_row = tower_rows[lower_index]
 			upper_row = tower_rows[upper_index]
-			if users_met(lower_row,upper_row):
+			if users_met(lower_row,upper_row,time_range):
 				collision_pairs.add((tuple(lower_row),tuple(upper_row)))
 			else:
 				break
 	return collision_pairs
 
 
-def users_met(cdr_user_1,cdr_user_2,time_range=1):
+def users_met(cdr_user_1,cdr_user_2,time_range=2):
+	"""ASSUMES SECOND NUMBER IS ALWAYS LATER THAN FIRST"""
 	time_1 = cdr_user_1[START_TIME_INDEX]
 	time_2 = cdr_user_2[START_TIME_INDEX]
 	year_cutoff_index = 10
 	hour_start_index = 11
 	hour_end_index = 13
+	min_start = 14
+	min_finish = 16
 
 	# TODO: refine for corner case of near midnight
 	# overlaps of calls
@@ -171,10 +195,12 @@ def users_met(cdr_user_1,cdr_user_2,time_range=1):
 	t1_hour = int(time_1[hour_start_index:hour_end_index])
 	t2_hour = int(time_2[hour_start_index:hour_end_index])
 
-	# TODO: add minute cut-off for exactly two hour_end_index
-	# range of overlap
+	t1_min = int(time_1[min_start:min_finish])
+	t2_min = int(time_2[min_start:min_finish])
 
-	if abs(t1_hour - t2_hour) <= time_range:
+	if ((t2_hour - t1_hour) < time_range):
+		return True
+	elif ((t2_hour - t1_hour) == time_range) and (t2_min <= t1_min):
 		return True
 	else:
 		return False 
@@ -207,17 +233,13 @@ def find_times(encouters_set,num_encounters):
 	return times
 
 
-def get_time_sum(meeting_times):
-	# TODO: define how we want to value this.
-	return -1
-
-
 def main():
-	# print "partitioning data by tower name..."
-	# partition_users_by_tower(data_filename,100)
-	# print "partitioning complete"
+	print "partitioning data by tower name..."
+	filename = '../../data_repository/datasets/telecom/cdr/201607-AndorraTelecom-CDR.csv'
+	partition_users_by_tower(data_filename)
+	print "partitioning complete"
 	towers_directory = '../niquo_data/partitioned_towers/'
 	destination_path = '../niquo_data/paired_callers/'
 	pair_users_from_towers(towers_directory,destination_path)
 
-main()
+# main()
