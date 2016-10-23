@@ -166,15 +166,15 @@ def time_difference(first_time,second_time):
 
 
 def average_call_times(time_stamp_1,time_stamp_2):
-	hour_s = 11
-	hour_f = 13
-	min_s = 14
-	min_f = 16
-	sec_s = 17
-	sec_f = 19
+	hour_s = 0
+	hour_f = 2
+	min_s = 3
+	min_f = 5
+	sec_s = 6
+	sec_f = 8
 	head = time_stamp_1[:DATE_INDEX]
-	time1 = time_stamp_1[hour_s:]
-	time2 = time_stamp_2[hour_s:]
+	time1 = time_stamp_1[DATE_INDEX+1:]
+	time2 = time_stamp_2[DATE_INDEX+1:]
 	avgh = (int(time1[hour_s:hour_f]) + int(time2[hour_s:hour_f]))/2
 	avgm = (int(time1[min_s:min_f]) + int(time2[min_s:min_f]))/2
 	avgs = (int(time1[sec_s:sec_f]) + int(time2[sec_s:sec_f]))/2
@@ -236,12 +236,12 @@ def analyze_pairings_dict(filename,meetings):
 
 
 def main():
-	print "partitioning data by tower name..."
-	data_filename = '../../data_repository/datasets/telecom/cdr/201607-AndorraTelecom-CDR.csv'
-	partition_users_by_tower(data_filename)
-	print "partitioning complete"
-	#towers_directory = '../niquo_data/partitioned_towers/'
-	#destination_path = '../niquo_data/paired_callers/'
-	#pair_users_from_towers(towers_directory,destination_path)
+	#print "partitioning data by tower name..."
+	#data_filename = '../../data_repository/datasets/telecom/cdr/201607-AndorraTelecom-CDR.csv'
+	#partition_users_by_tower(data_filename)
+	#print "partitioning complete"
+	towers_directory = '../niquo_data/partitioned_towers/'
+	destination_path = '../niquo_data/paired_callers/'
+	pair_users_from_towers(towers_directory,destination_path)
 
 main()
