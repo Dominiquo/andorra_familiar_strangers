@@ -58,7 +58,7 @@ def partition_users_by_tower(filename,limit=float('inf')):
 				continue
 			pre_funnel_id = row[TOWER_INDEX]
 			if pre_funnel_id not in tower_map:
-				tower_id = pre_funnel_id
+				continue
 			else:
 				tower_id = tower_map[pre_funnel_id]
 			call_time = row[START_TIME_INDEX]
