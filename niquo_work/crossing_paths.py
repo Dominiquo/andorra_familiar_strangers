@@ -119,11 +119,11 @@ def pair_users_from_towers(towers_directory,destination_path,limit = float('inf'
 				if first_number in pair_map:
 					first_num_dict = pair_map[first_number]
 					if second_number in first_num_dict:
-						first_num_dict[second_number].add(avg_call_time)
+						first_num_dict[second_number].append(avg_call_time)
 					else:
-						first_num_dict[second_number] = set([avg_call_time])
+						first_num_dict[second_number] = [avg_call_time]
 				else:
-					pair_map[first_number] = {second_number:set([avg_call_time])}
+					pair_map[first_number] = {second_number: [avg_call_time]}
 
 			pickle.dump(pair_map,open(dest_pickle_file,'wb'))
 
@@ -147,15 +147,44 @@ def find_next_meeting(meetings_path, destination_path, num_encounters=2, limit=f
 						continue
 					current_encounters_count = len(encounters_set)
 					last_encounter = max(encounters_set)
-					delta_days,delta_seconds = search_next_encounter(tower,last_encounter,current_encounters_count,num_encounters)
+					delta_days,delta_seconds = search_next_encounter(meetings_path, user, encountered_user, tower,last_encounter,current_encounters_count,num_encounters)
+					if not delta_days:
+						continue
 					row = [user,encountered_user,delta_days,delta_seconds]
 					encounter_times_csv.writerow(row)
+					print row
+					print 'found a collision'
+					print '******************'
+					return False
 	return True
 
 
-def search_next_encounter(tower,last_encounter,current_encounters_count,num_encounters):
-
-	return True
+def search_next_encounter(meetings_path, user, encountered_user, tower_init,last_encounter,current_encounters_count,num_encounters):
+	all_dates = sorted(os.listdir(meetings_path))
+	last_encounter_date = last_encounter[:DATE_INDEX]
+	for date in all_dates:
+		if date < last_encounter:
+			continue
+		towers_dir = meetings_path + '/' + date
+		all_towers = os.listdir(towers_dir)
+		for tower in all_towers:
+			# TODO: add recursion step here for finding those after this
+			if tower == tower_init:
+				continue
+			tower_file = towers_dir + "/" + tower
+			tower_pair_map = pickle.load(open(tower_file,'rb'))
+			users_encounters = tower_pair_map.get(user,None)
+			if not users_encounters: continue
+			times_list = users_encounters.get(encountered_user,None)
+			if not times_list: continue
+			min_time_met = times_list[0]
+			if min_time_met > last_encounter:
+				return time_difference(last_encounter,min_time_met)
+			else:
+				for min_time_met in times_list:
+					if min_time_met > last_encounter:
+						return time_difference(last_encounter,min_time_met)
+	return None,None
 
 def time_difference(first_time,second_time):
 	format_string = "%Y.%m.%d %H:%M:%S"
@@ -241,8 +270,9 @@ def main():
 	#data_filename = '../../data_repository/datasets/telecom/cdr/201607-AndorraTelecom-CDR.csv'
 	#partition_users_by_tower(data_filename)
 	#print "partitioning complete"
-	towers_directory = '../niquo_data/partitioned_towers/'
-	destination_path = '../niquo_data/paired_callers/'
-	pair_users_from_towers(towers_directory,destination_path)
+	# towers_directory = '../niquo_data/partitioned_towers/'
+	# destination_path = '../niquo_data/paired_callers/'
+	# pair_users_from_towers(towers_directory,destination_path)
+
 
 main()
