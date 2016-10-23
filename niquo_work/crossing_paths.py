@@ -178,7 +178,8 @@ def average_call_times(time_stamp_1,time_stamp_2):
 	avgh = (int(time1[hour_s:hour_f]) + int(time2[hour_s:hour_f]))/2
 	avgm = (int(time1[min_s:min_f]) + int(time2[min_s:min_f]))/2
 	avgs = (int(time1[sec_s:sec_f]) + int(time2[sec_s:sec_f]))/2
-	return head + ' ' + str(avgh) + ':' + str(avgm) + ':' + str(avgs)
+	zero_pad = lambda v: '0' + str(v) if v < 10 else str(v)
+	return head + ' ' + zero_pad(avgh) + ':' + zero_pad(avgm) + ':' + str(avgs)
 
 
 def find_collisions_from_tower(tower_rows,time_range=1):
