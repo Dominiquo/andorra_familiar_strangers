@@ -3,6 +3,7 @@ import os
 import extractData as ex
 import pickle
 import itertools
+from datetime import datetime
 
 START_TIME_INDEX = 3
 TOWER_INDEX = 6
@@ -58,7 +59,7 @@ def partition_users_by_tower(filename,limit=float('inf')):
 				continue
 			pre_funnel_id = row[TOWER_INDEX]
 			if pre_funnel_id not in tower_map:
-				continue
+				tower_id = pre_funnel_id
 			else:
 				tower_id = tower_map[pre_funnel_id]
 			call_time = row[START_TIME_INDEX]
@@ -129,19 +130,39 @@ def pair_users_from_towers(towers_directory,destination_path,limit = float('inf'
 	return pair_map
 
 
-def find_next_meeting(meetings_path,destination_path,limit=float('inf')):
-	# TODO: PARALLELIZE THIS
-#	dates
-# 	towers
-# 	destination ecounter times
-#	 for every encounteree for every encounterer for each tower in each date
-# 		find the nearest date/time in a different tower that those two encountered
-# 			store the encounter time difference in csv file
-# 	
-# 
-# 	
+def find_next_meeting(meetings_path, destination_path, num_encounters=2, limit=float('inf')):
+	all_dates = sorted(os.listdir(meetings_path))
+	destination_file = open(destination_path,'wb')
+	encounter_times_csv = csv.writer(dest_pickle_file,delimiter=';')
+	for date in all_dates:
+		towers_path = meetings_path + "/" + date
+		all_towers = sorted(os.listdir(towers_path))
+		for tower in all_towers:
+			pair_map_path
+			user_pair_map = pickle.load(open(pair_map_path,'rb'))
+			for user,encounters_dict in user_pair_map.iteritems:
+				for encountered_user,encounters_set in encounters_dict.iteritems():
+					# ignore case when person 'encounters' themselves
+					if encountered_user == user:
+						continue
+					current_encounters_count = len(encounters_set)
+					last_encounter = max(encounters_set)
+					delta_days,delta_seconds = search_next_encounter(tower,last_encounter,current_encounters_count,num_encounters)
+					row = [user,encountered_user,delta_days,delta_seconds]
+					encounter_times_csv.writerow(row)
 	return True
 
+
+def search_next_encounter(tower,last_encounter,current_encounters_count,num_encounters):
+
+	return True
+
+def time_difference(first_time,second_time):
+	format_string = "%Y.%m.%d %H:%M:%S"
+	time_1 = datetime.strptime(first_time,format_string)
+	time_2 = datetime.strptime(second_time,format_string)
+	time_difference = time_2 - time_1
+	return time_difference.days,time_difference.seconds
 
 
 def average_call_times(time_stamp_1,time_stamp_2):
@@ -212,25 +233,6 @@ def analyze_pairings_dict(filename,meetings):
 	for call_id,encounters in encounters_dict.iteritems():
 		all_remeet_times += find_times(encounters,meetings)
 	return all_remeet_times
-
-
-
-def find_times(encouters_set,num_encounters):
-	# TODO: update later if we want to change criterion
-	# difference between first time met and last time met
-	times = []
-	encounter_map = {}
-	for encouter in encouters_set:
-		user_id = encouter[0]
-		time = encouter[1]
-		if user_id in encouter:
-			encounter_map[user_id].append(time)
-		else:
-			encounter_map[user_id] = [time]
-	for user,met_times in encounter_map.iteritems():
-		if len(met_times) > num_encounters:
-			times.append(get_time_sum(met_times))
-	return times
 
 
 def main():
