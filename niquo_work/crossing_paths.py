@@ -2,6 +2,7 @@ import csv
 import os
 import extractData as ex
 import pickle
+import cPickle
 import itertools
 from datetime import datetime
 
@@ -88,7 +89,7 @@ def partition_users_by_tower(filename,limit=float('inf')):
 	print 'created',files_count,'new files of towers.'
 
 def pair_users_from_towers(towers_directory,destination_path,limit = float('inf')):
-	all_dates_dirs = set(os.listdir(towers_directory))
+	all_dates_dirs = sorted(set(os.listdir(towers_directory)))
 	print "total count of available date files:",len(all_dates_dirs)
 	inf = float('inf')
 	for date_dir in all_dates_dirs:
@@ -106,7 +107,11 @@ def pair_users_from_towers(towers_directory,destination_path,limit = float('inf'
 			tower_count += 1
 			tower_path = date_path + tower_name
 			dest_pickle_file = dest_date_dir + tower_name.split('.')[0] + '.p'
+			if os.path.isfile(dest_pickle_file):
+				continue
 			all_callers = ex.read_csv(tower_path,inf)
+			if len(all_callers) > 8000:
+				continue
 			all_callers.sort(key=lambda val:val[START_TIME_INDEX])
 			pairs = find_collisions_from_tower(all_callers)
 			pair_map = {}
@@ -156,11 +161,6 @@ def find_next_meeting(meetings_path, destination_path, num_encounters=2, limit=f
 						continue
 					row = [user,encountered_user,delta_days,delta_seconds]
 					encounter_times_csv.writerow(row)
-					print row
-					print 'found a collision'
-					print 'user:',user,'met with user:',encountered_user,num_encounters,'times with deltas:',delta_days,delta_seconds
-					print '******************'
-					return False
 	return True
 
 
@@ -174,6 +174,7 @@ def search_next_encounter(meetings_path, user, encountered_user, tower_init,last
 		all_towers = os.listdir(towers_dir)
 		for tower in all_towers:
 			tower_file = towers_dir + "/" + tower
+			print 'checking file',tower_file,'for matches on day',date
 			if (num_encounters - current_encounters_count) == 1:
 				# skip this tower since we want meetings in a different tower
 				if tower == tower_init:
@@ -195,7 +196,7 @@ def search_next_encounter(meetings_path, user, encountered_user, tower_init,last
 
 
 def open_file_find_nearest_time(tower_file,user,encountered_user,last_encounter):
-	tower_pair_map = pickle.load(open(tower_file,'rb'))
+	tower_pair_map = cPickle.load(open(tower_file,'rb'))
 	users_encounters = tower_pair_map.get(user,None)
 	if not users_encounters:
 		return None
@@ -295,12 +296,12 @@ def main():
 	#data_filename = '../../data_repository/datasets/telecom/cdr/201607-AndorraTelecom-CDR.csv'
 	#partition_users_by_tower(data_filename)
 	#print "partitioning complete"
-	towers_directory = '../niquo_data/partitioned_towers/'
+	#towers_directory = '../niquo_data/partitioned_towers/'
 	destination_path = '../niquo_data/paired_callers/'
-	pair_users_from_towers(towers_directory,destination_path)
-	#deltas_2enc_file = '../niquo_data/encounter_n_2.csv'
-	#find_next_meeting(destination_path,deltas_2enc_file,2)
-	#print 'completed finding encounter time difference for n=2'
+	#pair_users_from_towers(towers_directory,destination_path)
+	deltas_2enc_file = '../niquo_data/encounter_n_2.csv'
+	find_next_meeting(destination_path,deltas_2enc_file,2)
+	print 'completed finding encounter time difference for n=2'
 
 
 
