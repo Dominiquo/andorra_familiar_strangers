@@ -241,7 +241,7 @@ def find_collisions_from_tower(tower_rows,time_range=1):
 	total_size = len(tower_rows)
 	lower_edge = 0
 	higher_edge = 0
-	print 'starting the comparision'
+	print 'starting the comparision on',len(tower_rows),'of data.'
 	for lower_index in range(len(tower_rows)):
 		for upper_index in range(lower_index+1,len(tower_rows)):
 			lower_row = tower_rows[lower_index]
@@ -295,12 +295,12 @@ def main():
 	#data_filename = '../../data_repository/datasets/telecom/cdr/201607-AndorraTelecom-CDR.csv'
 	#partition_users_by_tower(data_filename)
 	#print "partitioning complete"
-	#towers_directory = '../niquo_data/partitioned_towers/'
-	destination_path = '../niquo_data/paired_callers'
-	#pair_users_from_towers(towers_directory,destination_path)
-	deltas_2enc_file = '../niquo_data/encounter_n_2.csv'
-	find_next_meeting(destination_path,deltas_2enc_file,2)
-	print 'completed finding encounter time difference for n=2'
+	towers_directory = '../niquo_data/partitioned_towers/'
+	destination_path = '../niquo_data/paired_callers/'
+	pair_users_from_towers(towers_directory,destination_path)
+	#deltas_2enc_file = '../niquo_data/encounter_n_2.csv'
+	#find_next_meeting(destination_path,deltas_2enc_file,2)
+	#print 'completed finding encounter time difference for n=2'
 
 
 
