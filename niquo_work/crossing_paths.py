@@ -160,22 +160,25 @@ def combine_tower_maps(dates_path, destination_path, len_combine=7):
 		first_day_towers = set(os.listdir(first_day_path))
 		if num_in_set == 1:
 			continue
-		date_dir = destination_path + first_day + "_" + working_set[num_in_set] 
+		date_dir = destination_path + first_day + "_" + working_set[-1] 
 		if not os.path.exists(date_dir):
 				os.makedirs(date_dir)
-		all_dates_paths = []
+		all_dates_paths = [first_day_path] 
 		for day_dir_index in range(1,num_in_set):
 			day_path = dates_path + '/' + working_set[day_dir_index] + '/'
 			all_dates_paths.append(day_path)
 		intersection_towers = find_intersecting_towers(all_dates_paths)
 		for tower in intersection_towers:
+			map_dump_loc = date_dir + '/' + tower
+			if os.path.isfile(map_dump_loc):
+				continue
 			first_day_tower_pairing = first_day_path + tower
 			first_day_map = cPickle.load(open(first_day_tower_pairing,'rb'))
 			for day_dir in all_dates_paths:
 				next_day_tower = day_dir + tower
 				next_day_tower_map = cPickle.load(open(next_day_tower, 'rb'))
 				first_day_map = combine_pair_mappings(first_day_map, next_day_tower_map)
-			cPickle.dump(open(date_dir + tower, 'wb'))
+			cPickle.dump(first_day_map, open(map_dump_loc, 'wb'))
 	return True
 
 def find_intersecting_towers(paths_list):
