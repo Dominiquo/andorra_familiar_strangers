@@ -133,8 +133,6 @@ def pair_users_from_towers(towers_directory,destination_path,limit = float('inf'
 	return pair_map
 
 def combine_pair_mappings(first_map, second_map):
-"""Order matters first_map.day < second_map.day: MUTATES LISTS:
-"""
 	for user,encounters_map in second_map.iteritems():
 		if user in first_map:
 			first_encounters_map = first_map[user]
@@ -149,7 +147,7 @@ def combine_pair_mappings(first_map, second_map):
 	return first_map
 
 def combine_tower_maps(dates_path, destination_path, len_combine=7):
-	all_dates = sorted(os.listdir(meetings_path))
+	all_dates = sorted(os.listdir(dates_path))
 	num_days = len(all_dates)
 	for day_index in range(0,num_days,len_combine):
 		if day_index + len_combine > num_days:
