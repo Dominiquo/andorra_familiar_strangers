@@ -1,7 +1,6 @@
 import csv
 import os
 import extractData as ex
-import pickle
 import cPickle
 import itertools
 from datetime import datetime
@@ -33,7 +32,7 @@ def create_tower_mapping(filepath=ex.towers,pickle_path=None):
 			geo_map[lat_lon] = tower_id
 			tower_map[tower_id] = tower_id
 	if pickle_path:
-		pickle.dump(tower_map,open(pickle_path,'wb'))
+		cPickle.dump(tower_map,open(pickle_path,'wb'))
 
 	return tower_map
 
@@ -45,8 +44,6 @@ def partition_users_by_tower(filename,limit=float('inf')):
 	tower_path_prefix = data_dir + towers_dir
 	csv_suffix = ".csv"
 	current_towers = set([])
-	# JULY_MONTH = 7
-	# days = get_dates_for_month(JULY_MONTH)
 	files_count = 1
 
 	with open(filename,'rb') as csvfile:
@@ -131,12 +128,72 @@ def pair_users_from_towers(towers_directory,destination_path,limit = float('inf'
 				else:
 					pair_map[first_number] = {second_number: [avg_call_time]}
 
-			pickle.dump(pair_map,open(dest_pickle_file,'wb'))
+			cPickle.dump(pair_map,open(dest_pickle_file,'wb'))
 
 	return pair_map
 
+def combine_pair_mappings(first_map, second_map):
+"""Order matters first_map.day < second_map.day: MUTATES LISTS:
+"""
+	for user,encounters_map in second_map.iteritems():
+		if user in first_map:
+			first_encounters_map = first_map[user]
+			for encountered_user,encounters_list in encounters_map.iteritems():
+				if encountered_user in first_encounters_map:
+					first_encounters_map[encountered_user].extend(encounters_list)
+				else:
+					first_encounters_map[encountered_user] = encounters_list
+		else:
+			first_map[user] = encounters_map
 
-def find_next_meeting(meetings_path, destination_path, num_encounters=2, limit=float('inf')):
+	return first_map
+
+def combine_tower_maps(dates_path, destination_path, len_combine=7):
+	all_dates = sorted(os.listdir(meetings_path))
+	num_days = len(all_dates)
+	for day_index in range(0,num_days,len_combine):
+		if day_index + len_combine > num_days:
+			working_set = all_dates[day_index:]
+		else:
+			working_set = all_dates[day_index:day_index + len_combine]
+		num_in_set = len(working_set)
+		first_day = working_set[0]
+		first_day_path = dates_path + '/' + first_day + '/'
+		first_day_towers = set(os.listdir(first_day_path))
+		if num_in_set == 1:
+			continue
+		date_dir = destination_path + first_day + "_" + working_set[num_in_set] 
+		if not os.path.exists(date_dir):
+				os.makedirs(date_dir)
+		all_dates_paths = []
+		for day_dir_index in range(1,num_in_set):
+			day_path = dates_path + '/' + working_set[day_dir_index] + '/'
+			all_dates_paths.append(day_path)
+		intersection_towers = find_intersecting_towers(all_dates_paths)
+		for tower in intersection_towers:
+			first_day_tower_pairing = first_day_path + tower
+			first_day_map = cPickle.load(open(first_day_tower_pairing,'rb'))
+			for day_dir in all_dates_paths:
+				next_day_tower = day_dir + tower
+				next_day_tower_map = cPickle.load(open(next_day_tower, 'rb'))
+				first_day_map = combine_pair_mappings(first_day_map, next_day_tower_map)
+			cPickle.dump(open(date_dir + tower, 'wb'))
+	return True
+
+def find_intersecting_towers(paths_list):
+	towers_sets = [set(os.listdir(path)) for path in paths_list]
+	return set.intersection(*towers_sets) 
+
+
+def combine_towers_by_path(left_path,right_path,destination_path):
+	left_map = cPickle.load(open(left_path,'rb'))
+	right_map = cPickle.load(open(right_path,'rb'))
+	combined_map = combine_pair_mappings(left_map,right_map)
+	cPickle.dump(combined_map,open(destination_path,'wb'))
+	return True
+
+
+def create_delta_time_file(meetings_path, destination_path, num_encounters=2, limit=float('inf')):
 	all_dates = sorted(os.listdir(meetings_path))
 	destination_file = open(destination_path,'wb')
 	encounter_times_csv = csv.writer(destination_file,delimiter=';')
@@ -147,7 +204,7 @@ def find_next_meeting(meetings_path, destination_path, num_encounters=2, limit=f
 		for tower in all_towers:
 			print 'checking', len(all_towers),'on day:',date
 			pair_map_path = towers_path + "/" + tower
-			user_pair_map = pickle.load(open(pair_map_path,'rb'))
+			user_pair_map = cPickle.load(open(pair_map_path,'rb'))
 			print 'checking users from', pair_map_path
 			for user,encounters_dict in user_pair_map.iteritems():
 				for encountered_user,encounters_set in encounters_dict.iteritems():
@@ -174,7 +231,6 @@ def search_next_encounter(meetings_path, user, encountered_user, tower_init,last
 		all_towers = os.listdir(towers_dir)
 		for tower in all_towers:
 			tower_file = towers_dir + "/" + tower
-			print 'checking file',tower_file,'for matches on day',date
 			if (num_encounters - current_encounters_count) == 1:
 				# skip this tower since we want meetings in a different tower
 				if tower == tower_init:
@@ -242,7 +298,6 @@ def find_collisions_from_tower(tower_rows,time_range=1):
 	total_size = len(tower_rows)
 	lower_edge = 0
 	higher_edge = 0
-	print 'starting the comparision on',len(tower_rows),'of data.'
 	for lower_index in range(len(tower_rows)):
 		for upper_index in range(lower_index+1,len(tower_rows)):
 			lower_row = tower_rows[lower_index]
@@ -283,12 +338,7 @@ def users_met(cdr_user_1,cdr_user_2,time_range=1):
 		return False 
 
 
-def analyze_pairings_dict(filename,meetings):
-	all_remeet_times = []
-	encounters_dict = pickle.load(open(filename,'rb'))
-	for call_id,encounters in encounters_dict.iteritems():
-		all_remeet_times += find_times(encounters,meetings)
-	return all_remeet_times
+
 
 
 def main():
@@ -297,12 +347,16 @@ def main():
 	#partition_users_by_tower(data_filename)
 	#print "partitioning complete"
 	#towers_directory = '../niquo_data/partitioned_towers/'
-	destination_path = '../niquo_data/paired_callers/'
+	# destination_path = '../niquo_data/paired_callers/'
 	#pair_users_from_towers(towers_directory,destination_path)
-	deltas_2enc_file = '../niquo_data/encounter_n_2.csv'
-	find_next_meeting(destination_path,deltas_2enc_file,2)
-	print 'completed finding encounter time difference for n=2'
+	# deltas_2enc_file = '../niquo_data/encounter_n_2.csv'
+	# create_delta_time_file(destination_path,deltas_2enc_file,2)
+	# print 'completed finding encounter time difference for n=2'
 
+	dates_path = '../niquo_data/paired_callers/'
+	combined_dates_path = '../niquo_data/combined_callers/'
+	combine_tower_maps(dates_path, combined_dates_path)
+	print 'Combined dates from paired mappings.'
 
 
 main()
