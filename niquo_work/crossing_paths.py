@@ -4,6 +4,7 @@ import extractData as ex
 import cPickle
 import itertools
 from datetime import datetime
+import time
 
 START_TIME_INDEX = 3
 TOWER_INDEX = 6
@@ -207,7 +208,12 @@ def create_delta_time_file(meetings_path, destination_path, num_encounters=2, li
 			pair_map_path = towers_path + "/" + tower
 			user_pair_map = cPickle.load(open(pair_map_path,'rb'))
 			print 'checking users from', pair_map_path
+			now_time = time.time()
 			for user,encounters_dict in user_pair_map.iteritems():
+				prev_time = now_time
+				now_time = time.time()
+				print 'time since previous loop:', now_time - prev_time
+				print 'checking if user', user, 'made multiple encounters'
 				for encountered_user,encounters_set in encounters_dict.iteritems():
 					# ignore case when person 'encounters' themselves
 					if encountered_user == user:
@@ -350,14 +356,16 @@ def main():
 	#towers_directory = '../niquo_data/partitioned_towers/'
 	# destination_path = '../niquo_data/paired_callers/'
 	#pair_users_from_towers(towers_directory,destination_path)
-	# deltas_2enc_file = '../niquo_data/encounter_n_2.csv'
+	deltas_2enc_file = '../niquo_data/encounter_n_2.csv'
 	# create_delta_time_file(destination_path,deltas_2enc_file,2)
 	# print 'completed finding encounter time difference for n=2'
 
-	dates_path = '../niquo_data/paired_callers/'
+	#dates_path = '../niquo_data/paired_callers/'
 	combined_dates_path = '../niquo_data/combined_callers/'
-	combine_tower_maps(dates_path, combined_dates_path)
-	print 'Combined dates from paired mappings.'
+	#combine_tower_maps(dates_path, combined_dates_path)
+	create_delta_time_file(combined_dates_path, deltas_2enc_file,2)
+	print 'made that delta file'
+	#print 'Combined dates from paired mappings.'
 
 
 main()
