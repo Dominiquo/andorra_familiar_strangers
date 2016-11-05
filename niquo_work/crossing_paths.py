@@ -89,7 +89,7 @@ def partition_users_by_tower(filename,limit=float('inf')):
 	print 'created',files_count,'new files of towers.'
 	
 
-def pair_users_from_towers(towers_directory,destination_path,limit = float('inf')):
+def pair_users_from_towers(towers_directory,destination_path,limit = 10000):
 	all_dates_dirs = sorted(set(os.listdir(towers_directory)))
 	print "total count of available date files:",len(all_dates_dirs)
 	inf = float('inf')
@@ -111,11 +111,16 @@ def pair_users_from_towers(towers_directory,destination_path,limit = float('inf'
 			if os.path.isfile(dest_pickle_file):
 				continue
 			all_callers = ex.read_csv(tower_path,inf)
-			if len(all_callers) > 8000:
+			if len(all_callers) > limit:
 				continue
+			print 'sorting rows...'
 			all_callers.sort(key=lambda val:val[START_TIME_INDEX])
+			print 'rows sorted.'
+			print 'finding collision pairs...'
 			pairs = find_collisions_from_tower(all_callers)
+			print 'found', len(pairs), 'pairs of collisions.'
 			pair_map = {}
+			print 'building map for pairs to be stored at', dest_pickle_file
 			for first,second in pairs:
 				first_number = first[CALLER_INDEX]
 				first_call_time = first[START_TIME_INDEX]
@@ -131,8 +136,9 @@ def pair_users_from_towers(towers_directory,destination_path,limit = float('inf'
 						first_num_dict[second_number] = [avg_call_time]
 				else:
 					pair_map[first_number] = {second_number: [avg_call_time]}
-
+			print 'dumping pickle file...'
 			cPickle.dump(pair_map,open(dest_pickle_file,'wb'))
+			print 'created file for', dest_pickle_file
 
 	return pair_map
 

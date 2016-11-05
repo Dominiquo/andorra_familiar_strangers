@@ -9,3 +9,4 @@ def get_all_counts(enc_map):
 		for receiver, occurances in receiver_dict.iteritems():
 			all_counts.append(len(occurances))
 	return all_counts
+
