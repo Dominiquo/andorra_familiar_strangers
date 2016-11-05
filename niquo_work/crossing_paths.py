@@ -37,6 +37,7 @@ def create_tower_mapping(filepath=ex.towers,pickle_path=None):
 
 	return tower_map
 
+
 def partition_users_by_tower(filename,limit=float('inf')):
 	data_dir = "../niquo_data/"
 	towers_dir = "partitioned_towers/"
@@ -61,6 +62,7 @@ def partition_users_by_tower(filename,limit=float('inf')):
 				tower_id = pre_funnel_id
 			else:
 				tower_id = tower_map[pre_funnel_id]
+
 			call_time = row[START_TIME_INDEX]
 			call_date = call_time[:DATE_INDEX]
 			date_path = data_dir + towers_dir + call_date + '/'
@@ -85,6 +87,7 @@ def partition_users_by_tower(filename,limit=float('inf')):
 			current_row += 1
 			current_towers.add(tower_path)
 	print 'created',files_count,'new files of towers.'
+	
 
 def pair_users_from_towers(towers_directory,destination_path,limit = float('inf')):
 	all_dates_dirs = sorted(set(os.listdir(towers_directory)))
@@ -368,4 +371,5 @@ def main():
 	#print 'Combined dates from paired mappings.'
 
 
-main()
+if __name__ == '__main__':
+    main()
