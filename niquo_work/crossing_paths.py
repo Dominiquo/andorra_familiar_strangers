@@ -171,29 +171,58 @@ def combine_tower_maps(dates_path, destination_path, len_combine=7):
 		if num_in_set == 1:
 			continue
 		date_dir = destination_path + first_day + "_" + working_set[-1] 
+		print 'combining tower files to be stored in ', date_dir
 		if not os.path.exists(date_dir):
 				os.makedirs(date_dir)
 		all_dates_paths = [first_day_path] 
 		for day_dir_index in range(1,num_in_set):
 			day_path = dates_path + '/' + working_set[day_dir_index] + '/'
 			all_dates_paths.append(day_path)
-		intersection_towers = find_intersecting_towers(all_dates_paths)
-		for tower in intersection_towers:
+		all_towers,tower_to_paths = get_intersecting_towers_map(all_dates_paths)
+		for tower in all_towers:
 			map_dump_loc = date_dir + '/' + tower
 			if os.path.isfile(map_dump_loc):
 				continue
-			first_day_tower_pairing = first_day_path + tower
-			first_day_map = cPickle.load(open(first_day_tower_pairing,'rb'))
-			for day_dir in all_dates_paths:
-				next_day_tower = day_dir + tower
-				next_day_tower_map = cPickle.load(open(next_day_tower, 'rb'))
-				first_day_map = combine_pair_mappings(first_day_map, next_day_tower_map)
-			cPickle.dump(first_day_map, open(map_dump_loc, 'wb'))
+			days_paths = tower_to_paths[tower]
+			print 'combining maps for', tower, 'for ', len(days_paths), 'days'
+			combined_map = combine_days_for_tower(tower,days_paths)
+			cPickle.dump(combined_map, open(map_dump_loc,'wb'))
 	return True
 
-def find_intersecting_towers(paths_list):
-	towers_sets = [set(os.listdir(path)) for path in paths_list]
-	return set.intersection(*towers_sets) 
+def get_intersecting_towers_map(paths_list):
+	all_towers = set([])
+	paths_to_towers = {}
+	tower_to_paths = {}
+
+	for day_path in paths_list:
+		days_towers = os.listdir(day_path)
+		paths_to_towers[day_path] = set([])
+		for tower_file in days_towers:
+			paths_to_towers[day_path].add(tower_file)
+			all_towers.add(tower_file)
+
+	for tower in all_towers:
+		current_intersections = []
+		for path, towers in paths_to_towers.iteritems():
+			if tower in towers:
+				current_intersections.append(path)
+		current_intersections.sort()
+		tower_to_paths[tower] = current_intersections
+
+	return all_towers,tower_to_paths
+
+def combine_days_for_tower(tower_file,days_paths):
+	"""days_paths expected to be sorted"""
+	first_day_path = days_paths[0]
+	first_day_tower_pairing = first_day_path + tower_file
+	first_day_map = cPickle.load(open(first_day_tower_pairing,'rb'))
+	if len(days_paths) == 1:
+		return first_day_map
+	for day_dir in days_paths[1:]:
+		next_day_tower = day_dir + tower_file
+		next_day_tower_map = cPickle.load(open(next_day_tower, 'rb'))
+		first_day_map = combine_pair_mappings(first_day_map, next_day_tower_map)
+	return first_day_map
 
 
 def combine_towers_by_path(left_path,right_path,destination_path):
@@ -365,23 +394,27 @@ def main():
 	# function = func_dict[arg[0]]
 
 
-	#print "partitioning data by tower name..."
 	#data_filename = '../../data_repository/datasets/telecom/cdr/201607-AndorraTelecom-CDR.csv'
 	#partition_users_by_tower(data_filename)
-	#print "partitioning complete"
-	towers_directory = '../niquo_data/partitioned_towers/'
-	destination_path = '../niquo_data/paired_callers/'
-	pair_users_from_towers(towers_directory,destination_path)
-	deltas_2enc_file = '../niquo_data/encounter_n_2.csv'
+
+
+	# towers_directory = '../niquo_data/partitioned_towers/'
+	# destination_path = '../niquo_data/paired_callers/'
+	# pair_users_from_towers(towers_directory,destination_path)
+
+
+	# deltas_2enc_file = '../niquo_data/encounter_n_2.csv'
+
+
 	# create_delta_time_file(destination_path,deltas_2enc_file,2)
 	# print 'completed finding encounter time difference for n=2'
 
-	#dates_path = '../niquo_data/paired_callers/'
-	# combined_dates_path = '../niquo_data/combined_callers/'
-	#combine_tower_maps(dates_path, combined_dates_path)
+	dates_path = '../niquo_data/paired_callers/'
+	combined_dates_path = '../niquo_data/combined_callers/'
+	combine_tower_maps(dates_path, combined_dates_path)
+
+
 	# create_delta_time_file(combined_dates_path, deltas_2enc_file,2)
-	# print 'made that delta file'
-	#print 'Combined dates from paired mappings.'
 
 
 if __name__ == '__main__':
