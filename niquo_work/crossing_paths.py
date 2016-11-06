@@ -358,22 +358,29 @@ def users_met(cdr_user_1,cdr_user_2,time_range=1):
 
 
 def main():
+	func_dict = {"create_tower_mapping": create_tower_mapping,
+				"partition_users_by_tower": partition_users_by_tower,
+				"pair_users_from_towers": pair_users_from_towers,
+				"create_delta_time_file": create_delta_time_file}
+	# function = func_dict[arg[0]]
+
+
 	#print "partitioning data by tower name..."
 	#data_filename = '../../data_repository/datasets/telecom/cdr/201607-AndorraTelecom-CDR.csv'
 	#partition_users_by_tower(data_filename)
 	#print "partitioning complete"
-	#towers_directory = '../niquo_data/partitioned_towers/'
-	# destination_path = '../niquo_data/paired_callers/'
-	#pair_users_from_towers(towers_directory,destination_path)
+	towers_directory = '../niquo_data/partitioned_towers/'
+	destination_path = '../niquo_data/paired_callers/'
+	pair_users_from_towers(towers_directory,destination_path)
 	deltas_2enc_file = '../niquo_data/encounter_n_2.csv'
 	# create_delta_time_file(destination_path,deltas_2enc_file,2)
 	# print 'completed finding encounter time difference for n=2'
 
 	#dates_path = '../niquo_data/paired_callers/'
-	combined_dates_path = '../niquo_data/combined_callers/'
+	# combined_dates_path = '../niquo_data/combined_callers/'
 	#combine_tower_maps(dates_path, combined_dates_path)
-	create_delta_time_file(combined_dates_path, deltas_2enc_file,2)
-	print 'made that delta file'
+	# create_delta_time_file(combined_dates_path, deltas_2enc_file,2)
+	# print 'made that delta file'
 	#print 'Combined dates from paired mappings.'
 
 
