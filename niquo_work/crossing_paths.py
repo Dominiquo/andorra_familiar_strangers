@@ -339,7 +339,7 @@ def find_next_encounter(tower,caller,receiver,last_time,all_maps):
 			last_time = find_nearest_time(enc_map,caller,receiver,last_time)
 			if last_time:
 				most_recent.append(last_time)
-	if most_recent == []
+	if most_recent == []:
 		return None,None
 	else:
 		closest_encounter = min(most_recent)
