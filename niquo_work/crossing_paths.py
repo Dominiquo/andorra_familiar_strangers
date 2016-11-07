@@ -234,6 +234,7 @@ def combine_towers_by_path(left_path,right_path,destination_path):
 
 
 def create_delta_time_file(meetings_path, destination_path, num_encounters=2, limit=float('inf')):
+	""" being abandoned because this method of finding encounters is too slow """
 	all_dates = sorted(os.listdir(meetings_path))
 	destination_file = open(destination_path,'wb')
 	encounter_times_csv = csv.writer(destination_file,delimiter=';')
@@ -331,13 +332,13 @@ def find_mult_enc_single_week(week_path,destination_path,n=2):
 	return True
 
 def find_next_encounter(tower,caller,receiver,last_time,all_maps):
-	# TODO: print to find if this code is ran
-	print 'finding next encounter for caller', caller,'to',receiver
 	most_recent = []
 	for t,enc_map in all_maps.iteritems():
 		if t == tower:
 			# TODO: find output from same tower 
 			continue
+		if caller in t:
+			print "caller", caller,'used tower', t
 		if (caller in t) and (receiver in enc_map[caller]):
 			last_time = find_nearest_time(enc_map,caller,receiver,last_time)
 			if last_time:
@@ -368,7 +369,9 @@ def find_nearest_time(tower_pair_map,user,encountered_user,last_encounter):
 # ********************************************** 
 
 
+
 def open_file_find_nearest_time(tower_file,user,encountered_user,last_encounter):
+	"""Not used anymore since this method of reading is too slow"""
 	tower_pair_map = cPickle.load(open(tower_file,'rb'))
 	users_encounters = tower_pair_map.get(user,None)
 	if not users_encounters:
