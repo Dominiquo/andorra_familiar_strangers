@@ -295,6 +295,66 @@ def search_next_encounter(meetings_path, user, encountered_user, tower_init,last
 				return delta_h,delta_s
 	return None,None
 
+# *********************************************
+#FIND ENCOUNTER GIVEN THAT ALL FILES ARE OPEN
+
+def find_mult_enc_single_week(week_path,destination_file,n=2):
+	all_towers = os.listdir(week_path)
+	print 'checking', len(all_towers),'total tower files...'
+	all_maps = {}
+	encounter_times_csv = csv.writer(destination_file,delimiter=';')
+	print 'openend', destination_file,'for writing csv data...'
+	print 'loading tower files in to RAM..'
+	tower_count = 1
+	for tower in all_towers:
+		print 'adding tower',tower_count,'/',len(all_towers)
+		tower_count += 1
+		tower_path = week_path + tower
+		all_maps[tower] = cPickle.load(open(tower_path,'rb'))
+
+	print 'loading files complete..'
+	for tower, tower_enc_map in all_maps.iteritems():
+		print 'checking matches for tower:',tower
+		print tower,'contains',len(tower_enc_map),'receivers'
+		for caller, receiver_map in tower_enc_map.iteritems():
+			for receiver, times in receiver_map.iteritems():
+				if receiver == caller or (len(times) < n-1):
+					continue
+				last_time = times[-1]
+				delta_days, delta_seconds = find_next_encounter(tower,caller,receiver,last_time,all_maps)
+				row = [caller,receiver,delta_days,delta_seconds]
+				print 'found encounter..'
+				encounter_times_csv.writerow(row)
+	return True
+
+def find_next_encounter(tower,caller,receiver,last_time,all_maps):
+	most_recent = []
+	for t,enc_map in all_maps.iteritems():
+		if t == tower:
+			continue
+		if (caller in t) and (receiver in enc_map[caller]):
+			last_time = find_nearest_time(enc_map,caller,receiver,last_time)
+			if last_time:
+				most_recent.append(last_time)
+	closest_encounter = min(most_recent)
+	return time_difference(last_time,closest_encounter)
+
+
+def find_nearest_time(tower_pair_map,user,encountered_user,last_encounter):
+	users_encounters = tower_pair_map.get(user,None)
+	times_list = users_encounters.get(encountered_user,None)
+	min_time_met = times_list[0]
+	if min_time_met > last_encounter:
+		return min_time_met
+	else:
+		for min_time_met in times_list:
+			if min_time_met > last_encounter:
+				return min_time_met
+	return None
+
+
+# ********************************************** 
+
 
 def open_file_find_nearest_time(tower_file,user,encountered_user,last_encounter):
 	tower_pair_map = cPickle.load(open(tower_file,'rb'))
@@ -409,9 +469,15 @@ def main():
 	# create_delta_time_file(destination_path,deltas_2enc_file,2)
 	# print 'completed finding encounter time difference for n=2'
 
-	dates_path = '../niquo_data/paired_callers/'
-	combined_dates_path = '../niquo_data/combined_callers/'
-	combine_tower_maps(dates_path, combined_dates_path)
+	# dates_path = '../niquo_data/paired_callers/'
+	# combined_dates_path = '../niquo_data/combined_callers/'
+	# combine_tower_maps(dates_path, combined_dates_path)
+
+
+
+	week_path = '../niquo_data/combined_callers/2016.07.01_2016.07.07'
+	destination_path = '../niquo_data/week_encounter_n_2.csv'
+	find_mult_enc_single_week(week_path,destination_path,2)	
 
 
 	# create_delta_time_file(combined_dates_path, deltas_2enc_file,2)
