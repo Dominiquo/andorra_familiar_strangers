@@ -359,7 +359,7 @@ def find_next_encounter(tower,caller,caller_enc,last_time,all_maps):
 	return None,None
 
 
-def find_nearest_time(encs_list,last_time):
+def find_nearest_time(encs_list,last_encounter):
 	min_time_met = encs_list[0]
 	if min_time_met > last_encounter:
 		print 'found time:',min_time_met
