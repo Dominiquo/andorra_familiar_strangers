@@ -313,6 +313,8 @@ def find_mult_enc_single_week(week_path,destination_path,n=2):
 		tower_count += 1
 		tower_path = week_path + tower
 		all_maps[tower] = cPickle.load(open(tower_path,'rb'))
+		if tower_count > 3:
+			break
 
 	print 'loading files complete..'
 	for tower, tower_enc_map in all_maps.iteritems():
@@ -366,7 +368,7 @@ def find_nearest_time(encs_list,last_encounter):
 		return min_time_met
 	else:
 		print 'met before first encounter, finding later encounter...'
-		for min_time_met in times_list:
+		for min_time_met in encs_list:
 			if min_time_met > last_encounter:
 				print 'found time after search:',min_time_met
 				return min_time_met
