@@ -299,7 +299,7 @@ def search_next_encounter(meetings_path, user, encountered_user, tower_init,last
 #FIND ENCOUNTER GIVEN THAT ALL FILES ARE OPEN
 
 def find_mult_enc_single_week(week_path,destination_path,n=2):
-	destination_file = open(destination_path,'wb')
+	destination_file = open(destination_path,'a')
 	all_towers = os.listdir(week_path)
 	print 'checking', len(all_towers),'total tower files...'
 	all_maps = {}
@@ -481,9 +481,16 @@ def main():
 
 
 
-	week_path = '../niquo_data/combined_callers/2016.07.01_2016.07.07/'
+	# week_path = '../niquo_data/combined_callers/2016.07.01_2016.07.07/'
+	# destination_path = '../niquo_data/week_encounter_n_2.csv'
+	# find_mult_enc_single_week(week_path,destination_path,2)	
+
+	week_path = '../niquo_data/combined_callers/'
 	destination_path = '../niquo_data/week_encounter_n_2.csv'
-	find_mult_enc_single_week(week_path,destination_path,2)	
+	all_week_paths = os.listdir(week_path)
+	for week_dir in all_week_paths:
+		current_week_path = week_path + week_dir
+		find_mult_enc_single_week(current_week_path,destination_path,2)	
 
 
 	# create_delta_time_file(combined_dates_path, deltas_2enc_file,2)
