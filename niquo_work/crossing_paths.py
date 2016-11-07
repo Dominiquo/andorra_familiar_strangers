@@ -323,6 +323,8 @@ def find_mult_enc_single_week(week_path,destination_path,n=2):
 					continue
 				last_time = times[-1]
 				delta_days, delta_seconds = find_next_encounter(tower,caller,receiver,last_time,all_maps)
+				if not delta_days:
+					continue
 				row = [caller,receiver,delta_days,delta_seconds]
 				print 'found encounter..'
 				encounter_times_csv.writerow(row)
@@ -337,8 +339,11 @@ def find_next_encounter(tower,caller,receiver,last_time,all_maps):
 			last_time = find_nearest_time(enc_map,caller,receiver,last_time)
 			if last_time:
 				most_recent.append(last_time)
-	closest_encounter = min(most_recent)
-	return time_difference(last_time,closest_encounter)
+	if most_recent == []
+		return None,None
+	else:
+		closest_encounter = min(most_recent)
+		return time_difference(last_time,closest_encounter)
 
 
 def find_nearest_time(tower_pair_map,user,encountered_user,last_encounter):
@@ -476,7 +481,7 @@ def main():
 
 
 
-	week_path = '../niquo_data/combined_callers/2016.07.01_2016.07.07'
+	week_path = '../niquo_data/combined_callers/2016.07.01_2016.07.07/'
 	destination_path = '../niquo_data/week_encounter_n_2.csv'
 	find_mult_enc_single_week(week_path,destination_path,2)	
 

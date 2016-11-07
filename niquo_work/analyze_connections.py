@@ -11,7 +11,7 @@ def get_encounters_count(enc_map):
 	for caller, receiver_dict in enc_map.iteritems():
 		for receiver, occurances in receiver_dict.iteritems():
 			all_counts.append(len(occurances))
-	print 'found'. len(all_counts),'encounters.'
+	print 'found', len(all_counts),'encounters.'
 	return all_counts
 
 def get_entire_distribution(enc_maps_path):
