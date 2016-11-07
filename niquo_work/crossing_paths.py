@@ -335,34 +335,32 @@ def find_next_encounter(tower,caller,caller_enc,last_time,all_maps):
 	most_recent = []
 	for t,enc_map in all_maps.iteritems():
 		if t == tower:
-			# TODO: find output from same tower 
 			continue
-		if caller in enc_map:
-			print "caller", caller,'used tower', t
-		elif caller_enc in t:
-			print "encounteree", caller_enc,'used tower', t
+		# if caller in enc_map:
+		# 	print "caller", caller,'used tower', t
+		# elif caller_enc in t:
+		# 	print "encounteree", caller_enc,'used tower', t
 
 		if (caller in enc_map) and (caller_enc in enc_map[caller]):
-			last_enc = find_nearest_time(enc_map,caller,caller_enc,last_time)
-			if last_time:
+			last_enc = find_nearest_time(enc_map[caller],last_time)
+			if last_time != None:
 				most_recent.append(last_enc)
 
 		elif (caller_enc in enc_map) and (caller in enc_map[caller_enc]):
-			last_enc = find_nearest_time(enc_map,caller_enc,caller,last_time)
-			if last_enc:
+			last_enc = find_nearest_time(enc_map[caller_enc],last_time)
+			if last_enc != None:
 				most_recent.append(last_enc)
-				
+
 	if most_recent == []:
 		return None,None
-	else:
+	elif min(most_recent) != None:
 		closest_encounter = min(most_recent)
 		return time_difference(last_time,closest_encounter)
+	return None,None
 
 
-def find_nearest_time(tower_pair_map,user,encountered_user,last_encounter):
-	users_encounters = tower_pair_map.get(user,None)
-	times_list = users_encounters.get(encountered_user,None)
-	min_time_met = times_list[0]
+def find_nearest_time(encs_list,last_time):
+	min_time_met = encs_list[0]
 	if min_time_met > last_encounter:
 		print 'found time:',min_time_met
 		return min_time_met
@@ -401,8 +399,8 @@ def time_difference(first_time,second_time):
 	format_string = "%Y.%m.%d %H:%M:%S"
 	time_1 = datetime.strptime(first_time,format_string)
 	time_2 = datetime.strptime(second_time,format_string)
-	time_difference = time_2 - time_1
-	return time_difference.days,time_difference.seconds
+	diff = time_2 - time_1
+	return diff.days,diff.seconds
 
 
 def average_call_times(time_stamp_1,time_stamp_2):
