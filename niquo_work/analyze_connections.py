@@ -14,7 +14,7 @@ def get_encounters_count(enc_map):
 	return all_counts
 
 def get_entire_distribution(enc_maps_path):
-	all_encounters_count = [
+	all_encounters_count = []
 	all_dates = os.listdir(enc_maps_path)
 	for date in all_dates:
 		date_dir = enc_maps_path + date
