@@ -317,32 +317,41 @@ def find_mult_enc_single_week(week_path,destination_path,n=2):
 	print 'loading files complete..'
 	for tower, tower_enc_map in all_maps.iteritems():
 		print 'checking matches for tower:',tower
-		print tower,'contains',len(tower_enc_map),'receivers'
-		for caller, receiver_map in tower_enc_map.iteritems():
-			for receiver, times in receiver_map.iteritems():
-				if receiver == caller or (len(times) < n-1):
+		print tower,'contains',len(tower_enc_map),'encounterees'
+		for caller, encounteree_map in tower_enc_map.iteritems():
+			for caller_enc, times in encounteree_map.iteritems():
+				if caller_enc == caller or (len(times) < n-1):
 					continue
 				last_time = times[-1]
-				delta_days, delta_seconds = find_next_encounter(tower,caller,receiver,last_time,all_maps)
+				delta_days, delta_seconds = find_next_encounter(tower,caller,caller_enc,last_time,all_maps)
 				if not delta_days:
 					continue
-				row = [caller,receiver,delta_days,delta_seconds]
+				row = [caller,caller_enc,delta_days,delta_seconds]
 				print 'found encounter..'
 				encounter_times_csv.writerow(row)
 	return True
 
-def find_next_encounter(tower,caller,receiver,last_time,all_maps):
+def find_next_encounter(tower,caller,caller_enc,last_time,all_maps):
 	most_recent = []
 	for t,enc_map in all_maps.iteritems():
 		if t == tower:
 			# TODO: find output from same tower 
 			continue
-		if caller in t:
+		if caller in enc_map:
 			print "caller", caller,'used tower', t
-		if (caller in t) and (receiver in enc_map[caller]):
-			last_time = find_nearest_time(enc_map,caller,receiver,last_time)
+		elif caller_enc in t:
+			print "encounteree", caller_enc,'used tower', t
+
+		if (caller in enc_map) and (caller_enc in enc_map[caller]):
+			last_enc = find_nearest_time(enc_map,caller,caller_enc,last_time)
 			if last_time:
-				most_recent.append(last_time)
+				most_recent.append(last_enc)
+
+		elif (caller_enc in enc_map) and (caller in enc_map[caller_enc]):
+			last_enc = find_nearest_time(enc_map,caller_enc,caller,last_time)
+			if last_enc:
+				most_recent.append(last_enc)
+				
 	if most_recent == []:
 		return None,None
 	else:
