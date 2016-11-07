@@ -331,9 +331,12 @@ def find_mult_enc_single_week(week_path,destination_path,n=2):
 	return True
 
 def find_next_encounter(tower,caller,receiver,last_time,all_maps):
+	# TODO: print to find if this code is ran
+	print 'finding next encounter for caller', caller,'to',receiver
 	most_recent = []
 	for t,enc_map in all_maps.iteritems():
 		if t == tower:
+			# TODO: find output from same tower 
 			continue
 		if (caller in t) and (receiver in enc_map[caller]):
 			last_time = find_nearest_time(enc_map,caller,receiver,last_time)
@@ -351,10 +354,13 @@ def find_nearest_time(tower_pair_map,user,encountered_user,last_encounter):
 	times_list = users_encounters.get(encountered_user,None)
 	min_time_met = times_list[0]
 	if min_time_met > last_encounter:
+		print 'found time:',min_time_met
 		return min_time_met
 	else:
+		print 'met before first encounter, finding later encounter...'
 		for min_time_met in times_list:
 			if min_time_met > last_encounter:
+				print 'found time after search:',min_time_met
 				return min_time_met
 	return None
 
@@ -481,16 +487,16 @@ def main():
 
 
 
-	# week_path = '../niquo_data/combined_callers/2016.07.01_2016.07.07/'
-	# destination_path = '../niquo_data/week_encounter_n_2.csv'
-	# find_mult_enc_single_week(week_path,destination_path,2)	
-
-	week_path = '../niquo_data/combined_callers/'
+	week_path = '../niquo_data/combined_callers/2016.07.01_2016.07.07/'
 	destination_path = '../niquo_data/week_encounter_n_2.csv'
-	all_week_paths = os.listdir(week_path)
-	for week_dir in all_week_paths:
-		current_week_path = week_path + week_dir
-		find_mult_enc_single_week(current_week_path,destination_path,2)	
+	find_mult_enc_single_week(week_path,destination_path,2)	
+
+	# week_path = '../niquo_data/combined_callers/'
+	# destination_path = '../niquo_data/week_encounter_n_2.csv'
+	# all_week_paths = os.listdir(week_path)
+	# for week_dir in all_week_paths:
+	# 	current_week_path = week_path + week_dir
+	# 	find_mult_enc_single_week(current_week_path,destination_path,2)	
 
 
 	# create_delta_time_file(combined_dates_path, deltas_2enc_file,2)
