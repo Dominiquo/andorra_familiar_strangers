@@ -342,12 +342,12 @@ def find_next_encounter(tower,caller,caller_enc,last_time,all_maps):
 		# 	print "encounteree", caller_enc,'used tower', t
 
 		if (caller in enc_map) and (caller_enc in enc_map[caller]):
-			last_enc = find_nearest_time(enc_map[caller],last_time)
+			last_enc = find_nearest_time(enc_map[caller][caller_enc],last_time)
 			if last_time != None:
 				most_recent.append(last_enc)
 
 		elif (caller_enc in enc_map) and (caller in enc_map[caller_enc]):
-			last_enc = find_nearest_time(enc_map[caller_enc],last_time)
+			last_enc = find_nearest_time(enc_map[caller_enc][caller],last_time)
 			if last_enc != None:
 				most_recent.append(last_enc)
 
