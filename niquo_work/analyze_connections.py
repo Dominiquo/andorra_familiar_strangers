@@ -11,17 +11,21 @@ def get_encounters_count(enc_map):
 	for caller, receiver_dict in enc_map.iteritems():
 		for receiver, occurances in receiver_dict.iteritems():
 			all_counts.append(len(occurances))
+	print 'found'. len(all_counts),'encounters.'
 	return all_counts
 
 def get_entire_distribution(enc_maps_path):
 	all_encounters_count = []
 	all_dates = os.listdir(enc_maps_path)
+	print 'checking', len(all_dates),'date files'
 	for date in all_dates:
 		date_dir = enc_maps_path + date
 		all_towers = os.listdir(date_dir)
+		print 'checking', len(all_towers),'for date', date
 		for tower_map in all_towers:
 			tower_path = date_dir + '/' + tower_map
 			enc_map = cPickle.load(open(tower_path,'rb'))
+			print 'finding all counts for', tower_path
 			all_encounters_count.append(get_encounters_count(enc_map))
 	return np.array(all_encounters_count)
 
