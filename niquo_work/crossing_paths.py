@@ -298,7 +298,8 @@ def search_next_encounter(meetings_path, user, encountered_user, tower_init,last
 # *********************************************
 #FIND ENCOUNTER GIVEN THAT ALL FILES ARE OPEN
 
-def find_mult_enc_single_week(week_path,destination_file,n=2):
+def find_mult_enc_single_week(week_path,destination_path,n=2):
+	destination_file = open(destination_path,'wb')
 	all_towers = os.listdir(week_path)
 	print 'checking', len(all_towers),'total tower files...'
 	all_maps = {}
