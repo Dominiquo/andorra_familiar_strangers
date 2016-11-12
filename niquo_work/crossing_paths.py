@@ -313,8 +313,6 @@ def find_mult_enc_single_week(week_path,destination_path,n=2):
 		tower_count += 1
 		tower_path = week_path + tower
 		all_maps[tower] = cPickle.load(open(tower_path,'rb'))
-		if tower_count > 3:
-			break
 
 	print 'loading files complete..'
 	for tower, tower_enc_map in all_maps.iteritems():
@@ -338,10 +336,6 @@ def find_next_encounter(tower,caller,caller_enc,last_time,all_maps):
 	for t,enc_map in all_maps.iteritems():
 		if t == tower:
 			continue
-		# if caller in enc_map:
-		# 	print "caller", caller,'used tower', t
-		# elif caller_enc in t:
-		# 	print "encounteree", caller_enc,'used tower', t
 
 		if (caller in enc_map) and (caller_enc in enc_map[caller]):
 			last_enc = find_nearest_time(enc_map[caller][caller_enc],last_time)
