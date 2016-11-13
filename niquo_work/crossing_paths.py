@@ -306,11 +306,6 @@ def find_nearest_time(encs_list,last_encounter):
 				return min_time_met
 	return None
 
-
-def encounter_after_threshold(time,hour):
-	return True
-
-
 # ********************************************** 
 
 
@@ -388,10 +383,6 @@ def users_met(cdr_user_1,cdr_user_2,time_range=1):
 
 
 def main():
-	func_dict = {"create_tower_mapping": create_tower_mapping,
-				"partition_users_by_tower": partition_users_by_tower,
-				"pair_users_from_towers": pair_users_from_towers,
-				"create_delta_time_file": create_delta_time_file}
 	# function = func_dict[arg[0]]
 
 
