@@ -342,15 +342,15 @@ def find_next_encounter(tower,caller,caller_enc,last_time,all_maps):
 
 		if (caller in enc_map) and (caller_enc in enc_map[caller]):
 			last_enc = find_nearest_time(enc_map[caller][caller_enc],last_time)
-			if last_time != None:
+			if last_enc != None:
 				most_recent.append((last_enc,t))
 
 		elif (caller_enc in enc_map) and (caller in enc_map[caller_enc]):
 			last_enc = find_nearest_time(enc_map[caller_enc][caller],last_time)
-			if last_enc != None:
+			if last_enc !=  None:
 				most_recent.append((last_enc,t))
 
-	if most_recent and min(most_recent,key=lambda x:x[0]) != None,None:
+	if most_recent and min(most_recent,key=lambda x:x[0]) != (None,None):
 		closest_encounter, next_tower = min(most_recent,key=lambda x:x[0])
 		delta_days, delta_seconds = time_difference(last_time,closest_encounter)
 		return delta_days, delta_seconds, next_tower
