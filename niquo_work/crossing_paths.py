@@ -232,75 +232,11 @@ def combine_towers_by_path(left_path,right_path,destination_path):
 	cPickle.dump(combined_map,open(destination_path,'wb'))
 	return True
 
-
-def create_delta_time_file(meetings_path, destination_path, num_encounters=2, limit=float('inf')):
-	""" being abandoned because this method of finding encounters is too slow """
-	all_dates = sorted(os.listdir(meetings_path))
-	destination_file = open(destination_path,'wb')
-	encounter_times_csv = csv.writer(destination_file,delimiter=';')
-	for date in all_dates:
-		print 'checking',len(all_dates),'dates'
-		towers_path = meetings_path + "/" + date
-		all_towers = sorted(os.listdir(towers_path))
-		for tower in all_towers:
-			print 'checking', len(all_towers),'on day:',date
-			pair_map_path = towers_path + "/" + tower
-			user_pair_map = cPickle.load(open(pair_map_path,'rb'))
-			print 'checking users from', pair_map_path
-			now_time = time.time()
-			for user,encounters_dict in user_pair_map.iteritems():
-				prev_time = now_time
-				now_time = time.time()
-				print 'time since previous loop:', now_time - prev_time
-				print 'checking if user', user, 'made multiple encounters'
-				for encountered_user,encounters_set in encounters_dict.iteritems():
-					# ignore case when person 'encounters' themselves
-					if encountered_user == user:
-						continue
-					current_encounters_count = len(encounters_set)
-					last_encounter = max(encounters_set)
-					delta_days,delta_seconds = search_next_encounter(meetings_path, user, encountered_user, tower,last_encounter,current_encounters_count,num_encounters)
-					if not delta_days:
-						continue
-					row = [user,encountered_user,delta_days,delta_seconds]
-					encounter_times_csv.writerow(row)
-	return True
-
-
-def search_next_encounter(meetings_path, user, encountered_user, tower_init,last_encounter,current_encounters_count,num_encounters):
-	all_dates = sorted(os.listdir(meetings_path))
-	last_encounter_date = last_encounter[:DATE_INDEX]
-	for date in all_dates:
-		if date < last_encounter:
-			continue
-		towers_dir = meetings_path + '/' + date
-		all_towers = os.listdir(towers_dir)
-		for tower in all_towers:
-			tower_file = towers_dir + "/" + tower
-			if (num_encounters - current_encounters_count) == 1:
-				# skip this tower since we want meetings in a different tower
-				if tower == tower_init:
-					continue
-				min_time_met = open_file_find_nearest_time(tower_file,user,encountered_user,last_encounter)
-				if not min_time_met:
-					continue
-				delta_h,delta_s = time_difference(last_encounter,min_time_met)
-			else:
-				if tower != tower_init:
-					continue
-				min_time_met = open_file_find_nearest_time(tower_file,user, encountered_user, last_encounter)
-				if not min_time_met:
-					continue
-				new_encounter_count = current_encounters_count + 1
-				delta_h,delta_s = search_next_encounter(meetings_path,user,encountered_user,tower_init,min_time_met,new_encounter_count,num_encounters)
-				return delta_h,delta_s
-	return None,None
-
 # *********************************************
 #FIND ENCOUNTER GIVEN THAT ALL FILES ARE OPEN
 
 def find_mult_enc_single_week(week_path,destination_path,n=2):
-	destination_file = open(destination_path,'a')
+	destination_file = open(destination_path,'wb')
 	all_towers = os.listdir(week_path)
 	print 'checking', len(all_towers),'total tower files...'
 	all_maps = {}
@@ -313,8 +249,6 @@ def find_mult_enc_single_week(week_path,destination_path,n=2):
 		tower_count += 1
 		tower_path = week_path + tower
 		all_maps[tower] = cPickle.load(open(tower_path,'rb'))
-		if tower_count > 3:
-			break
 
 	print 'loading files complete..'
 	for tower, tower_enc_map in all_maps.iteritems():
@@ -322,6 +256,8 @@ def find_mult_enc_single_week(week_path,destination_path,n=2):
 		print tower,'contains',len(tower_enc_map),'encounterees'
 		for caller, encounteree_map in tower_enc_map.iteritems():
 			for caller_enc, times in encounteree_map.iteritems():
+				# if len(times) != n:
+					# continue
 				if caller_enc == caller or (len(times) < n-1):
 					continue
 				last_time = times[-1]
@@ -330,7 +266,6 @@ def find_mult_enc_single_week(week_path,destination_path,n=2):
 					continue
 				# ROW STRUCTURE OF ENCOUNTERS
 				row = [caller,caller_enc,delta_days,delta_seconds,tower,next_tower,last_time]
-				print 'found encounter..'
 				encounter_times_csv.writerow(row)
 	return True
 
@@ -361,13 +296,13 @@ def find_next_encounter(tower,caller,caller_enc,last_time,all_maps):
 def find_nearest_time(encs_list,last_encounter):
 	min_time_met = encs_list[0]
 	if min_time_met > last_encounter:
-		print 'found time:',min_time_met
+		# print 'found time:',min_time_met
 		return min_time_met
 	else:
-		print 'met before first encounter, finding later encounter...'
+		# print 'met before first encounter, finding later encounter...'
 		for min_time_met in encs_list:
 			if min_time_met > last_encounter:
-				print 'found time after search:',min_time_met
+				# print 'found time after search:',min_time_met
 				return min_time_met
 	return None
 
@@ -378,25 +313,6 @@ def encounter_after_threshold(time,hour):
 
 # ********************************************** 
 
-
-
-def open_file_find_nearest_time(tower_file,user,encountered_user,last_encounter):
-	"""Not used anymore since this method of reading is too slow"""
-	tower_pair_map = cPickle.load(open(tower_file,'rb'))
-	users_encounters = tower_pair_map.get(user,None)
-	if not users_encounters:
-		return None
-	times_list = users_encounters.get(encountered_user,None)
-	if not times_list:
-		return None
-	min_time_met = times_list[0]
-	if min_time_met > last_encounter:
-		return min_time_met
-	else:
-		for min_time_met in times_list:
-			if min_time_met > last_encounter:
-				return min_time_met
-	return None
 
 def time_difference(first_time,second_time):
 	format_string = "%Y.%m.%d %H:%M:%S"
@@ -500,9 +416,19 @@ def main():
 
 
 
-	week_path = '../niquo_data/combined_callers/2016.07.01_2016.07.07/'
-	destination_path = '../niquo_data/week_encounter_n_2.csv'
-	find_mult_enc_single_week(week_path,destination_path,2)	
+	week_path0 = '2016.07.01_2016.07.07'
+	week_path1 = '2016.07.08_2016.07.14'
+	week_path2 = '2016.07.15_2016.07.21'
+	week_path3 = '2016.07.22_2016.07.28'
+	week_path4 = '2016.07.29_2016.07.31'
+	week_paths = [week_path0, week_path1, week_path2, week_path3, week_path4]
+
+	for week_path in week_paths:
+		prefix = '../niquo_data/combined_callers/'
+		full_path = prefix + week_path + '/'
+		for n in range(2,20,4):
+			destination_path = '../niquo_data/%s_encounter_n_%s.csv' % (week_path, n)
+			find_mult_enc_single_week(full_path,destination_path,n)	
 
 	# week_path = '../niquo_data/combined_callers/'
 	# destination_path = '../niquo_data/week_encounter_n_2.csv'
