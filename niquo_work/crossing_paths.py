@@ -350,7 +350,7 @@ def find_next_encounter(tower,caller,caller_enc,last_time,all_maps):
 			if last_enc != None:
 				most_recent.append((last_enc,t))
 
-	if most_recent and min(most_recent,key=lambda x:x[0]) != None:
+	if most_recent and min(most_recent,key=lambda x:x[0]) != None,None:
 		closest_encounter, next_tower = min(most_recent,key=lambda x:x[0])
 		delta_days, delta_seconds = time_difference(last_time,closest_encounter)
 		return delta_days, delta_seconds, next_tower
