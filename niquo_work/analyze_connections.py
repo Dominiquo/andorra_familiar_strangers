@@ -31,7 +31,7 @@ def get_entire_distribution(enc_maps_path):
 
 def filter_produce_hist(file_path,save_path,filter_func=lambda x: True):
 	days_row = 2
-	all_rows = ex.read_csv(file_path,float('inf'))
+		
 	x_vals = [convert_row(row) for row in all_rows if filter_func(row)]
 
 	date_filename =  file_path.split('/')[-1]
@@ -39,8 +39,8 @@ def filter_produce_hist(file_path,save_path,filter_func=lambda x: True):
 	create_dist_histogram(x_vals,save_path + filename)
 	return True
 
-def create_dist_histogram(x_vals,save_file):
-	plt.hist(x_vals)
+def create_dist_histogram(x_vals,bins,range,save_file):
+	plt.hist(x_vals,bins,range=range)
 	plt.savefig(save_file)
 	return True
 
