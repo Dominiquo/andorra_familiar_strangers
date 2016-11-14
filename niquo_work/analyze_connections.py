@@ -2,7 +2,6 @@ import cPickle
 import csv
 import os
 import numpy as np
-import matplotlib.mlab as mlab
 import matplotlib.pyplot as plt
 import crossing_paths as cp
 import extractData as ex
@@ -33,9 +32,10 @@ def get_entire_distribution(enc_maps_path):
 def filter_produce_hist(file_path,save_path,filter_func=lambda x: True):
 	days_row = 2
 	all_rows = ex.read_csv(file_path,float('inf'))
-	x_vals = [row[days_row] for row in all_rows if filter_func(row)]
+	x_vals = [convert_row(row) for row in all_rows if filter_func(row)]
 
-	filename =  file_path.split('/')[-1].split('.')[0] + '.png'
+	date_filename =  file_path.split('/')[-1]
+	filename = save_path + date_filename[:-3] + 'png'
 	create_dist_histogram(x_vals,save_path + filename)
 	return True
 
@@ -50,6 +50,15 @@ def first_encountered_after_hour():
 def encountered_on_weekends():
 	return True
 
+def days_seconds_to_hours(days,seconds):
+	total_secs = seconds + days*24*60*60
+	total_hours = total_secs/(60*60)
+	return total_hours
 
-
+def convert_row(row):
+	days_row = 2
+	seconds_row = 3
+	days = int(row[days_row])
+	seconds = int(row[seconds_row])
+	return days_seconds_to_hours(days,seconds)
 
