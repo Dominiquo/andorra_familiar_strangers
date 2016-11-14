@@ -63,8 +63,8 @@ def convert_row(row):
 	return days_seconds_to_hours(days,seconds)
 
 def main(args):
-	file_path = args[0]
-	dest_path = args[1]
+	file_path = args[1]
+	dest_path = args[2]
 	print 'FILENAME*****',file_path
 	print 'DESTINATION****', dest_path
 	bins = 150
