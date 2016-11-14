@@ -1,6 +1,7 @@
 import cPickle
 import csv
 import os
+import sys
 import numpy as np
 import matplotlib.pyplot as plt
 import crossing_paths as cp
@@ -29,18 +30,17 @@ def get_entire_distribution(enc_maps_path):
 			all_encounters_count.append(get_encounters_count(enc_map))
 	return np.array(all_encounters_count)
 
-def filter_produce_hist(file_path,save_path,filter_func=lambda x: True):
+def filter_xvals(file_path,save_path,filter_func=lambda x: True):
 	days_row = 2
 		
 	x_vals = [convert_row(row) for row in all_rows if filter_func(row)]
 
 	date_filename =  file_path.split('/')[-1]
 	filename = save_path + date_filename[:-3] + 'png'
-	create_dist_histogram(x_vals,save_path + filename)
-	return True
+	return x_vals,filename
 
-def create_dist_histogram(x_vals,bins,range,save_file):
-	plt.hist(x_vals,bins,range=range)
+def create_dist_histogram(x_vals,bins,bin_range,save_file):
+	plt.hist(x_vals,bins,range=bin_range)
 	plt.savefig(save_file)
 	return True
 
@@ -62,3 +62,15 @@ def convert_row(row):
 	seconds = int(row[seconds_row])
 	return days_seconds_to_hours(days,seconds)
 
+def main(args):
+	file_path = args[0]
+	dest_path = args[1]
+	bins = 150
+	bin_range = [0,180]
+	print 'retreiving values...'
+	x_vals,filename = filter_xvals(file_path,dest_path)
+	create_dist_histogram(x_vals,bins,bin_range,filename)
+	print 'complete'
+
+if __name__ == '__main__':
+    main(sys.argv)
