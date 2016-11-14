@@ -32,7 +32,7 @@ def get_entire_distribution(enc_maps_path):
 
 def filter_xvals(file_path,save_path,filter_func=lambda x: True):
 	days_row = 2
-		
+	all_rows = ex.read_csv(file_path,float('inf'))
 	x_vals = [convert_row(row) for row in all_rows if filter_func(row)]
 
 	date_filename =  file_path.split('/')[-1]
