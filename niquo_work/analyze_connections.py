@@ -65,6 +65,8 @@ def convert_row(row):
 def main(args):
 	file_path = args[0]
 	dest_path = args[1]
+	print 'FILENAME*****',file_path
+	print 'DESTINATION****', dest_path
 	bins = 150
 	bin_range = [0,180]
 	print 'retreiving values...'
