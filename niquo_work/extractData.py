@@ -25,6 +25,23 @@ def read_csv(filename,count=0):
 	csvfile.close()
 	return read_rows
 
+def create_new_comms_data(filename,destination,count=0,filter_func=lambda row: True):
+	count_limit = count
+	read_rows = []
+	with open(filename,'rb') as csvfile:
+		with open(destination,'wb') as outfile:
+			CDR_data = csv.reader(csvfile,delimiter=';')
+			out_CDR = csv.writer(outfile,delimiter=';')
+			current = 0
+			for row in CDR_data:
+				if filter_func(row):
+					out_CDR.writerow(row)
+				current += 1
+				if current > count_limit:
+					break
+		outfile.close()
+		csvfile.close()
+
 
 def initialize_towers(filename,limit=0):
 	count_limit = limit
@@ -43,6 +60,12 @@ def initialize_towers(filename,limit=0):
 				break
 	csvfile.close()
 	return towers_dict
+
+def remove_data_comms(row):
+	if row[10] != 'S-CDR':
+		return True
+	else:
+		return False
 
 def filter_data(data,indices):
 	return map(lambda d: [d[i] for i in indices],data[1:])
