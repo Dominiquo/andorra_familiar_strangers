@@ -87,6 +87,38 @@ def partition_users_by_tower(filename,limit=float('inf')):
 			current_row += 1
 			current_towers.add(tower_path)
 	print 'created',files_count,'new files of towers.'
+
+def pair_users_single_file(filename,destination_file,limit=10000):
+	all_callers = ex.read_csv(tower_path,inf)
+	if len(all_callers) > limit:
+				return False
+	all_callers.sort(key=lambda val:val[START_TIME_INDEX])
+	print 'sorting rows...'
+	print 'rows sorted.'
+			print 'finding collision pairs...'
+			pairs = find_collisions_from_tower(all_callers)
+			print 'found', len(pairs), 'pairs of collisions.'
+			pair_map = {}
+			print 'building map for pairs to be stored at', destination_file
+			for first,second in pairs:
+				first_number = first[CALLER_INDEX]
+				first_call_time = first[START_TIME_INDEX]
+				second_number = second[CALLER_INDEX]
+				second_call_time = second[START_TIME_INDEX]
+				avg_call_time = average_call_times(first_call_time,second_call_time)
+				tower_id = first[TOWER_INDEX]
+				if first_number in pair_map:
+					first_num_dict = pair_map[first_number]
+					if second_number in first_num_dict:
+						first_num_dict[second_number].append(avg_call_time)
+					else:
+						first_num_dict[second_number] = [avg_call_time]
+				else:
+					pair_map[first_number] = {second_number: [avg_call_time]}
+			print 'dumping pickle file...'
+			cPickle.dump(pair_map,open(destination_file,'wb'))
+			print 'created file for', destination_file
+	return True
 	
 
 def pair_users_from_towers(towers_directory,destination_path,limit = 10000):
@@ -110,37 +142,8 @@ def pair_users_from_towers(towers_directory,destination_path,limit = 10000):
 			dest_pickle_file = dest_date_dir + tower_name.split('.')[0] + '.p'
 			if os.path.isfile(dest_pickle_file):
 				continue
-			all_callers = ex.read_csv(tower_path,inf)
-			if len(all_callers) > limit:
-				continue
-			print 'sorting rows...'
-			all_callers.sort(key=lambda val:val[START_TIME_INDEX])
-			print 'rows sorted.'
-			print 'finding collision pairs...'
-			pairs = find_collisions_from_tower(all_callers)
-			print 'found', len(pairs), 'pairs of collisions.'
-			pair_map = {}
-			print 'building map for pairs to be stored at', dest_pickle_file
-			for first,second in pairs:
-				first_number = first[CALLER_INDEX]
-				first_call_time = first[START_TIME_INDEX]
-				second_number = second[CALLER_INDEX]
-				second_call_time = second[START_TIME_INDEX]
-				avg_call_time = average_call_times(first_call_time,second_call_time)
-				tower_id = first[TOWER_INDEX]
-				if first_number in pair_map:
-					first_num_dict = pair_map[first_number]
-					if second_number in first_num_dict:
-						first_num_dict[second_number].append(avg_call_time)
-					else:
-						first_num_dict[second_number] = [avg_call_time]
-				else:
-					pair_map[first_number] = {second_number: [avg_call_time]}
-			print 'dumping pickle file...'
-			cPickle.dump(pair_map,open(dest_pickle_file,'wb'))
-			print 'created file for', dest_pickle_file
-
-	return pair_map
+			return pair_users_single_file(tower_path,dest_pickle_file,limit)
+	return True
 
 def combine_pair_mappings(first_map, second_map):
 	for user,encounters_map in second_map.iteritems():
