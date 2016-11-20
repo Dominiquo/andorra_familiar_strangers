@@ -95,29 +95,29 @@ def pair_users_single_file(filename,destination_file,limit=10000):
 	all_callers.sort(key=lambda val:val[START_TIME_INDEX])
 	print 'sorting rows...'
 	print 'rows sorted.'
-			print 'finding collision pairs...'
-			pairs = find_collisions_from_tower(all_callers)
-			print 'found', len(pairs), 'pairs of collisions.'
-			pair_map = {}
-			print 'building map for pairs to be stored at', destination_file
-			for first,second in pairs:
-				first_number = first[CALLER_INDEX]
-				first_call_time = first[START_TIME_INDEX]
-				second_number = second[CALLER_INDEX]
-				second_call_time = second[START_TIME_INDEX]
-				avg_call_time = average_call_times(first_call_time,second_call_time)
-				tower_id = first[TOWER_INDEX]
-				if first_number in pair_map:
-					first_num_dict = pair_map[first_number]
-					if second_number in first_num_dict:
-						first_num_dict[second_number].append(avg_call_time)
-					else:
-						first_num_dict[second_number] = [avg_call_time]
-				else:
-					pair_map[first_number] = {second_number: [avg_call_time]}
-			print 'dumping pickle file...'
-			cPickle.dump(pair_map,open(destination_file,'wb'))
-			print 'created file for', destination_file
+	print 'finding collision pairs...'
+	pairs = find_collisions_from_tower(all_callers)
+	print 'found', len(pairs), 'pairs of collisions.'
+	pair_map = {}
+	print 'building map for pairs to be stored at', destination_file
+	for first,second in pairs:
+		first_number = first[CALLER_INDEX]
+		first_call_time = first[START_TIME_INDEX]
+		second_number = second[CALLER_INDEX]
+		second_call_time = second[START_TIME_INDEX]
+		avg_call_time = average_call_times(first_call_time,second_call_time)
+		tower_id = first[TOWER_INDEX]
+		if first_number in pair_map:
+			first_num_dict = pair_map[first_number]
+			if second_number in first_num_dict:
+				first_num_dict[second_number].append(avg_call_time)
+			else:
+				first_num_dict[second_number] = [avg_call_time]
+		else:
+			pair_map[first_number] = {second_number: [avg_call_time]}
+	print 'dumping pickle file...'
+	cPickle.dump(pair_map,open(destination_file,'wb'))
+	print 'created file for', destination_file
 	return True
 	
 
