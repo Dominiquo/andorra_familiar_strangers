@@ -92,8 +92,8 @@ def pair_users_single_file(filename,destination_file,limit=10000):
 	all_callers = ex.read_csv(filename,float('inf'))
 	if len(all_callers) > limit:
 				return False
-	all_callers.sort(key=lambda val:val[START_TIME_INDEX])
 	print 'sorting rows...'
+	all_callers.sort(key=lambda val:val[START_TIME_INDEX])
 	print 'rows sorted.'
 	print 'finding collision pairs...'
 	pairs = find_collisions_from_tower(all_callers)
@@ -408,21 +408,23 @@ def main():
 	# combined_dates_path = '../niquo_data/combined_callers/'
 	# combine_tower_maps(dates_path, combined_dates_path)
 
+	dest = '../niquo_data/filtered_data/06_2017_pairs.p'
+	filename = '../niquo_data/filtered_data/06_2017_no_data.csv'
+	pair_users_single_file(filename,dest,float('inf'))
 
+	# week_path0 = '2016.07.01_2016.07.07'
+	# week_path1 = '2016.07.08_2016.07.14'
+	# week_path2 = '2016.07.15_2016.07.21'
+	# week_path3 = '2016.07.22_2016.07.28'
+	# week_path4 = '2016.07.29_2016.07.31'
+	# week_paths = [week_path0, week_path1, week_path2, week_path3, week_path4]
 
-	week_path0 = '2016.07.01_2016.07.07'
-	week_path1 = '2016.07.08_2016.07.14'
-	week_path2 = '2016.07.15_2016.07.21'
-	week_path3 = '2016.07.22_2016.07.28'
-	week_path4 = '2016.07.29_2016.07.31'
-	week_paths = [week_path0, week_path1, week_path2, week_path3, week_path4]
-
-	for week_path in week_paths:
-		prefix = '../niquo_data/combined_callers/'
-		full_path = prefix + week_path + '/'
-		for n in range(2,20,4):
-			destination_path = '../niquo_data/%s_encounter_n_%s.csv' % (week_path, n)
-			find_mult_enc_single_week(full_path,destination_path,n)	
+	# for week_path in week_paths:
+	# 	prefix = '../niquo_data/combined_callers/'
+	# 	full_path = prefix + week_path + '/'
+	# 	for n in range(2,20,4):
+	# 		destination_path = '../niquo_data/%s_encounter_n_%s.csv' % (week_path, n)
+	# 		find_mult_enc_single_week(full_path,destination_path,n)	
 
 	# week_path = '../niquo_data/combined_callers/'
 	# destination_path = '../niquo_data/week_encounter_n_2.csv'

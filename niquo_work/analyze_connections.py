@@ -30,6 +30,10 @@ def get_entire_distribution(enc_maps_path):
 			all_encounters_count.append(get_encounters_count(enc_map))
 	return np.array(all_encounters_count)
 
+def create_friends_file(file,destination,limit=0):
+	return None
+
+
 def filter_xvals(file_path,save_path,filter_func=lambda x: True):
 	days_row = 2
 	all_rows = ex.read_csv(file_path,float('inf'))
