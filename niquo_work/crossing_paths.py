@@ -89,7 +89,7 @@ def partition_users_by_tower(filename,limit=float('inf')):
 	print 'created',files_count,'new files of towers.'
 
 def pair_users_single_file(filename,destination_file,limit=10000):
-	all_callers = ex.read_csv(tower_path,inf)
+	all_callers = ex.read_csv(filename,inf)
 	if len(all_callers) > limit:
 				return False
 	all_callers.sort(key=lambda val:val[START_TIME_INDEX])
