@@ -344,7 +344,7 @@ def find_collisions_from_tower(tower_rows,time_range=1):
 	lower_edge = 0
 	higher_edge = 0
 	for lower_index in range(len(tower_rows)):
-		if lower_index % 1000 == 0:
+		if lower_index % 10 == 0:
 			print 'on row', lower_index, '/', len(tower_rows)
 		for upper_index in range(lower_index+1,len(tower_rows)):
 			lower_row = tower_rows[lower_index]
