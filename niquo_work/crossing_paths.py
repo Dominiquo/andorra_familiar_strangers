@@ -143,7 +143,7 @@ def pair_users_from_towers(towers_directory,destination_path,limit = 10000):
 			dest_pickle_file = dest_date_dir + tower_name.split('.')[0] + '.p'
 			if os.path.isfile(dest_pickle_file):
 				continue
-			return pair_users_single_file(tower_path,dest_pickle_file,limit)
+			pair_users_single_file(tower_path,dest_pickle_file,limit)
 	return True
 
 def combine_pair_mappings(first_map, second_map):
