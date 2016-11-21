@@ -411,7 +411,13 @@ def main():
 
 	dest = '../niquo_data/filtered_data/06_2017_pairs.p'
 	filename = '../niquo_data/filtered_data/06_2017_no_data.csv'
-	pair_users_single_file(filename,dest,float('inf'))
+
+	towers_dir = '../niquo_data/filtered_data/partitioned_towers/'
+	paired_callers = '../niquo_data/filtered_data/paired_callers/'
+
+	pair_users_from_towers(towers_dir,paired_callers)
+
+	# pair_users_single_file(filename,dest,float('inf'))
 
 	# week_path0 = '2016.07.01_2016.07.07'
 	# week_path1 = '2016.07.08_2016.07.14'
