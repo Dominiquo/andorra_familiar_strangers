@@ -39,7 +39,7 @@ def create_tower_mapping(filepath=ex.towers,pickle_path=None):
 
 
 def partition_users_by_tower(filename,limit=float('inf')):
-	data_dir = "../niquo_data/"
+	data_dir = "../niquo_data/filtered_data/"
 	towers_dir = "partitioned_towers/"
 	tower_file_prefix = "cdr_tower_"
 	tower_map = create_tower_mapping()
@@ -344,8 +344,6 @@ def find_collisions_from_tower(tower_rows,time_range=1):
 	lower_edge = 0
 	higher_edge = 0
 	for lower_index in range(len(tower_rows)):
-		if lower_index % 10 == 0:
-			print 'on row', lower_index, '/', len(tower_rows)
 		for upper_index in range(lower_index+1,len(tower_rows)):
 			lower_row = tower_rows[lower_index]
 			upper_row = tower_rows[upper_index]
