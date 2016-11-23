@@ -415,7 +415,9 @@ def main():
 	towers_dir = '../niquo_data/filtered_data/partitioned_towers/'
 	paired_callers = '../niquo_data/filtered_data/paired_callers/'
 
-	pair_users_from_towers(towers_dir,paired_callers)
+	combined_dates = '../niquo_data/filtered_data/combined_callers/'
+
+	combine_tower_maps(paired_callers,combined_dates)
 
 	# pair_users_single_file(filename,dest,float('inf'))
 
