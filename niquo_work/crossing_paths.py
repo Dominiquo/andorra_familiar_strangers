@@ -17,6 +17,8 @@ def create_tower_mapping(filepath=ex.towers,pickle_path=None):
 	tower_map = {}
 	lat = 2
 	lon = 3
+	code = 4
+	t_id = 1
 	with open(filepath) as tower_file:
 		towers_data = [row for row in csv.reader(tower_file.read().splitlines())]
 
@@ -25,13 +27,14 @@ def create_tower_mapping(filepath=ex.towers,pickle_path=None):
 			continue
 		t_lat = tower[lat]
 		t_lon = tower[lon]
+		t_code = tower[code]
 		tower_id = tower[1]
 		lat_lon = (t_lat,t_lon)
    		if lat_lon in geo_map:
-   			tower_map[tower_id] = geo_map[lat_lon]
+   			tower_map[tower_id] = {'id':geo_map[lat_lon],'code': t_code}
 		else:
 			geo_map[lat_lon] = tower_id
-			tower_map[tower_id] = tower_id
+			tower_map[tower_id] = {'id': tower_id, 'code': t_code}
 	if pickle_path:
 		cPickle.dump(tower_map,open(pickle_path,'wb'))
 
@@ -59,9 +62,10 @@ def partition_users_by_tower(filename,limit=float('inf')):
 				continue
 			pre_funnel_id = row[TOWER_INDEX]
 			if pre_funnel_id not in tower_map:
-				tower_id = pre_funnel_id
+				# tower_id = pre_funnel_id
+				continue
 			else:
-				tower_id = tower_map[pre_funnel_id]
+				tower_id = tower_map[pre_funnel_id]['id']
 
 			call_time = row[START_TIME_INDEX]
 			call_date = call_time[:DATE_INDEX]
@@ -409,31 +413,31 @@ def main():
 	# combined_dates_path = '../niquo_data/combined_callers/'
 	# combine_tower_maps(dates_path, combined_dates_path)
 
-	dest = '../niquo_data/filtered_data/06_2017_pairs.p'
-	filename = '../niquo_data/filtered_data/06_2017_no_data.csv'
+	# dest = '../niquo_data/filtered_data/06_2017_pairs.p'
+	# filename = '../niquo_data/filtered_data/06_2017_no_data.csv'
 
-	towers_dir = '../niquo_data/filtered_data/partitioned_towers/'
-	paired_callers = '../niquo_data/filtered_data/paired_callers/'
+	# towers_dir = '../niquo_data/filtered_data/partitioned_towers/'
+	# paired_callers = '../niquo_data/filtered_data/paired_callers/'
 
-	combined_dates = '../niquo_data/filtered_data/combined_callers/'
+	# combined_dates = '../niquo_data/filtered_data/combined_callers/'
 
-	combine_tower_maps(paired_callers,combined_dates)
+	# combine_tower_maps(paired_callers,combined_dates)
 
 	# pair_users_single_file(filename,dest,float('inf'))
 
-	# week_path0 = '2016.07.01_2016.07.07'
-	# week_path1 = '2016.07.08_2016.07.14'
-	# week_path2 = '2016.07.15_2016.07.21'
-	# week_path3 = '2016.07.22_2016.07.28'
-	# week_path4 = '2016.07.29_2016.07.31'
-	# week_paths = [week_path0, week_path1, week_path2, week_path3, week_path4]
+	week_path0 = '2016.07.01_2016.07.07'
+	week_path1 = '2016.07.08_2016.07.14'
+	week_path2 = '2016.07.15_2016.07.21'
+	week_path3 = '2016.07.22_2016.07.28'
+	week_path4 = '2016.07.29_2016.07.31'
+	week_paths = [week_path0, week_path1, week_path2, week_path3, week_path4]
 
-	# for week_path in week_paths:
-	# 	prefix = '../niquo_data/combined_callers/'
-	# 	full_path = prefix + week_path + '/'
-	# 	for n in range(2,20,4):
-	# 		destination_path = '../niquo_data/%s_encounter_n_%s.csv' % (week_path, n)
-	# 		find_mult_enc_single_week(full_path,destination_path,n)	
+	for week_path in week_paths:
+		prefix = '../niquo_data/filtered_data/combined_callers/'
+		full_path = prefix + week_path + '/'
+		for n in range(2,20,4):
+			destination_path = '../niquo_data/%s_encounter_n_%s.csv' % (week_path, n)
+			find_mult_enc_single_week(full_path,destination_path,n)	
 
 	# week_path = '../niquo_data/combined_callers/'
 	# destination_path = '../niquo_data/week_encounter_n_2.csv'
