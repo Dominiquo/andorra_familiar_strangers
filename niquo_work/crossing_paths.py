@@ -41,8 +41,8 @@ def create_tower_mapping(filepath=ex.towers,pickle_path=None):
 	return tower_map
 
 
-def partition_users_by_tower(filename,limit=float('inf')):
-	data_dir = "../niquo_data/filtered_data/"
+def partition_users_by_tower(filename,data_dir,limit=float('inf')):
+	# data_dir = "../niquo_data/filtered_data/"
 	towers_dir = "partitioned_towers/"
 	tower_file_prefix = "cdr_tower_"
 	tower_map = create_tower_mapping()
@@ -126,7 +126,7 @@ def pair_users_single_file(filename,destination_file,limit=10000):
 	return True
 	
 
-def pair_users_from_towers(towers_directory,destination_path,limit = 10000):
+def pair_users_from_towers(towers_directory,destination_path,limit=10000):
 	all_dates_dirs = sorted(set(os.listdir(towers_directory)))
 	print "total count of available date files:",len(all_dates_dirs)
 	inf = float('inf')
@@ -387,6 +387,22 @@ def users_met(cdr_user_1,cdr_user_2,time_range=1):
 		return False 
 
 
+def partition_filtered_towers_ONETIME():
+	filtered_recent = '../niquo_data/filtered_data/06_2017_no_data.csv'
+	filtered_dir = '../niquo_data/filtered_data/'
+	partition_users_by_tower(filtered_recent,filtered_dir)
+	return True
+
+def pair_callers_filtered_ONETIME():
+	towers_directory = '../niquo_data/filtered_data/partitioned_towers/'
+	destination_path = '../niquo_data/filtered_data/paired_callers/'
+	pair_users_from_towers(towers_directory,destination_path)
+	return True	
+
+def combined_filtered_ONETIME():
+	dates_path = '../niquo_data/filtered_data/paired_callers/'
+	combined_dates_path = '../niquo_data/filtered_data/combined_callers/'
+	combine_tower_maps(dates_path, combined_dates_path)
 
 
 
@@ -425,6 +441,10 @@ def main():
 
 	# pair_users_single_file(filename,dest,float('inf'))
 
+	partition_filtered_towers_ONETIME()
+	pair_callers_filtered_ONETIME()
+	combined_filtered_ONETIME()
+
 	week_path0 = '2016.07.01_2016.07.07'
 	week_path1 = '2016.07.08_2016.07.14'
 	week_path2 = '2016.07.15_2016.07.21'
@@ -436,7 +456,7 @@ def main():
 		prefix = '../niquo_data/filtered_data/combined_callers/'
 		full_path = prefix + week_path + '/'
 		for n in range(2,20,4):
-			destination_path = '../niquo_data/%s_encounter_n_%s.csv' % (week_path, n)
+			destination_path = '../niquo_data/filtered_data/encounters_CSVs/%s_encounter_n_%s.csv' % (week_path, n)
 			find_mult_enc_single_week(full_path,destination_path,n)	
 
 	# week_path = '../niquo_data/combined_callers/'
