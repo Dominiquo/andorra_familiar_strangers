@@ -112,18 +112,28 @@ def create_combo_histograms(conditions,encounters_csv,destination_dir):
 		bin_range = [0,180]
 		filename = destination_dir + '/' + base + '_' first.func_name + '_' + second.func_name + '.png'
 		create_dist_histogram(all_encs,bins,bin_range,filename)
+
+		print 'creating flipped version of', first.func_name, second.func_name
+
+		all_encs = encounter_time_conditional(encounters_csv,second,first)
+		filename_flipped = destination_dir + '/' + base + '_' second.func_name + '_' + first.func_name + '.png'
+		create_dist_histogram(all_encs,bins,bin_range,filename_flipped)
 		print 'completed'
+
 	return True
 
 def create_graphs_for_time_conditions(encounters_dir,images_dir,conditions):
 	for encounters_file in os.listdir(encounters_dir):
 		encounters_csv = os.path.join(encounters_dir,encounters_file)
+		print 'creating combinations for ', encounters_csv
 		create_combo_histograms(conditions,encounters_csv,images_dir)
 		print 'completed making plots for ', encounters_csv
 
 def time_of_days():
-	encounters_dir = 'niquo_data/filtered_data/encounters_CSVs/'
-	images_dir = 'niquo_data/filtered_data/plot_images/'
+	# encounters_dir = 'niquo_data/filtered_data/encounters_CSVs/'
+	# images_dir = 'niquo_data/filtered_data/plot_images/'
+	encounters_dir = 'niquo_data/encounters_CSVs/'
+	images_dir = 'niquo_data/plot_images/'
 	conditions = [isMorning,isNight,isHome]
 	create_graphs_for_time_conditions(encounters_dir,images_dir,conditions)
 	print 'done plotting images to be put in ', images_dir
@@ -131,16 +141,7 @@ def time_of_days():
 def main(args):
 	# all_times = [isMorning,isHome,isNight]
 
-	file_path = args[1]
-	dest_path = args[2]
-	print 'FILENAME*****',file_path
-	print 'DESTINATION****', dest_path
-	bins = 150
-	bin_range = [0,180]
-	print 'retreiving values...'
-	x_vals,filename = filter_xvals(file_path,dest_path)
-	create_dist_histogram(x_vals,bins,bin_range,filename)
-	print 'complete'
+	time_of_days()
 
 if __name__ == '__main__':
     main(sys.argv)
