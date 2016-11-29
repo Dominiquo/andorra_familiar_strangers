@@ -110,13 +110,13 @@ def create_combo_histograms(conditions,encounters_csv,destination_dir):
 		all_encs = encounter_time_conditional(encounters_csv,first,second)
 		bins = 150
 		bin_range = [0,180]
-		filename = destination_dir + '/' + base + '_' first.func_name + '_' + second.func_name + '.png'
+		filename = destination_dir + '/' + base + '_' + first.func_name + '_' + second.func_name + '.png'
 		create_dist_histogram(all_encs,bins,bin_range,filename)
 
 		print 'creating flipped version of', first.func_name, second.func_name
 
 		all_encs = encounter_time_conditional(encounters_csv,second,first)
-		filename_flipped = destination_dir + '/' + base + '_' second.func_name + '_' + first.func_name + '.png'
+		filename_flipped = destination_dir + '/' + base + '_' + second.func_name + '_' + first.func_name + '.png'
 		create_dist_histogram(all_encs,bins,bin_range,filename_flipped)
 		print 'completed'
 
