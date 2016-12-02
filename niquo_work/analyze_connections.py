@@ -131,9 +131,13 @@ def encounters_tower_conditional(encounters_csv,first,second,towers_map):
 	# row = [caller,caller_enc,delta_days,delta_seconds,tower,next_tower,last_time]
 	first_tower = 4
 	next_tower = 5
-	filter_func = lambda row: towers_map[row[first_tower]]['code'] == first and towers_map[row[next_tower]]['code'] == second
+	filter_func = lambda row: get_tower_code(row,first_tower, towers_map) == first and get_tower_code(row,next_tower,towers_map) == second
 	return filter_xvals(encounters_csv,filter_func)
 
+def get_tower_code(row,index,towers_map):
+	# TODO: MAKE LESS HACKY
+	# very hacky but only need it for this one number.
+	return towers_map[row[index][10:-2]]['code']
 
 def get_tower_types(towers_map):
 	tower_codes = set([])
