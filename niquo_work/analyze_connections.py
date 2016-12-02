@@ -127,6 +127,38 @@ def create_graphs_for_time_conditions(encounters_dir,images_dir,conditions):
 		create_combo_histograms(conditions,encounters_csv,images_dir)
 		print 'completed making plots for ', encounters_csv
 
+def encounters_tower_conditional(encounters_csv,first,second,towers_map):
+	# row = [caller,caller_enc,delta_days,delta_seconds,tower,next_tower,last_time]
+	first_tower = 4
+	next_tower = 5
+	filter_func = lambda row: towers_map[row[first_tower]]['code'] == first and towers_map[row[next_tower]]['code'] == second
+	return filter_xvals(encounters_csv,filter_func)
+
+
+def get_tower_types(towers_map):
+	tower_codes = set([])
+	for key,value in towers_map.iteritems():
+		tower_codes.add(value['code'])
+	return list(tower_codes)
+
+def encounters_on_tower(encounters_csv,images_dir,towers_map):
+	tower_types = get_tower_types(towers_map)
+	for first,second in  itertools.combinations(tower_types, 2):
+		all_encs = encounters_tower_conditional(encounters_csv,first,second,towers_map)
+		bins = 150
+		bin_range = [0,180]
+		filename = destination_dir + '/' + base + '_type_' + str(first) + '_type_' + str(second) + '.png'
+		create_dist_histogram(all_encs,bins,bin_range,filename)
+
+		print 'creating flipped version of', first, second
+
+		all_encs = encounters_tower_conditional(encounters_csv,second,first,towers_map)
+		filename_flipped = destination_dir + '/' + base + '_type_' + str(second) + '_type_' + str(first) + '.png'
+		create_dist_histogram(all_encs,bins,bin_range,filename_flipped)
+		
+		print 'completed'
+	return True
+
 def time_of_days():
 	encounters_dir = '../niquo_data/filtered_data/encounters_CSVs/'
 	images_dir = '../niquo_data/filtered_data/plot_images/time_comparisons/'
@@ -135,6 +167,18 @@ def time_of_days():
 	conditions = [isMorning,isNight,isHome]
 	create_graphs_for_time_conditions(encounters_dir,images_dir,conditions)
 	print 'done plotting images to be put in ', images_dir
+
+
+def tower_types():
+	encounters_dir = '../niquo_data/filtered_data/encounters_CSVs/'
+	images_dir = '../niquo_data/filtered_data/plot_images/tower_types/'
+	towers_map = cp.create_tower_mapping()
+	for encounters_file in os.listdir(encounters_dir):
+		print 'creating tower type histograms for', encounters_file
+		encounters_csv = os.path.join(encounters_dir,encounters_file)
+		encounters_on_tower(encounters_csv,images_dir,towers_map)
+		print 'completed making plots for',encounters_csv
+
 
 def main(args):
 	# all_times = [isMorning,isHome,isNight]
