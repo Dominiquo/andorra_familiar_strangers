@@ -148,7 +148,7 @@ def get_tower_types(towers_map):
 		tower_codes.add(value['code'])
 	return list(tower_codes)
 
-def encounters_on_tower(encounters_csv,images_dir,towers_map):
+def encounters_on_tower(encounters_csv,images_dir,towers_map,destination_dir):
 	tower_types = get_tower_types(towers_map)
 	for first,second in  itertools.combinations(tower_types, 2):
 		all_encs = encounters_tower_conditional(encounters_csv,first,second,towers_map)
@@ -183,13 +183,28 @@ def tower_types():
 	for encounters_file in os.listdir(encounters_dir):
 		print 'creating tower type histograms for', encounters_file
 		encounters_csv = os.path.join(encounters_dir,encounters_file)
-		encounters_on_tower(encounters_csv,images_dir,towers_map)
+		encounters_on_tower(encounters_csv,images_dir,towers_map,images_dir)
 		print 'completed making plots for',encounters_csv
+
+def unfiltered_plots():
+	encounters_dir = '../niquo_data/filtered_data/encounters_CSVs/'
+	images_dir = '../niquo_data/filtered_data/plot_images/unfiltered_plots/'
+	for encounters_file in os.listdir(encounters_dir):
+		print 'creating unfiltered_plots for ', encounters_file
+		encounters_csv = os.path.join(encounters_dir,encounters_file)
+		all_encs = filter_xvals(encounters_csv)
+		bins = 150
+		bin_range = [0,180]
+		base = os.path.basename(encounters_csv)[:-4]
+		filename = destination_dir + '/' + base + '.png'
+		create_dist_histogram(all_encs,bins,bin_range,filename)
+		print 'complete.'
 
 
 def main(args):
-	time_of_days()
+	# time_of_days()
 	tower_types()
+	unfiltered_plots()
 
 if __name__ == '__main__':
     main(sys.argv)
