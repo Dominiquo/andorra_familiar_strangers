@@ -128,8 +128,8 @@ def create_graphs_for_time_conditions(encounters_dir,images_dir,conditions):
 		print 'completed making plots for ', encounters_csv
 
 def time_of_days():
-	encounters_dir = 'niquo_data/filtered_data/encounters_CSVs/'
-	images_dir = 'niquo_data/filtered_data/plot_images/'
+	encounters_dir = '../niquo_data/filtered_data/encounters_CSVs/'
+	images_dir = '../niquo_data/filtered_data/plot_images/'
 	# encounters_dir = '../niquo_data/encounters_CSVs/'
 	# images_dir = '../niquo_data/plot_images/'
 	conditions = [isMorning,isNight,isHome]
