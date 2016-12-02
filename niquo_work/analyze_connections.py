@@ -149,6 +149,7 @@ def get_tower_types(towers_map):
 	return list(tower_codes)
 
 def encounters_on_tower(encounters_csv,images_dir,towers_map,destination_dir):
+	base = os.path.basename(encounters_csv)[:-4]
 	tower_types = get_tower_types(towers_map)
 	for first,second in  itertools.combinations(tower_types, 2):
 		all_encs = encounters_tower_conditional(encounters_csv,first,second,towers_map)
