@@ -155,7 +155,7 @@ def encounters_on_tower(encounters_csv,images_dir,towers_map):
 		all_encs = encounters_tower_conditional(encounters_csv,second,first,towers_map)
 		filename_flipped = destination_dir + '/' + base + '_type_' + str(second) + '_type_' + str(first) + '.png'
 		create_dist_histogram(all_encs,bins,bin_range,filename_flipped)
-		
+
 		print 'completed'
 	return True
 
@@ -181,8 +181,8 @@ def tower_types():
 
 
 def main(args):
-	# all_times = [isMorning,isHome,isNight]
-	time_of_days()
+	# time_of_days()
+	tower_types()
 
 if __name__ == '__main__':
     main(sys.argv)
