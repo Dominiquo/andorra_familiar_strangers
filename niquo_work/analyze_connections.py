@@ -40,9 +40,6 @@ def filter_xvals(file_path,filter_func=lambda x: True):
 	days_row = 2
 	all_rows = ex.read_csv(file_path,float('inf'))
 	x_vals = [convert_row(row) for row in all_rows if filter_func(row)]
-
-	# date_filename =  file_path.split('/')[-1]
-	# filename = save_path + date_filename[:-3] + 'png'
 	return x_vals
 
 def create_dist_histogram(x_vals,bins,bin_range,save_file):
@@ -79,7 +76,7 @@ def create_time_string_from_delta(time,delta_d,delta_s):
 	time_obj = get_time_obj(time)
 	delta_obj = timedelta(int(delta_d),int(delta_s))
 	new_obj = time_obj + delta_obj
-	new_time = time_obj_to_string(time_obj)
+	new_time = time_obj_to_string(new_obj)
 	return new_time
 
 def encountered_on_weekends():
