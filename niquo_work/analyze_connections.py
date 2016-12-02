@@ -137,11 +137,10 @@ def encounters_tower_conditional(encounters_csv,first,second,towers_map):
 def get_tower_code(row,index,towers_map):
 	# TODO: MAKE LESS HACKY
 	# very hacky but only need it for this one number.
-	print 'row ', row
-	print 'row of what', row[index]
-	print 'id pulled', row[index][10:-2]
-
-	return towers_map[row[index][10:-2]]['code']
+	try:
+		return towers_map[row[index][10:-2]]['code']
+	except:
+		return -1
 
 def get_tower_types(towers_map):
 	tower_codes = set([])
@@ -189,7 +188,7 @@ def tower_types():
 
 
 def main(args):
-	# time_of_days()
+	time_of_days()
 	tower_types()
 
 if __name__ == '__main__':
