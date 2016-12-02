@@ -137,6 +137,9 @@ def encounters_tower_conditional(encounters_csv,first,second,towers_map):
 def get_tower_code(row,index,towers_map):
 	# TODO: MAKE LESS HACKY
 	# very hacky but only need it for this one number.
+	print 'row of what', row[index]
+	print 'id pulled', row[index][10:-2]
+	
 	return towers_map[row[index][10:-2]]['code']
 
 def get_tower_types(towers_map):
