@@ -441,16 +441,17 @@ def main():
 
 	# pair_users_single_file(filename,dest,float('inf'))
 
-	partition_filtered_towers_ONETIME()
-	pair_callers_filtered_ONETIME()
-	combined_filtered_ONETIME()
+	# partition_filtered_towers_ONETIME()
+	# pair_callers_filtered_ONETIME()
+	# combined_filtered_ONETIME()
 
 	week_path0 = '2016.07.01_2016.07.07'
 	week_path1 = '2016.07.08_2016.07.14'
 	week_path2 = '2016.07.15_2016.07.21'
 	week_path3 = '2016.07.22_2016.07.28'
 	week_path4 = '2016.07.29_2016.07.31'
-	week_paths = [week_path0, week_path1, week_path2, week_path3, week_path4]
+	# week_paths = [week_path0, week_path1, week_path2, week_path3, week_path4]
+	week_paths = [week_path1]
 
 	for week_path in week_paths:
 		prefix = '../niquo_data/filtered_data/combined_callers/'

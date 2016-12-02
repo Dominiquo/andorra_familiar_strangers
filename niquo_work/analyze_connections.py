@@ -4,6 +4,7 @@ import os
 import sys
 import numpy as np
 import matplotlib.pyplot as plt
+from datetime import datetime
 import crossing_paths as cp
 import extractData as ex
 import itertools
@@ -102,10 +103,10 @@ def encounter_time_conditional(ecnounters_csv,first_cond,second_cond):
 	delt_d = 2
 	delt_s = 3
 	filter_func = lambda row: first_cond(row[last_time]) and second_cond(create_time_string_from_delta(row[last_time],row[delt_d],row[delt_s]))
-	return filter_xvals(encounters_csv,filter_func)
+	return filter_xvals(ecnounters_csv,filter_func)
 
 def create_combo_histograms(conditions,encounters_csv,destination_dir):
-	base = os.path.basename(encounters_csv)[:-3]
+	base = os.path.basename(encounters_csv)[:-4]
 	for first,second in  itertools.combinations(conditions, 2):
 		all_encs = encounter_time_conditional(encounters_csv,first,second)
 		bins = 150
@@ -140,7 +141,6 @@ def time_of_days():
 
 def main(args):
 	# all_times = [isMorning,isHome,isNight]
-
 	time_of_days()
 
 if __name__ == '__main__':
