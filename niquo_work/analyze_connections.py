@@ -76,7 +76,7 @@ def get_time_obj(time_string):
 	return datetime.strptime(time_string,format_string)
 
 def create_time_string_from_delta(time,delta_d,delta_s):
-	print 'TIME:' time
+	print 'TIME:', time
 	print 'delta_d:', delta_d, type(delta_d)
 	print 'delta_s', delta_s, type(delta_s)
 	time_obj = get_time_obj(time)
