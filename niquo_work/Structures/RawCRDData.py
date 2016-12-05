@@ -14,8 +14,8 @@ COMM_TYPE_INDEX = 10
 
 class RawCDRCSV(object):
 	"""Represents class for raw CDR data given in CSV form and operations related to it"""
-	def __init__(self, filepath):
-		self.filename = filepath
+	def __init__(self, filename):
+		self.filename = filename
 
 	def partition_by_tower_id(self,destination_dir):
 		# TODO: move code 
@@ -30,7 +30,7 @@ class RawCDRCSV(object):
 		return None
 
 	def rows_generator(self):
-		with open(self.filepath) as csvfile:
+		with open(self.filename) as csvfile:
 			data_csv = csv.reader(csvfile,delimiter=';')
 			for row in data_csv:
 				yield row
