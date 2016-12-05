@@ -1,6 +1,6 @@
 import csv
 import os
-import extractData as ex
+# import extractData as ex
 import cPickle
 import itertools
 from datetime import datetime
