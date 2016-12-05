@@ -30,7 +30,7 @@ class RawCDRCSV(object):
 		return None
 
 	def rows_generator(self):
-		with open(filepath) as infile:
+		with open(self.filepath) as csvfile:
 			data_csv = csv.reader(csvfile,delimiter=';')
 			for row in data_csv:
 				yield row
