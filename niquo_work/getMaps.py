@@ -1,6 +1,5 @@
 import csv
 import os
-import extractData as ex
 import cPickle
 import itertools
 from datetime import datetime
@@ -25,7 +24,7 @@ def id_to_lat_long(filepath=constants.TOWERS_ID):
 		lat_lon = (t_lat,t_lon)
 		try:
    			geo_map[int(tower_id)] = lat_lon
-   		except Exception e:
+   		except Exception as e:
    			pass
 
 	return geo_map
