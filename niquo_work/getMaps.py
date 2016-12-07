@@ -23,7 +23,7 @@ def id_to_lat_long(filepath=constants.TOWERS_ID):
 		tower_id = tower[t_index]
 		lat_lon = (t_lat,t_lon)
 		try:
-   			geo_map[int(tower_id)] = lat_lon
+   			geo_map[tower_id] = lat_lon
    		except Exception as e:
    			pass
 
@@ -54,7 +54,7 @@ def tower_to_activity():
 	for row in activity_data:
 		category_vals = row[cat_index]
 		tower_id = row[id_index]
-		vals_set = set([int(cat) for cat in category_vals.split(',')])
+		vals_set = set([cat for cat in category_vals.split(',')])
 		activity_map[tower_id] = vals_set
 
 	return activity_map
