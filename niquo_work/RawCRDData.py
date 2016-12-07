@@ -66,6 +66,7 @@ class RawCDRCSV(object):
 		with open(self.filename) as csvfile:
 			data_csv = csv.reader(csvfile,delimiter=';')
 			for row in data_csv:
+				yield row
 
 
 
