@@ -44,7 +44,7 @@ def tower_map_id():
 
 
 def tower_to_activity():
-	activity_map = ()
+	activity_map = {}
 	id_index = 0
 	cat_index = 9
 	with open(constants.TOWERS_TYPE,'rb') as csvfile:
