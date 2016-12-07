@@ -33,11 +33,11 @@ class RawCDRCSV(object):
 				pre_funnel_id = int(row[TOWER_INDEX])
 			except Exception as e:
 				continue
-				
+
 			if pre_funnel_id not in tower_map:
 				continue
 			else:
-				tower_id = tower_map[pre_funnel_id]['id']
+				tower_id = tower_map[pre_funnel_id]
 			print 'made it past funnel id filter'
 			call_time = row[START_TIME_INDEX]
 			call_date = call_time[:DATE_INDEX]
