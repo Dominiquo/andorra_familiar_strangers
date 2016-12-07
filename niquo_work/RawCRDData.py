@@ -26,6 +26,7 @@ class RawCDRCSV(object):
 		current_towers = set([])
 		current_count = 0
 		files_count = 1
+		total_ids = set([])
 		for row in self.rows_generator():
 			if (row[TOWER_INDEX]== 'ID_CELLA_INI') or (not filter_func(row)):
 				continue
@@ -34,6 +35,10 @@ class RawCDRCSV(object):
 				continue
 			else:
 				tower_id = tower_map[pre_funnel_id]
+
+			total_ids.add(tower_id)
+			print 'added another id for a total of', len(tower_ids)
+
 			call_time = row[START_TIME_INDEX]
 			call_date = call_time[:DATE_INDEX]
 			date_path = os.path.join(destination_dir,call_date)
