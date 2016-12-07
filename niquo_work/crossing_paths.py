@@ -266,7 +266,7 @@ def find_mult_enc_single_week(week_path,destination_path,n=2):
 			for caller_enc, times in encounteree_map.iteritems():
 				# if len(times) != n:
 					# continue
-				if caller_enc == caller or (len(times) < n-1):
+				if caller_enc == caller or (len(times) != n-1):
 					continue
 				last_time = times[-1]
 				delta_days, delta_seconds, next_tower = find_next_encounter(tower,caller,caller_enc,last_time,all_maps)
@@ -451,10 +451,10 @@ def main():
 	week_path3 = '2016.07.22_2016.07.28'
 	week_path4 = '2016.07.29_2016.07.31'
 	# week_paths = [week_path0, week_path1, week_path2, week_path3, week_path4]
-	week_paths = [week_path1]
+	week_paths = [week_path0,week_path1,week_path2,week_path3,week_path4]
 
 	for week_path in week_paths:
-		prefix = '../niquo_data/filtered_data/combined_callers/'
+		prefix = '../niquo_data/test_folder/combined_callers/'
 		full_path = prefix + week_path + '/'
 		for n in range(2,20,4):
 			destination_path = '../niquo_data/filtered_data/encounters_CSVs/%s_encounter_n_%s.csv' % (week_path, n)

@@ -181,3 +181,11 @@ def get_intersecting_towers_map(paths_list):
 		tower_to_paths[tower] = current_intersections
 
 	return all_towers,tower_to_paths
+
+
+def main():
+	return True
+	# imap = InteractionMaps()
+
+if __name__ == '__main__':
+    main()
