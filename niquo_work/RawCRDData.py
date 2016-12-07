@@ -33,6 +33,7 @@ class RawCDRCSV(object):
 			print 'ready to ready csv file...'
 			for row in data_csv:
 				if (row[TOWER_INDEX]== 'ID_CELLA_INI') or (not filter_func(row)):
+					print 'continued'
 					continue
 				pre_funnel_id = row[TOWER_INDEX]
 				if pre_funnel_id not in tower_map:
