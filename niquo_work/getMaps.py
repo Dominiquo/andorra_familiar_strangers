@@ -45,5 +45,19 @@ def tower_map_id():
 
 def tower_to_activity():
 	tower_map = tower_map_id()
-	# TODO: MAKE THIS HAPPEN
-	return True 
+	activity_map = ()
+	id_index = 0
+	cat_index = 9
+	with open(constants.TOWERS_TYPE,'rb') as csvfile:
+		activity_data = [row for row in csv.reader(csvfile.read().splitlines())]
+
+	for row in activity_data:
+		category_vals = row[cat_index]
+		tower_id = row[id_index]
+		vals_set = set([int(cat) for cat in category_vals.split(',')])
+		activity_map[tower_id] = vals_set
+
+	return activity_map
+
+
+ 
