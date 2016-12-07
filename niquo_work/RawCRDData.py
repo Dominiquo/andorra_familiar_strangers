@@ -72,7 +72,6 @@ class RawCDRCSV(object):
 
 
 def is_comm_type_data(row):
-	print row[COMM_TYPE_INDEX]
 	return row[COMM_TYPE_INDEX] != 'S-CDR'
 
 def main():
