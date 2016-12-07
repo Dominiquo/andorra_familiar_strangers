@@ -146,12 +146,19 @@ def get_tower_code(row,index,towers_map):
 def get_tower_types(towers_map):
 	tower_codes = set([])
 	for key,value in towers_map.iteritems():
-		tower_codes.union(value)
+		tower_codes = tower_codes.union(value)
+
+	# manual clenaing
+	if '' in tower_codes:
+		tower_codes.remove('')
+	if 'Category code' in tower_codes:
+		tower_codes.remove('Category code')
+
 	return list(tower_codes)
 
 def encounters_on_tower(encounters_csv,images_dir,towers_map,destination_dir):
 	base = os.path.basename(encounters_csv)[:-4]
-	tower_types = get_tower_types(towers_map)
+	tower_types = get_tower_types(towers_map)	
 	print 'generated ', len(tower_types), 'types of towers'
 	for first,second in  itertools.combinations(tower_types, 2):
 		all_encs = encounters_tower_conditional(encounters_csv,first,second,towers_map)
