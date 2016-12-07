@@ -50,7 +50,7 @@ class TowersPartitioned(object):
 		pairs = find_collisions_from_tower(all_callers)
 		print 'found', len(pairs), 'pairs of collisions.'
 		pair_map = {}
-		print 'building map for pairs to be stored at', destination_file
+		print 'building map for pairs to be stored at', dest_pickle_file
 		for first,second in pairs:
 			first_number = first[CALLER_INDEX]
 			first_call_time = first[START_TIME_INDEX]
