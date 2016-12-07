@@ -37,7 +37,7 @@ class RawCDRCSV(object):
 				tower_id = tower_map[pre_funnel_id]
 
 			total_ids.add(tower_id)
-			print 'added another id for a total of', len(tower_ids)
+			print 'added another id for a total of', len(total_ids)
 
 			call_time = row[START_TIME_INDEX]
 			call_date = call_time[:DATE_INDEX]
