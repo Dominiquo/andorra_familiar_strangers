@@ -21,7 +21,7 @@ def main():
 	csv_file = constants.JULY_DATA_FILTERED
 	save_location = '../niquo_data/filtered_data/network_object.p'
 	print 'creating network graph to be saved at', save_location
-	create_graph(csvfile,save_location)
+	create_graph(csv_file,save_location)
 	print 'graph created and stored'
 
 if __name__ == '__main__':
