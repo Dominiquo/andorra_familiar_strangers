@@ -29,12 +29,13 @@ class RawCDRCSV(object):
 		for row in self.rows_generator():
 			if (row[TOWER_INDEX]== 'ID_CELLA_INI') or (not filter_func(row)):
 				continue
+			print 'made it passed filter'
 			pre_funnel_id = row[TOWER_INDEX]
 			if pre_funnel_id not in tower_map:
 				continue
 			else:
 				tower_id = tower_map[pre_funnel_id]['id']
-
+			print 'made it past funnel id filter'
 			call_time = row[START_TIME_INDEX]
 			call_date = call_time[:DATE_INDEX]
 			date_path = os.path.join(destination_dir,call_date)
