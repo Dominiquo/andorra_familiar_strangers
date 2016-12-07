@@ -18,8 +18,8 @@ def id_to_lat_long(filepath=constants.TOWERS_ID):
 	for i,tower in enumerate(towers_data):
 		if i == 0:
 			continue
-		t_lat = tower[lat]
-		t_lon = tower[lon]
+		t_lat = tower[lat_index]
+		t_lon = tower[lon_index]
 		tower_id = tower[t_index]
 		lat_lon = (t_lat,t_lon)
 		try:
@@ -60,4 +60,3 @@ def tower_to_activity():
 	return activity_map
 
 
- 
