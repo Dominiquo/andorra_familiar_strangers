@@ -29,7 +29,7 @@ class RawCDRCSV(object):
 		for row in self.rows_generator():
 			if (row[TOWER_INDEX]== 'ID_CELLA_INI') or (not filter_func(row)):
 				continue
-			pre_funnel_id = int(row[TOWER_INDEX])
+			pre_funnel_id = row[TOWER_INDEX]
 			if pre_funnel_id not in tower_map:
 				continue
 			else:
