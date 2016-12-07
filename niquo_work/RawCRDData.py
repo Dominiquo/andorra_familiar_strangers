@@ -28,7 +28,9 @@ class RawCDRCSV(object):
 		files_count = 1
 		print 'opening file to read from as a csv...'
 		with open(self.filename) as csvfile:
+			print 'file opened and creating csv reader..'
 			data_csv = csv.reader(csvfile,delimiter=';')
+			print 'ready to ready csv file...'
 			for row in data_csv:
 				if (row[TOWER_INDEX]== 'ID_CELLA_INI') or (not filter_func(row)):
 					continue
