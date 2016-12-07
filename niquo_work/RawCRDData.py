@@ -34,7 +34,6 @@ class RawCDRCSV(object):
 				continue
 			else:
 				tower_id = tower_map[pre_funnel_id]
-			print 'made it past funnel id filter'
 			call_time = row[START_TIME_INDEX]
 			call_date = call_time[:DATE_INDEX]
 			date_path = os.path.join(destination_dir,call_date)
@@ -51,7 +50,6 @@ class RawCDRCSV(object):
 				tower_file_obj = open(tower_path,'wb')
 
 			tower_file_csv = csv.writer(tower_file_obj,delimiter=';')
-			print 'ROW ADDED!'
 			tower_file_csv.writerow(row)
 			tower_file_obj.close()
 
