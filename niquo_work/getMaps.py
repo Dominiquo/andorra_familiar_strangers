@@ -44,7 +44,6 @@ def tower_map_id():
 
 
 def tower_to_activity():
-	tower_map = tower_map_id()
 	activity_map = ()
 	id_index = 0
 	cat_index = 9

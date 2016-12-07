@@ -3,6 +3,7 @@ import csv
 import os
 import sys
 import numpy as np
+import getMaps as maps
 import matplotlib.pyplot as plt
 from datetime import datetime, timedelta
 import crossing_paths as cp
@@ -131,21 +132,21 @@ def encounters_tower_conditional(encounters_csv,first,second,towers_map):
 	# row = [caller,caller_enc,delta_days,delta_seconds,tower,next_tower,last_time]
 	first_tower = 4
 	next_tower = 5
-	filter_func = lambda row: get_tower_code(row,first_tower, towers_map) == first and get_tower_code(row,next_tower,towers_map) == second
+	filter_func = lambda row: (first in get_tower_code(row,first_tower, towers_map)) and (second in get_tower_code(row,next_tower,towers_map))
 	return filter_xvals(encounters_csv,filter_func)
 
 def get_tower_code(row,index,towers_map):
 	# TODO: MAKE LESS HACKY
 	# very hacky but only need it for this one number.
 	try:
-		return towers_map[row[index][10:-2]]['code']
+		return towers_map[row[index][10:-2]]
 	except:
-		return -1
+		return set([])
 
 def get_tower_types(towers_map):
 	tower_codes = set([])
 	for key,value in towers_map.iteritems():
-		tower_codes.add(value['code'])
+		tower_codes.union(value)
 	return list(tower_codes)
 
 def encounters_on_tower(encounters_csv,images_dir,towers_map,destination_dir):
@@ -179,8 +180,8 @@ def time_of_days():
 
 def tower_types():
 	encounters_dir = '../niquo_data/filtered_data/encounters_CSVs/'
-	images_dir = '../niquo_data/filtered_data/plot_images/tower_types/'
-	towers_map = cp.create_tower_mapping()
+	images_dir = '../niquo_data/test_data/plot_images/tower_types/'
+	towers_map = maps.tower_to_activity()
 	for encounters_file in os.listdir(encounters_dir):
 		print 'creating tower type histograms for', encounters_file
 		encounters_csv = os.path.join(encounters_dir,encounters_file)
@@ -205,7 +206,7 @@ def unfiltered_plots():
 def main(args):
 	# time_of_days()
 	tower_types()
-	unfiltered_plots()
+	# unfiltered_plots()
 
 if __name__ == '__main__':
     main(sys.argv)
