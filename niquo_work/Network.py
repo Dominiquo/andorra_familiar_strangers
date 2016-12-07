@@ -4,7 +4,7 @@ import file_constants as constants
 import cPickle
 
 def create_graph(csv_file,store_path):
-	csvData = raw.RawCDRCSV(csvfile)
+	csvData = raw.RawCDRCSV(csv_file)
 	friend_graph = nx.Graph()
 	caller_index = 0
 	receiver_index = 16
