@@ -454,10 +454,10 @@ def main():
 	week_paths = [week_path0,week_path1,week_path2,week_path3,week_path4]
 
 	for week_path in week_paths:
-		prefix = '../niquo_data/test_folder/combined_callers/'
+		prefix = '../niquo_data/filtered_data/combined_callers/'
 		full_path = prefix + week_path + '/'
 		for n in range(2,20,4):
-			destination_path = '../niquo_data/filtered_data/encounters_CSVs/%s_encounter_n_%s.csv' % (week_path, n)
+			destination_path = '../niquo_data/test_folder/encounters_CSVs/%s_encounter_n_%s.csv' % (week_path, n)
 			find_mult_enc_single_week(full_path,destination_path,n)	
 
 	# week_path = '../niquo_data/combined_callers/'
