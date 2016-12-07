@@ -154,6 +154,7 @@ def encounters_on_tower(encounters_csv,images_dir,towers_map,destination_dir):
 	tower_types = get_tower_types(towers_map)
 	for first,second in  itertools.combinations(tower_types, 2):
 		all_encs = encounters_tower_conditional(encounters_csv,first,second,towers_map)
+		print 'found encounters for ', first, second, 'with length', len(all_encs)
 		bins = 150
 		bin_range = [0,180]
 		filename = destination_dir + '/' + base + '_type_' + str(first) + '_type_' + str(second) + '.png'
@@ -162,6 +163,7 @@ def encounters_on_tower(encounters_csv,images_dir,towers_map,destination_dir):
 		print 'creating flipped version of', first, second
 
 		all_encs = encounters_tower_conditional(encounters_csv,second,first,towers_map)
+		print 'found encounters for ', second, first, 'with length', len(all_encs)
 		filename_flipped = destination_dir + '/' + base + '_type_' + str(second) + '_type_' + str(first) + '.png'
 		create_dist_histogram(all_encs,bins,bin_range,filename_flipped)
 
