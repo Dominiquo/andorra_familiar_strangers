@@ -9,7 +9,7 @@ def create_graph(csv_file,store_path):
 	caller_index = 0
 	receiver_index = 16
 
-	for row in csvData.row_generator():
+	for row in csvData.rows_generator():
 		caller = row[caller_index]
 		receiver = row[receiver_index]
 		friend_graph.add_edge(caller,receiver)
