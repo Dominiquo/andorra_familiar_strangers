@@ -67,8 +67,8 @@ class TowersPartitioned(object):
 			else:
 				pair_map[first_number] = {second_number: [avg_call_time]}
 		print 'dumping pickle file...'
-		cPickle.dump(pair_map,open(destination_file,'wb'))
-		print 'created file for', destination_file
+		cPickle.dump(pair_map,open(dest_pickle_file,'wb'))
+		print 'created file for', dest_pickle_file
 		return True
 
 	def generate_dates(self):
@@ -152,7 +152,7 @@ def main():
 	dest_path = '/pickle.p'
 	print 'creating user maps for ', towers_dir, 'to be stored at', dest_path
 	partitioned = TowersPartitioned(towers_dir)
-	partitioned.pair_users_from_towers(destination_file)
+	partitioned.pair_users_from_towers(dest_path)
 	print 'completed pairing users.'
 
 if __name__ == '__main__':
