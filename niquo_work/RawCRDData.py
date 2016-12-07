@@ -51,6 +51,7 @@ class RawCDRCSV(object):
 				tower_file_obj = open(tower_path,'wb')
 
 			tower_file_csv = csv.writer(tower_file_obj,delimiter=';')
+			print 'ROW ADDED!'
 			tower_file_csv.writerow(row)
 			tower_file_obj.close()
 
