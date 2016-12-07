@@ -192,7 +192,7 @@ def time_of_days():
 
 def tower_types():
 	encounters_dir = '../niquo_data/filtered_data/encounters_CSVs/'
-	images_dir = '../niquo_data/test_data/plot_images/tower_types/'
+	images_dir = '../niquo_data/test_folder/plot_images/tower_types/'
 	towers_map = maps.tower_to_activity()
 	for encounters_file in os.listdir(encounters_dir):
 		print 'creating tower type histograms for', encounters_file
