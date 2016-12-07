@@ -39,7 +39,7 @@ class TowersPartitioned(object):
 		return True
 
 	def pair_users_single_file(self,tower_path,dest_pickle_file,limit):
-		all_callers = ex.read_csv(filename,float('inf'))
+		all_callers = ex.read_csv(tower_path,float('inf'))
 		if len(all_callers) > limit:
 					return False
 		print 'sorting rows...'
@@ -147,3 +147,13 @@ def average_call_times(time_stamp_1,time_stamp_2):
 	return head + ' ' + zero_pad(avgh) + ':' + zero_pad(avgm) + ':' + str(avgs)
 
 
+def main():
+	towers_dir = 'some_dir/'
+	dest_path = '/pickle.p'
+	print 'creating user maps for ', towers_dir, 'to be stored at', dest_path
+	partitioned = TowersPartitioned(towers_dir)
+	partitioned.pair_users_from_towers(destination_file)
+	print 'completed pairing users.'
+
+if __name__ == '__main__':
+    main()
