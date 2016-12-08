@@ -10,15 +10,15 @@ class InteractionMap(object):
 	"""docstring for InteractionMaps"""
 	def __init__(self, directory_path):
 		self.directory = directory_path
+		self.towers = sorted(os.listdir(self.directory))
 
-	def combine_interaction_maps(self, otherMap, len_combine=7):
-		all_dates = sorted(os.listdir(self.directory))
-		num_days = len(all_dates)
+	def combine_interaction_maps(self, otherMaps, destination_path, len_combine=7):
+		num_days = len(otherMaps)
 		for day_index in range(0,num_days,len_combine):
 			if (day_index + len_combine) > num_days:
-				working_set = all_dates[day_index:]
+				working_set = otherMaps[day_index:]
 			else:
-				working_set = all_dates[day_index:day_index + len_combine]
+				working_set = otherMaps[day_index:day_index + len_combine]
 
 			num_in_set = len(working_set)
 			first_day = working_set[0]
@@ -44,6 +44,11 @@ class InteractionMap(object):
 				combined_map = combine_days_for_tower(tower,days_paths)
 				cPickle.dump(combined_map, open(map_dump_loc,'wb'))
 		return True
+
+
+		@classmethod
+		def createInteractionMapsSet(cls,days_directory):
+			return [InteractionMaps(path) for path in os.listdir(days_directory)]
 
 
 
