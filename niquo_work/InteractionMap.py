@@ -45,10 +45,9 @@ class InteractionMap(object):
 				cPickle.dump(combined_map, open(map_dump_loc,'wb'))
 		return True
 
-
-		@classmethod
-		def createInteractionMapsSet(cls,days_directory):
-			return [InteractionMaps(path) for path in os.listdir(days_directory)]
+	@classmethod
+	def createInteractionMapsSet(cls,days_directory):
+		return [InteractionMaps(path) for path in os.listdir(days_directory)]
 
 
 
