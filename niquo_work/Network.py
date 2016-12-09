@@ -40,7 +40,7 @@ def get_distribution_encounters(encoutners_csv,network_object_path,destination_p
 	with open(encoutners_csv,'rb') as csvfile:
 		with open(destination_path,'wb') as csvout:
 			csv_iterator = csv.reader(csvfile,delimiter=';')
-			distance_csv = csv.writer(tower_file_obj,delimiter=';')
+			distance_csv = csv.writer(csvout,delimiter=';')
 			for row in csv_iterator:
 				caller = row[caller_index]
 				encounteree = row[enc_index]
