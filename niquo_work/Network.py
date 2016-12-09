@@ -2,6 +2,7 @@ import networkx as nx
 import RawCRDData as raw
 import file_constants as constants
 import cPickle
+import csv
 
 def create_graph(csv_file,store_path):
 	csvData = raw.RawCDRCSV(csv_file)
