@@ -41,4 +41,4 @@ def Main(root_path='../niquo_data/v2_data_root', data_path='../niquo_data/filter
 
 
 if __name__ == '__main__':
-    main()
+    Main()
