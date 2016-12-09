@@ -4,7 +4,7 @@ import extractData as ex
 import cPickle
 import itertools
 from datetime import datetime
-import times
+import time
 
 
 
