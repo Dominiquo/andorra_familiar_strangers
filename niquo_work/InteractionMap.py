@@ -47,7 +47,7 @@ class InteractionMap(object):
 
 	@classmethod
 	def createInteractionMapsSet(cls,days_directory):
-		return [InteractionMap(path) for path in os.listdir(days_directory)]
+		return [InteractionMap(os.path.join(days_directory, path)) for path in os.listdir(days_directory)]
 
 
 
