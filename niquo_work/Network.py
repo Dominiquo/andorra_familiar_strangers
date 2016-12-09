@@ -16,29 +16,36 @@ def create_graph(csv_file,store_path):
 	cPickle.dump(friend_graph, open(store_path,'wb'))
 	return True
 
-def clean_graph(network_object_path,threshold=1000):
+def clean_graph(network_object_path, cleaned_path, threshold=1000):
 	friend_graph = cPickle.load(open(network_object,'rb'))
-	# TODO: clean the graph
+	nodes = nx.nodes(friend_graph)
+	degrees_dict = nx.degree(friend_graph,nodes)
+	count = 0
+	for node, degree in degrees_dict.iteritems():
+		if degree > threshold:
+			friend_graph.remove_node(node)
+			count += 1
+	print 'removed ', count, 'nodes from the graph'
 	return True
 
 
 def get_distribution_encounters(encoutners_csv,network_object_path,destination_path):
+	# row = [caller,caller_enc,delta_days,delta_seconds,tower,next_tower,last_time]
 	friend_graph = cPickle.load(open(network_object,'rb'))
-	caller_index = -1
-	receiver_index = -1
-
-	csvout = open(destination_path,'wb')
-
+	caller_index = 0
+	enc_index = 1
+	nodes_set = set(nx.nodes(friend_graph))
 	with open(encoutners_csv,'rb') as csvfile:
-		csv_iterator = csv.reader(csvfile,delimiter=';')
-		distance_csv = csv.writer(tower_file_obj,delimiter=';')
-		for row in csv_iterator:
-			caller = row[caller_index]
-			receiver = row[receiver_index]
-			# TODO
-			distance = friend_graph.distance(caller,receiver)
-			new_row = [caller, receiver, distance]
-			distance_csv.writerow(row)
+		with open(destination_path,'wb') as csvout:
+			csv_iterator = csv.reader(csvfile,delimiter=';')
+			distance_csv = csv.writer(tower_file_obj,delimiter=';')
+			for row in csv_iterator:
+				caller = row[caller_index]
+				encounteree = row[enc_index]
+				if (caller in nodes_set) and (encounteree in nodes_set):
+					distance = shortest_path_length(friend_graph, source=encounteree)
+					new_row = row.append(distance)
+					distance_csv.writerow(row)
 	return True
 
 
