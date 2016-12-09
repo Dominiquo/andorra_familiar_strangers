@@ -27,7 +27,7 @@ class InteractionMap(object):
 			num_in_set = len(working_set)
 			if num_in_set == 1:
 				continue
-			date_dir = destination_path + first_day.base + "_" + working_set[-1].base
+			date_dir = os.path.join(destination_path, first_day.base + "_" + working_set[-1].base)
 			print 'combining tower files to be stored in ', date_dir
 			if not os.path.exists(date_dir):
 					os.makedirs(date_dir)
