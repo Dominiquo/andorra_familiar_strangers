@@ -80,3 +80,12 @@ def find_nearest_time(encs_list,last_encounter):
 				# print 'found time after search:',min_time_met
 				return min_time_met
 	return None
+
+def time_difference(first_time,second_time):
+	format_string = "%Y.%m.%d %H:%M:%S"
+	time_1 = datetime.strptime(first_time,format_string)
+	time_2 = datetime.strptime(second_time,format_string)
+	diff = time_2 - time_1
+	return diff.days,diff.seconds
+
+	
