@@ -166,7 +166,7 @@ def encounters_on_tower(encounters_csv,images_dir,towers_map,destination_dir):
 		print 'found encounters for ', first, second, 'with length', len(all_encs)
 		bins = 150
 		bin_range = [0,180]
-		y_range = [0,2500]
+		y_range = [0,800]
 		filename = destination_dir + '/' + base + '_type_' + str(first) + '_type_' + str(second) + '.png'
 		print 'destination', filename
 		if len(all_encs) != 0:
