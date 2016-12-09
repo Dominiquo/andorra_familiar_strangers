@@ -18,6 +18,7 @@ def Main(root_path='../niquo_data/v2_data_root', data_path='../niquo_data/filter
 	towers_dir_name = 'partitioned_towers'
 	towers_path = os.path.join(root_path, towers_dir_name)
 	if not os.path.exists(towers_path):
+				print 'made directory', towers_path
 				os.makedirs(towers_path)
 	print 'partitioning raw data in tower files to be stored in directory: ', towers_path
 	csvData = raw.RawCDRCSV(data_path)
