@@ -20,7 +20,7 @@ def find_mult_enc_single_week(week_path,destination_path,n=2):
 	for tower in all_towers:
 		print 'adding tower',tower_count,'/',len(all_towers)
 		tower_count += 1
-		tower_path = week_path + tower
+		tower_path = os.path.join(week_path, tower)
 		all_maps[tower] = cPickle.load(open(tower_path,'rb'))
 
 	print 'loading files complete..'
