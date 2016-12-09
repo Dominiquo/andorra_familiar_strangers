@@ -16,23 +16,23 @@ class InteractionMap(object):
 	def get_towers_paths(self):
 		return self.towers
 
-	def combine_interaction_maps(self, otherMaps, destination_path, len_combine=7):
-		num_days = len(otherMaps)
+	@staticmethod
+	def combine_interaction_maps(combMaps, destination_path, len_combine=7):
+		num_days = len(combMaps)
 		for day_index in range(0,num_days,len_combine):
 			if (day_index + len_combine) > num_days:
-				working_set = otherMaps[day_index:]
+				working_set = combMaps[day_index:]
 			else:
-				working_set = otherMaps[day_index:day_index + len_combine]
-
-			num_in_set = len(working_set)
+				working_set = combMaps[day_index:day_index + len_combine]
 			first_day = working_set[0]
+			num_in_set = len(working_set)
 			if num_in_set == 1:
 				continue
 			date_dir = destination_path + first_day.base + "_" + working_set[-1].base
 			print 'combining tower files to be stored in ', date_dir
 			if not os.path.exists(date_dir):
 					os.makedirs(date_dir)
-			all_towers,tower_to_paths = get_intersecting_towers_map([imap.directory for imap in otherMaps])
+			all_towers,tower_to_paths = get_intersecting_towers_map([imap.directory for imap in combMaps])
 			for tower in all_towers:
 				map_dump_loc = os.path.join(date_dir, tower)
 				if os.path.isfile(map_dump_loc):
@@ -45,7 +45,7 @@ class InteractionMap(object):
 
 	@classmethod
 	def createInteractionMapsSet(cls,days_directory):
-		return [InteractionMap(os.path.join(days_directory, path)) for path in os.listdir(days_directory)]
+		return [InteractionMap(os.path.join(days_directory, path)) for path in sorted(os.listdir(days_directory))]
 
 
 
