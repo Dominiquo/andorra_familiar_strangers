@@ -37,6 +37,7 @@ def get_distribution_encounters(encoutners_csv,network_object_path,destination_p
 	caller_index = 0
 	enc_index = 1
 	nodes_set = set(nx.nodes(friend_graph))
+	print 'loaded in ', len(nodes_set), 'nodes'
 	with open(encoutners_csv,'rb') as csvfile:
 		with open(destination_path,'wb') as csvout:
 			csv_iterator = csv.reader(csvfile,delimiter=';')
@@ -46,7 +47,8 @@ def get_distribution_encounters(encoutners_csv,network_object_path,destination_p
 				encounteree = row[enc_index]
 				if (caller in nodes_set) and (encounteree in nodes_set):
 					distance = shortest_path_length(friend_graph, source=encounteree)
-					new_row = row.append(distance)
+					print 'two users at distance of ',distance
+					row.append(distance)
 					distance_csv.writerow(row)
 	return True
 
