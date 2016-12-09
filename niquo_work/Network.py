@@ -32,7 +32,7 @@ def clean_graph(network_object_path, cleaned_path, threshold=1000):
 
 def get_distribution_encounters(encoutners_csv,network_object_path,destination_path):
 	# row = [caller,caller_enc,delta_days,delta_seconds,tower,next_tower,last_time]
-	friend_graph = cPickle.load(open(network_object,'rb'))
+	friend_graph = cPickle.load(open(network_object_path,'rb'))
 	caller_index = 0
 	enc_index = 1
 	nodes_set = set(nx.nodes(friend_graph))
