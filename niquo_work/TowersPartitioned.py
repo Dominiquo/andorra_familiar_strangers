@@ -26,16 +26,16 @@ class TowersPartitioned(object):
 			dest_date_dir = os.path.join(destination_path,date_dir)
 			if not os.path.exists(dest_date_dir):
 				os.makedirs(dest_date_dir)
-		tower_count = 1
-		for tower_name in tower_files:
-			total_towers = len(tower_files)
-			print 'creating pair map object', tower_count, '/', total_towers,'for day',date_dir
-			tower_count += 1
-			tower_path = os.path.join(date_path,tower_name)
-			dest_pickle_file = dest_date_dir + '/' + tower_name.split('.')[0] + '.p'
-			if os.path.isfile(dest_pickle_file):
-				continue
-			self.pair_users_single_file(tower_path,dest_pickle_file,limit)
+			tower_count = 1
+			for tower_name in tower_files:
+				total_towers = len(tower_files)
+				print 'creating pair map object', tower_count, '/', total_towers,'for day',date_dir
+				tower_count += 1
+				tower_path = os.path.join(date_path,tower_name)
+				dest_pickle_file = os.path.join(dest_date_dir, tower_name.split('.')[0] + '.p')
+				if os.path.isfile(dest_pickle_file):
+					continue
+				self.pair_users_single_file(tower_path,dest_pickle_file,limit)
 		return True
 
 	def pair_users_single_file(self,tower_path,dest_pickle_file,limit):
