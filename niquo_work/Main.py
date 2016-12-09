@@ -6,7 +6,8 @@ import Encounters as encs
 
 
 def create_encounter(data_path, dest_path, n_vals):
-	week_paths = os.listdir(data_path)
+	# TODO: take off indexing to do all weeks
+	week_paths = sorted(os.listdir(data_path))[0]
 	for week_path in week_paths:
 			full_path = os.path.join(prefix, week_path)
 			for n in range(2,20,4):
@@ -38,7 +39,8 @@ def Main(root_path='../niquo_data/v2_data_root', data_path='../niquo_data/filter
 	if not os.path.exists(combo_path):
 				os.makedirs(combo_path)
 	print 'combining encounters maps to be stored at ', combo_path
-	all_days_maps_dir = imap.InteractionMap.createInteractionMapsSet(paired_path)
+	# TODO: extend to all weeks
+	all_days_maps_dir = imap.InteractionMap.createInteractionMapsSet(paired_path)[:7]
 	imap.InteractionMap.combine_interaction_maps(all_days_maps_dir,combo_path)
 
 	n_vals = range(2,20,4)
