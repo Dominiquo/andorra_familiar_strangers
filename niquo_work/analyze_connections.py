@@ -45,7 +45,7 @@ def filter_xvals(file_path,filter_func=lambda x: True):
 
 def create_dist_histogram(x_vals,bins,bin_range, y_range, save_file):
 	plt.hist(x_vals,bins,range=bin_range)
-	plt.set_ylim(y_range)
+	plt.ylim(y_range)
 	plt.savefig(save_file)
 	plt.clf()
 	return True
