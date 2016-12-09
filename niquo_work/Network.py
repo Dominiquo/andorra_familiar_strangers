@@ -53,7 +53,7 @@ def get_distribution_encounters(encoutners_csv,network_object_path,destination_p
 def main():
 	new_obj_clean = '../niquo_data/filtered_data/network_object_cleaned.p'
 	encs_csv = '../niquo_data/CURRENT_DATA/encs_data/2016.07.15_2016.07.21_encounter_n_2.csv'
-	dest = '../niquo_data/CURRENT_DATA/friend_dis_n2.png'
+	dest = '../niquo_data/CURRENT_DATA/friend_dis_n2.csv'
 	get_distribution_encounters(encs_csv,new_obj_clean,dest)
 
 
