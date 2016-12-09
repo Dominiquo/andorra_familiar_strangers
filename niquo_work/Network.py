@@ -51,11 +51,11 @@ def get_distribution_encounters(encoutners_csv,network_object_path,destination_p
 
 
 def main():
-	csv_file = constants.JULY_DATA_FILTERED
-	save_location = '../niquo_data/filtered_data/network_object.p'
-	print 'creating network graph to be saved at', save_location
-	create_graph(csv_file,save_location)
-	print 'graph created and stored'
+	new_obj_clean = '../niquo_data/filtered_data/network_object_cleaned.p'
+	encs_csv = '../niquo_data/CURRENT_DATA/encs_data/2016.07.15_2016.07.21_encounter_n_2.csv'
+	dest = '../niquo_data/CURRENT_DATA/friend_dis_n2.png'
+	get_distribution_encounters(encs_csv,new_obj_clean,dest)
+
 
 if __name__ == '__main__':
     main()
