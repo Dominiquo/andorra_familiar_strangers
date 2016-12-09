@@ -17,6 +17,8 @@ def Main(root_path='../niquo_data/v2_data_root', data_path='../niquo_data/filter
 
 	towers_dir_name = 'partitioned_towers'
 	towers_path = os.path.join(root_path, towers_dir_name)
+	if not os.path.exists(towers_path):
+				os.makedirs(towers_path)
 	print 'partitioning raw data in tower files to be stored in directory: ', towers_path
 	csvData = raw.RawCDRCSV(data_path)
 	csvData.filter_and_partition(towers_path)
@@ -24,11 +26,15 @@ def Main(root_path='../niquo_data/v2_data_root', data_path='../niquo_data/filter
 	paired_dir_name = 'paired_callers'
 	paired_path = os.path.join(root_path,paired_dir_name)
 	print 'finding user call pairs to be stored ', paired_path
+	if not os.path.exists(paired_path):
+				os.makedirs(paired_path)
 	partitioned = TP.TowersPartitioned(towers_path)
 	partitioned.pair_users_from_towers(paired_path)
 
 	combo_dir_name = 'combined_callers'
 	combo_path = os.path.join(root_path,combo_dir_name)
+	if not os.path.exists(combo_path):
+				os.makedirs(combo_path)
 	print 'combining encounters maps to be stored at ', combo_path
 	all_days_maps_dir = imap.InteractionMap.createInteractionMapsSet(paired_path)
 	imap.InteractionMap.combine_interaction_maps(all_days_maps_dir,combo_path)
@@ -36,6 +42,8 @@ def Main(root_path='../niquo_data/v2_data_root', data_path='../niquo_data/filter
 	n_vals = range(2,20,4)
 	encounters_dir_name = 'encounters_CSVs'
 	encounters_path = os.path.join(root_path,encounters_dir_name)
+	if not os.path.exists(encounters_path):
+				os.makedirs(encounters_path)
 	create_encounter(combo_path, encounters_path, n_vals)
 	return True
 
