@@ -70,7 +70,7 @@ def combine_pair_mappings(first_map, second_map):
 def combine_days_for_tower(tower_file,days_paths):
 	"""days_paths expected to be sorted"""
 	first_day_path = days_paths[0]
-	first_day_tower_pairing = first_day_path + tower_file
+	first_day_tower_pairing = os.path.join(first_day_path, tower_file)
 	first_day_map = cPickle.load(open(first_day_tower_pairing,'rb'))
 	if len(days_paths) == 1:
 		return first_day_map
