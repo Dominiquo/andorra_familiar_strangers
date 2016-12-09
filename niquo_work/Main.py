@@ -7,7 +7,7 @@ import Encounters as encs
 
 def create_encounter(data_path, dest_path, n_vals):
 	# TODO: take off indexing to do all weeks
-	week_paths = sorted(os.listdir(data_path))[0]
+	week_paths = sorted(os.listdir(data_path))[:1]
 	for week_path in week_paths:
 			full_path = os.path.join(data_path, week_path)
 			for n in range(2,20,4):
