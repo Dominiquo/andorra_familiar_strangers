@@ -43,8 +43,9 @@ def filter_xvals(file_path,filter_func=lambda x: True):
 	x_vals = [convert_row(row) for row in all_rows if filter_func(row)]
 	return x_vals
 
-def create_dist_histogram(x_vals,bins,bin_range,save_file):
+def create_dist_histogram(x_vals,bins,bin_range, y_range, save_file):
 	plt.hist(x_vals,bins,range=bin_range)
+	plt.set_ylim(y_range)
 	plt.savefig(save_file)
 	plt.clf()
 	return True
@@ -165,10 +166,11 @@ def encounters_on_tower(encounters_csv,images_dir,towers_map,destination_dir):
 		print 'found encounters for ', first, second, 'with length', len(all_encs)
 		bins = 150
 		bin_range = [0,180]
+		y_range = [0,2500]
 		filename = destination_dir + '/' + base + '_type_' + str(first) + '_type_' + str(second) + '.png'
 		print 'destination', filename
 		if len(all_encs) != 0:
-			create_dist_histogram(all_encs,bins,bin_range,filename)
+			create_dist_histogram(all_encs, bins, bin_range, y_range, filename)
 
 		print 'creating flipped version of', first, second
 
@@ -177,7 +179,7 @@ def encounters_on_tower(encounters_csv,images_dir,towers_map,destination_dir):
 		filename_flipped = destination_dir + '/' + base + '_type_' + str(second) + '_type_' + str(first) + '.png'
 		print 'destination', filename
 		if len(all_encs) != 0:
-			create_dist_histogram(all_encs,bins,bin_range,filename_flipped)
+			create_dist_histogram(all_encs,bins,bin_range, y_range,filename_flipped)
 
 		print 'completed'
 	return True
@@ -193,8 +195,8 @@ def time_of_days():
 
 
 def tower_types():
-	encounters_dir = '../niquo_data/filtered_data/encounters_CSVs/'
-	images_dir = '../niquo_data/test_folder/plot_images/tower_types/'
+	encounters_dir = '../niquo_data/CURRENT_DATA'
+	images_dir = '../niquo_data/CURRENT_PLOTS'
 	towers_map = maps.tower_to_activity()
 	for encounters_file in os.listdir(encounters_dir):
 		print 'creating tower type histograms for', encounters_file
@@ -202,19 +204,19 @@ def tower_types():
 		encounters_on_tower(encounters_csv,images_dir,towers_map,images_dir)
 		print 'completed making plots for',encounters_csv
 
-def unfiltered_plots():
-	encounters_dir = '../niquo_data/filtered_data/encounters_CSVs/'
-	images_dir = '../niquo_data/filtered_data/plot_images/unfiltered_plots/'
-	for encounters_file in os.listdir(encounters_dir):
-		print 'creating unfiltered_plots for ', encounters_file
-		encounters_csv = os.path.join(encounters_dir,encounters_file)
-		all_encs = filter_xvals(encounters_csv)
-		bins = 150
-		bin_range = [0,180]
-		base = os.path.basename(encounters_csv)[:-4]
-		filename = destination_dir + '/' + base + '.png'
-		create_dist_histogram(all_encs,bins,bin_range,filename)
-		print 'complete.'
+# def unfiltered_plots():
+# 	encounters_dir = '../niquo_data/filtered_data/encounters_CSVs/'
+# 	images_dir = '../niquo_data/filtered_data/plot_images/unfiltered_plots/'
+# 	for encounters_file in os.listdir(encounters_dir):
+# 		print 'creating unfiltered_plots for ', encounters_file
+# 		encounters_csv = os.path.join(encounters_dir,encounters_file)
+# 		all_encs = filter_xvals(encounters_csv)
+# 		bins = 150
+# 		bin_range = [0,180]
+# 		base = os.path.basename(encounters_csv)[:-4]
+# 		filename = destination_dir + '/' + base + '.png'
+# 		create_dist_histogram(all_encs,bins,bin_range,filename)
+# 		print 'complete.'
 
 
 def main(args):
