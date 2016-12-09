@@ -2,6 +2,7 @@ import csv
 import os
 import cPickle
 import itertools
+import extractData as ex
 from datetime import datetime
 import time
 

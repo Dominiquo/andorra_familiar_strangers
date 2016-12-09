@@ -15,13 +15,13 @@ def create_encounter(data_path, dest_path, n_vals):
 
 def Main(root_path='../niquo_data/v2_data_root', data_path='../niquo_data/filtered_data/06_2017_no_data.csv'):
 
-	towers_dir_name = 'partitioned_towers'
-	towers_path = os.path.join(root_path, towers_dir_name)
-	if not os.path.exists(towers_path):
-				os.makedirs(towers_path)
-	print 'partitioning raw data in tower files to be stored in directory: ', towers_path
-	csvData = raw.RawCDRCSV(data_path)
-	csvData.filter_and_partition(towers_path)
+	# towers_dir_name = 'partitioned_towers'
+	# towers_path = os.path.join(root_path, towers_dir_name)
+	# if not os.path.exists(towers_path):
+	# 			os.makedirs(towers_path)
+	# print 'partitioning raw data in tower files to be stored in directory: ', towers_path
+	# csvData = raw.RawCDRCSV(data_path)
+	# csvData.filter_and_partition(towers_path)
 
 	paired_dir_name = 'paired_callers'
 	paired_path = os.path.join(root_path,paired_dir_name)
