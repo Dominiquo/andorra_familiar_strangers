@@ -39,8 +39,7 @@ def Main(root_path='../niquo_data/v2_data_root', data_path='../niquo_data/filter
 	if not os.path.exists(combo_path):
 				os.makedirs(combo_path)
 	print 'combining encounters maps to be stored at ', combo_path
-	# TODO: extend to all weeks
-	all_days_maps_dir = imap.InteractionMap.createInteractionMapsSet(paired_path)[:7]
+	all_days_maps_dir = imap.InteractionMap.createInteractionMapsSet(paired_path)
 	imap.InteractionMap.combine_interaction_maps(all_days_maps_dir,combo_path)
 
 	n_vals = range(2,20,4)

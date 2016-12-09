@@ -74,7 +74,7 @@ def combine_days_for_tower(tower_file,days_paths):
 	if len(days_paths) == 1:
 		return first_day_map
 	for day_dir in days_paths[1:]:
-		next_day_tower = day_dir + tower_file
+		next_day_tower = os.path.join(day_dir, tower_file)
 		next_day_tower_map = cPickle.load(open(next_day_tower, 'rb'))
 		first_day_map = combine_pair_mappings(first_day_map, next_day_tower_map)
 	return first_day_map
