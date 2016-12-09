@@ -26,6 +26,7 @@ def clean_graph(network_object_path, cleaned_path, threshold=1000):
 			friend_graph.remove_node(node)
 			count += 1
 	print 'removed ', count, 'nodes from the graph'
+	cPickle.dump(friend_graph,open(cleaned_path,'wb'))
 	return True
 
 
