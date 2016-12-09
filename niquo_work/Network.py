@@ -48,7 +48,6 @@ def get_distribution_encounters(encoutners_csv,network_object_path,destination_p
 				if (caller in nodes_set) and (encounteree in nodes_set):
 					try:
 						distance = nx.shortest_path_length(friend_graph, source=caller, target=encounteree)
-						print 'found two users that are at a distance of', distance
 						row.append(distance)
 						distance_csv.writerow(row)
 					except Exception as e:
