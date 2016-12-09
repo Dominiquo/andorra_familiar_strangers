@@ -22,8 +22,6 @@ def find_mult_enc_single_week(week_path,destination_path,n=2):
 		tower_count += 1
 		tower_path = os.path.join(week_path, tower)
 		all_maps[tower] = cPickle.load(open(tower_path,'rb'))
-		if tower_count > 5:
-			break
 
 	print 'loading files complete..'
 	for tower, tower_enc_map in all_maps.iteritems():
@@ -88,4 +86,3 @@ def time_difference(first_time,second_time):
 	diff = time_2 - time_1
 	return diff.days,diff.seconds
 
-	
