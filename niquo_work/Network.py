@@ -17,7 +17,7 @@ def create_graph(csv_file,store_path):
 	return True
 
 def clean_graph(network_object_path, cleaned_path, threshold=1000):
-	friend_graph = cPickle.load(open(network_object,'rb'))
+	friend_graph = cPickle.load(open(network_object_path,'rb'))
 	nodes = nx.nodes(friend_graph)
 	degrees_dict = nx.degree(friend_graph,nodes)
 	count = 0
