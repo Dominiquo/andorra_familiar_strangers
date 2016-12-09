@@ -39,7 +39,6 @@ class RawCDRCSV(object):
 
 			if tower_id not in total_ids:
 				total_ids.add(tower_id)
-				print 'added id for total of ', len(total_ids)
 			call_time = row[START_TIME_INDEX]
 			call_date = call_time[:DATE_INDEX]
 			date_path = os.path.join(destination_dir,call_date)
