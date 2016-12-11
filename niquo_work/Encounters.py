@@ -12,7 +12,6 @@ def find_mult_enc_single_week(week_path,destination_path,n=2):
 	all_towers = os.listdir(week_path)
 	print 'checking', len(all_towers),'total tower files...'
 	all_maps = {}
-	print 'openend', destination_file,'for writing csv data...'
 	print 'loading tower files in to RAM..'
 	tower_count = 1
 	for tower in all_towers:
