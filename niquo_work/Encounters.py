@@ -37,6 +37,8 @@ def find_mult_enc_single_week(week_path,destination_path,n=2):
 					times.sort()
 					last_time = times[-1]
 					delta_days, delta_seconds, next_tower = find_next_encounter(tower,caller,caller_enc,last_time,all_maps)
+					if next_tower == None:
+						continue
 					next_time = encs_anal.create_time_string_from_delta(last_time,delta_days,delta_seconds)
 					row = {'caller': caller,
 							'caller_enc': caller_enc,
