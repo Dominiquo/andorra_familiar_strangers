@@ -4,12 +4,13 @@ import cPickle
 import itertools
 import encounters_analysis as encs_anal
 from datetime import datetime
+from Network import get_graph_distance
 import time
 import json
 
 
 
-def find_mult_enc_single_week(week_path,destination_path,n=2):
+def find_mult_enc_single_week(week_path,destination_path, friend_graph, n=2):
 	all_towers = os.listdir(week_path)
 	print 'checking', len(all_towers),'total tower files...'
 	all_maps = {}
@@ -20,9 +21,6 @@ def find_mult_enc_single_week(week_path,destination_path,n=2):
 		tower_count += 1
 		tower_path = os.path.join(week_path, tower)
 		all_maps[tower] = cPickle.load(open(tower_path,'rb'))
-		if tower_count > 4:
-			print 'breaking early for testing reasons'
-			break
 
 	print 'loading files complete..'
 	with open(destination_path,'wb') as json_out:
@@ -41,6 +39,7 @@ def find_mult_enc_single_week(week_path,destination_path,n=2):
 					if next_tower == None:
 						continue
 					next_time = encs_anal.create_time_string_from_delta(last_time,delta_days,delta_seconds)
+					distance = get_graph_distance(caller, caller_enc, friend_graph)
 					row = {'caller': caller,
 							'caller_enc': caller_enc,
 							'first_times:': times,
@@ -48,6 +47,7 @@ def find_mult_enc_single_week(week_path,destination_path,n=2):
 							'delta_days': delta_days,
 							'delta_seconds': delta_seconds,
 							'first_tower': tower,
+							'distance': distance
 							'next_tower': next_tower}
 					json.dump(row,json_out)
 					json_out.write('\n')
