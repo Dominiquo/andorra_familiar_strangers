@@ -38,7 +38,7 @@ def find_mult_enc_single_week(week_path,destination_path,n=2):
 					next_time = encs_anal.create_time_string_from_delta(last_time,delta_days,delta_seconds)
 					row = {'caller': caller,
 							'caller_enc': caller_enc,
-							'first_times:': times
+							'first_times:': times,
 							'next_time': next_time,
 							'delta_days': delta_days,
 							'delta_seconds': delta_seconds
