@@ -41,7 +41,7 @@ def find_mult_enc_single_week(week_path,destination_path,n=2):
 							'first_times:': times,
 							'next_time': next_time,
 							'delta_days': delta_days,
-							'delta_seconds': delta_seconds
+							'delta_seconds': delta_seconds,
 							'first_tower': tower,
 							'next_tower': next_tower}
 					json.dump(row,json_out)
