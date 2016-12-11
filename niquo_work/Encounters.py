@@ -21,6 +21,10 @@ def find_mult_enc_single_week(week_path,destination_path,n=2):
 		tower_count += 1
 		tower_path = os.path.join(week_path, tower)
 		all_maps[tower] = cPickle.load(open(tower_path,'rb'))
+		if tower_count > 5:
+			print 'breaking early for testing reasons'
+			break
+
 	print 'loading files complete..'
 	with open(destination_file,'wb') as json_out:
 		for tower, tower_enc_map in all_maps.iteritems():
