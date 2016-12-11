@@ -5,6 +5,7 @@ import itertools
 import encounters_analysis as encs_anal
 from datetime import datetime
 import time
+import json
 
 
 
