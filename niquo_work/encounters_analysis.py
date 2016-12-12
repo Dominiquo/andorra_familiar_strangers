@@ -25,7 +25,7 @@ def graph_filter_vals(json_filename, filter_func):
 def create_graphs_on_tower_type(encounters_json, destination_path, n, bins=150, bin_range=[0,180]):
 	tower_map = maps.tower_to_activity()
 	tower_types = get_tower_types(tower_map)
-	axis_ranges = [50, 200, 500, 1000, 2000, 50000]
+	axis_ranges = [50, 200, 500, 1000, 2000, 5000]
 	for first, second in itertools.permutations(tower_types, 2):
 		filter_func = create_loc_filter_func(first, second, n, tower_map)
 		print 'retreiving x vals for tower types ', first, second, 'with n = ', n 
@@ -43,7 +43,7 @@ def create_graphs_on_tower_type(encounters_json, destination_path, n, bins=150, 
 
 def create_graphs_on_times(encounters_json, destination_path, n, bins=150, bin_range=[0,180]):
 	all_conditions = [isMorning,isHome,isNight]
-	axis_ranges = [50, 200, 500, 1000, 2000, 50000]
+	axis_ranges = [50, 200, 500, 1000, 2000, 5000]
 	for first, second in itertools.permutations(all_conditions, 2):
 		filter_func = create_times_filter_func(first,second, n)
 		print 'retreiving x vals for call times ', first.func_name, second.func_name, 'for n = ', n
@@ -80,7 +80,7 @@ def create_encounters_count_filter(n):
 def create_friend_dist_graph(encounters_json, destination_path, n,  bins=100, bin_range=[0,100]):
 	filter_func = create_encounters_count_filter(n)
 	print 'retreiving x vals for friend distance with n = ', n
-	axis_ranges = [50, 200, 500, 1000, 2000, 50000]
+	axis_ranges = [50, 200, 500, 1000, 2000, 5000]
 	x_vals = graph_filter_vals(encounters_json, filter_func)
 	print 'found ', len(x_vals), 'values to plot'
 	if len(x_vals) == 0:
@@ -210,10 +210,10 @@ def Main():
 		print 'creating graphs for n =', n
 		create_friend_dist_graph(encounters_json, destination_path, n)
 		print 'created friend distance graph for n = ', n
-		# create_graphs_on_tower_type(encounters_json, destination_path, n)
-		# print 'create tower type graph for n = ', n
-		# create_graphs_on_times(encounters_json, destination_path, n)
-		# print 'created graph for encounter times for n =', n
+		create_graphs_on_tower_type(encounters_json, destination_path, n)
+		print 'create tower type graph for n = ', n
+		create_graphs_on_times(encounters_json, destination_path, n)
+		print 'created graph for encounter times for n =', n
 
 	return True
 
