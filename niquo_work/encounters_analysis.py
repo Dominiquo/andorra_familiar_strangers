@@ -3,6 +3,7 @@ import csv
 import os
 import sys
 import numpy as np
+import json
 import getMaps as maps
 import matplotlib.pyplot as plt
 from datetime import datetime, timedelta
