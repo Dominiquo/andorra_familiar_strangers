@@ -46,16 +46,16 @@ def create_loc_filter_func(first, second, towers_map):
 	first_times = 'first_times'
 	first_tower = 'first_tower'
 	next_tower = 'next_tower'
-	return lambda row: (first in get_tower_code(row,first_tower, towers_map)) and (second in get_tower_code(row,next_tower,towers_map)) and (len(row[first_times]) == n)
+	return lambda row: (first in get_tower_code(row,first_tower, towers_map)) and (second in get_tower_code(row,next_tower,towers_map)) and (len(row[first_times]) >= n)
 
 def create_times_filter_func(first_cond,second_cond, n, use_majority=True):
 	first_times = 'first_times'
 	next_time = 'next_time'
 	last_element = -1
 	if use_majority:
-		return lambda row: majority_check(row[first_times],first_cond) and second_cond(row[next_time]) and (len(row[first_times]) == n)
+		return lambda row: majority_check(row[first_times],first_cond) and second_cond(row[next_time]) and (len(row[first_times]) >= n)
 	else:
-		return lambda row: first_cond(row[first_times][last_element]) and second_cond(row[next_time]) and (len(row[first_times]) == n)
+		return lambda row: first_cond(row[first_times][last_element]) and second_cond(row[next_time]) and (len(row[first_times]) >= n)
 
 def create_encounters_count_filter(n):
 	return lambda row: ((row['first_times'] > n) and (row['distance'] > 0))
