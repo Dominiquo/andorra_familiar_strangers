@@ -99,7 +99,7 @@ def get_max_occurs(x_vals):
 	d = defaultdict(int)
 	for i in x_vals:
 		d[i] += 1
-	return max(d.iteritems(), key=lambda x: x[1])
+	return max(d.iteritems(), key=lambda x: x[1])[1]
 
 
 def create_file_name(json_filename, first, second, n, is_graph):
