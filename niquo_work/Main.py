@@ -6,17 +6,16 @@ import InteractionMap as imap
 import Encounters as encs
 
 
-def create_encounter(data_path, dest_path, n_vals,friend_graph_path):
+def create_encounter(data_path, dest_path, friend_graph_path):
 	print 'loading friend graph...'
 	friend_graph = cPickle.load(open(friend_graph_path,'rb'))
 	print 'graph loaded.'
 	week_paths = sorted(os.listdir(data_path))
 	for week_path in week_paths:
-			full_path = os.path.join(data_path, week_path)
-			for n in range(2,20,4):
-				dest_base = '%s_encounter_n_%s.json' % (week_path, n)
-				full_destination = os.path.join(dest_path,dest_base)
-				encs.find_mult_enc_single_week(full_path,full_destination,n,friend_graph)
+		full_path = os.path.join(data_path, week_path)
+		dest_base = '%s_encounter.json' % (week_path)
+		full_destination = os.path.join(dest_path,dest_base)
+		encs.find_mult_enc_single_week(full_path,full_destination,friend_graph)
 
 def Main(root_path='../niquo_data/v2_data_root', data_path='../niquo_data/filtered_data/06_2017_no_data.csv', graph_path='../niquo_data/filtered_data/network_object_100.p'):
 
@@ -45,13 +44,12 @@ def Main(root_path='../niquo_data/v2_data_root', data_path='../niquo_data/filter
 	# all_days_maps_dir = imap.InteractionMap.createInteractionMapsSet(paired_path)
 	# imap.InteractionMap.combine_interaction_maps(all_days_maps_dir,combo_path)
 
-	n_vals = range(2,20,4)
 	encounters_dir_name = 'encounters_files'
 	encounters_path = os.path.join(root_path,encounters_dir_name)
 	if not os.path.exists(encounters_path):
 				os.makedirs(encounters_path)
 	print 'creating encounters files to be stored at ', encounters_path
-	create_encounter(combo_path, encounters_path, n_vals, graph_path)
+	create_encounter(combo_path, encounters_path, graph_path)
 	return True
 
 

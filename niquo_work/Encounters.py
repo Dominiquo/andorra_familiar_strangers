@@ -10,7 +10,7 @@ import json
 
 
 
-def find_mult_enc_single_week(week_path,destination_path, friend_graph, n=2):
+def find_mult_enc_single_week(week_path,destination_path, friend_graph):
 	all_towers = os.listdir(week_path)
 	print 'checking', len(all_towers),'total tower files...'
 	all_maps = {}
@@ -32,9 +32,7 @@ def find_mult_enc_single_week(week_path,destination_path, friend_graph, n=2):
 			print tower,'contains',len(tower_enc_map),'encounterees'
 			for caller, encounteree_map in tower_enc_map.iteritems():
 				for caller_enc, times in encounteree_map.iteritems():
-					# if len(times) != n:
-						# continue
-					if caller_enc == caller or (len(times) != n):
+					if caller_enc == caller:
 						continue
 					times.sort()
 					last_time = times[-1]
