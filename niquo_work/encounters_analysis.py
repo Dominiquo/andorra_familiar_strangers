@@ -134,7 +134,7 @@ def get_axis_range_for_max(max_val, axis_ranges):
 	for val in axis_ranges:
 		if val > max_val:
 			return val
-	return axis_ranges[-1]
+	return max_val
 
 
 
@@ -210,10 +210,10 @@ def Main():
 		print 'creating graphs for n =', n
 		create_friend_dist_graph(encounters_json, destination_path, n)
 		print 'created friend distance graph for n = ', n
-		create_graphs_on_tower_type(encounters_json, destination_path, n)
-		print 'create tower type graph for n = ', n
-		create_graphs_on_times(encounters_json, destination_path, n)
-		print 'created graph for encounter times for n =', n
+		# create_graphs_on_tower_type(encounters_json, destination_path, n)
+		# print 'create tower type graph for n = ', n
+		# create_graphs_on_times(encounters_json, destination_path, n)
+		# print 'created graph for encounter times for n =', n
 
 	return True
 
