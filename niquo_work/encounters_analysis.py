@@ -203,7 +203,7 @@ def create_dist_histogram(x_vals,bins, bin_range, y_axis, save_file):
 	return True
 
 def Main():
-	encounters_json = '../niquo_data/v2_data_root/encounters_files/2016.07.01_2016.07.07_encounter.json'
+	encounters_json = '../niquo_data/v2_data_root/encounters_files/2016.07.08_2016.07.14_encounter.json'
 	destination_path = '../niquo_data/v2_data_root/plots'
 
 	for n in range(2,20,4):
