@@ -71,7 +71,7 @@ def create_times_filter_func(first_cond,second_cond, n, use_majority=True):
 def create_encounters_count_filter(n):
 	return lambda row: ((row['first_times'] > n) and (row['distance'] > 0))
 
-def create_friend_dist_graph(encounters_json, destination_path, n):
+def create_friend_dist_graph(encounters_json, destination_path, n,  bins=150, bin_range=[0,180]):
 	filter_func = create_encounters_count_filter(n)
 	print 'retreiving x vals for friend distance with n = ', n
 	axis_ranges = [50, 200, 500, 1000, 2000, 50000]
