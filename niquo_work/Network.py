@@ -55,13 +55,15 @@ def get_distribution_encounters(encoutners_csv,network_object_path,destination_p
 	return True
 
 def get_graph_distance(user1, user2, friend_graph):
+	# -1 means they are infinitely far apart (not connected)
+	# -2 means that one of the users was pruned from the graph
 	if (user1 in friend_graph) and (user2 in friend_graph):
 		try:
-			distance = nx.shortest_path_length(friend_graph, source=caller, target=encounteree)
+			distance = nx.shortest_path_length(friend_graph, source=user1, target=user2)
 			return distance
 		except Exception as e:
 			return -1
-	return -1
+	return -2
 
 def main():
 	new_obj_clean = '../niquo_data/filtered_data/network_object_cleaned.p'
