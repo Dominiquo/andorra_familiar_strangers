@@ -25,7 +25,11 @@ def create_graphs_on_tower_type(encounters_json, destination_path, n, bins=150, 
 	axis_ranges = [50, 200, 500, 1000, 2000, 50000]
 	for first, second in itertools.permutations(tower_types, 2):
 		filter_func = create_loc_filter_func(first, second, n, tower_map)
+		print 'retreiving x vals for tower types ', first, second, 'with n = ', n 
 		x_vals = filter_xvals(encounters_json, filter_func)
+		print 'found ', len(x_vals), 'values to plot'
+		if len(x_vals) == 0:
+			return False
 		y_axis = get_axis_range_for_max(max(x_vals), axis_ranges)
 		save_file = create_file_name(encounters_json, str(first), str(second), n, False)
 		create_dist_histogram(x_vals, bins, bin_range, y_axis,  save_file)
@@ -36,7 +40,11 @@ def create_graphs_on_times(encounters_json, destination_path, n, bins=150, bin_r
 	axis_ranges = [50, 200, 500, 1000, 2000, 50000]
 	for first, second in itertools.permutations(all_conditions, 2):
 		filter_func = create_times_filter_func(first,second, n)
+		print 'retreiving x vals for call times ', first.func_name, second.func_name, 'for n = ', n
 		x_vals = filter_xvals(encounters_json, filter_func)
+		print 'found ', len(x_vals), 'values to plot'
+		if len(x_vals) == 0:
+			return False
 		y_axis = get_axis_range_for_max(max(x_vals), axis_ranges)
 		save_file = create_file_name(encounters_json, first.func_name, second.func_name, n, False)
 		create_dist_histogram(x_vals, bins, bin_range, y_axis,  save_file)
@@ -46,23 +54,27 @@ def create_loc_filter_func(first, second, n, towers_map):
 	first_times = 'first_times'
 	first_tower = 'first_tower'
 	next_tower = 'next_tower'
-	return lambda row: (first in get_tower_code(row,first_tower, towers_map)) and (second in get_tower_code(row,next_tower,towers_map)) and (len(row[first_times]) >= n)
+	return lambda row: (len(row[first_times]) >= n) and (first in get_tower_code(row,first_tower, towers_map)) and (second in get_tower_code(row,next_tower,towers_map))
 
 def create_times_filter_func(first_cond,second_cond, n, use_majority=True):
 	first_times = 'first_times'
 	next_time = 'next_time'
 	last_element = -1
 	if use_majority:
-		return lambda row: majority_check(row[first_times],first_cond) and second_cond(row[next_time]) and (len(row[first_times]) >= n)
+		return lambda row: (len(row[first_times]) >= n) and majority_check(row[first_times],first_cond) and second_cond(row[next_time])
 	else:
-		return lambda row: first_cond(row[first_times][last_element]) and second_cond(row[next_time]) and (len(row[first_times]) >= n)
+		return lambda row: (len(row[first_times]) >= n) and first_cond(row[first_times][last_element]) and second_cond(row[next_time])
 
 def create_encounters_count_filter(n):
 	return lambda row: ((row['first_times'] > n) and (row['distance'] > 0))
 
 def create_friend_dist_graph(encounters_json, destination_path, n):
 	filter_func = create_encounters_count_filter(n)
+	print 'retreiving x vals for friend distance with n = ', n
 	x_vals = filter_xvals(encounters_json, filter_func)
+	print 'found ', len(x_vals), 'values to plot'
+	if len(x_vals) == 0:
+		return False
 	y_axis = get_axis_range_for_max(max(x_vals), axis_ranges)
 	save_file = create_file_name(encounters_json, None, None, n, True)
 	create_dist_histogram(x_vals, bins, bin_range, y_axis,  save_file)
@@ -179,9 +191,12 @@ def Main():
 
 	for n in range(2,20,4):
 		print 'creating graphs for n =', n
-		# create_graphs_on_tower_type(encounters_json, destination_path, n)
 		create_graphs_on_times(encounters_json, destination_path, n)
+		print 'created graph for encounter times for n =', n
 		create_friend_dist_graph(encounters_json, destination_path, n)
+		print 'created friend distance graph for n = ', n
+		create_graphs_on_tower_type(encounters_json, destination_path, n)
+		print 'create tower type graph for n = ', n
 
 	return True
 
