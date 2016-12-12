@@ -31,7 +31,7 @@ class InteractionMap(object):
 			print 'combining tower files to be stored in ', date_dir
 			if not os.path.exists(date_dir):
 					os.makedirs(date_dir)
-			all_towers,tower_to_paths = get_intersecting_towers_map([imap.directory for imap in combMaps])
+			all_towers,tower_to_paths = get_intersecting_towers_map([imap.directory for imap in working_set])
 			for tower in all_towers:
 				map_dump_loc = os.path.join(date_dir, tower)
 				if os.path.isfile(map_dump_loc):
