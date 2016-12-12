@@ -91,7 +91,7 @@ def create_box_plot():
 # *************HELPER FUNCTIONS*************
 
 def create_file_name(json_filename, first, second, n, is_graph):
-	dir_name = '/'.join(f.split('/')[:-2]) + '/plots'
+	dir_name = '/'.join(json_filename.split('/')[:-2]) + '/plots'
 	suffix = '.png'
 	if is_graph:
 		filename = os.path.basename(json_filename)[:21] + '_' + 'DISTANCES' + 'N_' + str(n)
@@ -117,11 +117,11 @@ def get_tower_code(row,index,towers_map):
 		return set([])
 
 def get_axis_range_for_max(max_val, axis_ranges):
-	largest = float('-inf')
 	for val in axis_ranges:
-		if val > largest and val < max_val:
-			largest = val
-	return largest
+		if val > max_val:
+			return val
+	return axis_ranges[-1]
+
 
 
 def get_tower_types(towers_map):
