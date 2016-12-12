@@ -5,6 +5,7 @@ import sys
 import numpy as np
 import json
 import getMaps as maps
+from collections import defaultdict
 import matplotlib.pyplot as plt
 from datetime import datetime, timedelta
 import itertools
@@ -30,7 +31,7 @@ def create_graphs_on_tower_type(encounters_json, destination_path, n, bins=150, 
 		print 'found ', len(x_vals), 'values to plot'
 		if len(x_vals) == 0:
 			return False
-		y_axis = get_axis_range_for_max(max(x_vals), axis_ranges)
+		y_axis = get_axis_range_for_max(get_max_occurs(x_vals), axis_ranges)
 		save_file = create_file_name(encounters_json, str(first), str(second), n, False)
 		print 'creating graph to be stored at ', save_file
 		create_dist_histogram(x_vals, bins, bin_range, y_axis,  save_file)
@@ -46,7 +47,7 @@ def create_graphs_on_times(encounters_json, destination_path, n, bins=150, bin_r
 		print 'found ', len(x_vals), 'values to plot'
 		if len(x_vals) == 0:
 			return False
-		y_axis = get_axis_range_for_max(max(x_vals), axis_ranges)
+		y_axis = get_axis_range_for_max(get_max_occurs(x_vals), axis_ranges)
 		save_file = create_file_name(encounters_json, first.func_name, second.func_name, n, False)
 		print 'creating graph to be stored at ', save_file
 		create_dist_histogram(x_vals, bins, bin_range, y_axis,  save_file)
@@ -73,11 +74,12 @@ def create_encounters_count_filter(n):
 def create_friend_dist_graph(encounters_json, destination_path, n):
 	filter_func = create_encounters_count_filter(n)
 	print 'retreiving x vals for friend distance with n = ', n
+	axis_ranges = [50, 200, 500, 1000, 2000, 50000]
 	x_vals = filter_xvals(encounters_json, filter_func)
 	print 'found ', len(x_vals), 'values to plot'
 	if len(x_vals) == 0:
 		return False
-	y_axis = get_axis_range_for_max(max(x_vals), axis_ranges)
+	y_axis = get_axis_range_for_max(get_max_occurs(x_vals), axis_ranges)
 	save_file = create_file_name(encounters_json, None, None, n, True)
 	print 'creating graph to be stored at ', save_file
 	create_dist_histogram(x_vals, bins, bin_range, y_axis,  save_file)
@@ -89,6 +91,13 @@ def create_box_plot():
 
 
 # *************HELPER FUNCTIONS*************
+
+def get_max_occurs(x_vals):
+	d = defaultdict(int)
+	for i in x_vals:
+    	d[i] += 1
+	return max(d.iteritems(), key=lambda x: x[1])
+
 
 def create_file_name(json_filename, first, second, n, is_graph):
 	dir_name = '/'.join(json_filename.split('/')[:-2]) + '/plots'
@@ -194,13 +203,13 @@ def Main():
 
 	for n in range(2,20,4):
 		print 'creating graphs for n =', n
-		create_graphs_on_times(encounters_json, destination_path, n)
-		print 'created graph for encounter times for n =', n
 		create_friend_dist_graph(encounters_json, destination_path, n)
 		print 'created friend distance graph for n = ', n
 		create_graphs_on_tower_type(encounters_json, destination_path, n)
 		print 'create tower type graph for n = ', n
-
+		create_graphs_on_times(encounters_json, destination_path, n)
+		print 'created graph for encounter times for n =', n
+		
 	return True
 
 
