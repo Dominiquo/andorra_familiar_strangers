@@ -209,11 +209,11 @@ def Main():
 	for n in range(2,20,4):
 		print 'creating graphs for n =', n
 		create_friend_dist_graph(encounters_json, destination_path, n)
-		print 'created friend distance graph for n = ', n
-		create_graphs_on_tower_type(encounters_json, destination_path, n)
-		print 'create tower type graph for n = ', n
-		create_graphs_on_times(encounters_json, destination_path, n)
-		print 'created graph for encounter times for n =', n
+		# print 'created friend distance graph for n = ', n
+		# create_graphs_on_tower_type(encounters_json, destination_path, n)
+		# print 'create tower type graph for n = ', n
+		# create_graphs_on_times(encounters_json, destination_path, n)
+		# print 'created graph for encounter times for n =', n
 
 	return True
 
