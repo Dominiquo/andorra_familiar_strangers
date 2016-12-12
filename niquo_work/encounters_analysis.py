@@ -95,7 +95,7 @@ def create_box_plot():
 def get_max_occurs(x_vals):
 	d = defaultdict(int)
 	for i in x_vals:
-    	d[i] += 1
+		d[i] += 1
 	return max(d.iteritems(), key=lambda x: x[1])
 
 
@@ -209,7 +209,7 @@ def Main():
 		print 'create tower type graph for n = ', n
 		create_graphs_on_times(encounters_json, destination_path, n)
 		print 'created graph for encounter times for n =', n
-		
+
 	return True
 
 
