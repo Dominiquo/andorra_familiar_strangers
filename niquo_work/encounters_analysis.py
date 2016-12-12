@@ -19,6 +19,8 @@ def read_json_file_generator(json_filename,limit=float('inf')):
 def filter_xvals(json_filename,filter_func=lambda row:True):
 	return [convert_row(row) for row in read_json_file_generator(json_filename) if filter_func(row)]
 
+def graph_filter_vals(encounters_json, filter_func):
+	return [row['distance'] for row in read_json_file_generator(json_filename) if filter_func(row)]	
 
 def create_graphs_on_tower_type(encounters_json, destination_path, n, bins=150, bin_range=[0,180]):
 	tower_map = maps.tower_to_activity()
@@ -77,7 +79,7 @@ def create_friend_dist_graph(encounters_json, destination_path, n,  bins=150, bi
 	filter_func = create_encounters_count_filter(n)
 	print 'retreiving x vals for friend distance with n = ', n
 	axis_ranges = [50, 200, 500, 1000, 2000, 50000]
-	x_vals = filter_xvals(encounters_json, filter_func)
+	x_vals = graph_filter_vals(encounters_json, filter_func)
 	print 'found ', len(x_vals), 'values to plot'
 	if len(x_vals) == 0:
 		print 'did not find any x values to fit criterion'
@@ -106,14 +108,10 @@ def create_file_name(json_filename, first, second, n, is_graph):
 	dir_name = '/'.join(json_filename.split('/')[:-2]) + '/plots'
 	suffix = '.png'
 	if is_graph:
-		filename = os.path.basename(json_filename)[:21] + '_' + 'DISTANCES' + 'N_' + str(n)
+		filename = os.path.basename(json_filename)[:21] + '_' + 'DISTANCES' + '_N_' + str(n)
 	else: 
 		filename = os.path.basename(json_filename)[:21] + '_' + first + '_' + second + '_N_' + str(n)
 	return os.path.join(dir_name, filename  + suffix)
-
-
-def graph_filter_vals(encounters_json, filter_func):
-	return [row['distance'] for row in read_json_file_generator(json_filename) if filter_func(row)]	
 
 def convert_row(row):
 	days = int(row['delta_days'])
