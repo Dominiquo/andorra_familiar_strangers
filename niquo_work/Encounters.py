@@ -21,9 +21,9 @@ def find_mult_enc_single_week(week_path,destination_path, friend_graph, n=2):
 		tower_count += 1
 		tower_path = os.path.join(week_path, tower)
 		all_maps[tower] = cPickle.load(open(tower_path,'rb'))
-		if tower_count > 4:
-			'breaking to save time for reproducing.'
-			break
+		# if tower_count > 4:
+		# 	'breaking to save time for reproducing.'
+		# 	break
 
 	print 'loading files complete..'
 	with open(destination_path,'wb') as json_out:
