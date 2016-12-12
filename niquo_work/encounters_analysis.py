@@ -42,6 +42,9 @@ def create_graphs_on_times(encounters_json, destination_path, n, bins=150, bin_r
 	return True
 
 def create_loc_filter_func(first, second, location_map):
+	first_times = 'first_times'
+	first_tower = 'first_tower'
+	next_tower = 'next_tower'
 	return filter_func = lambda row: (first in get_tower_code(row,first_tower, towers_map)) and (second in get_tower_code(row,next_tower,towers_map)) and (len(row[first_times]) == n)
 
 def create_times_filter_func(first_cond,second_cond, n, use_majority=True):
