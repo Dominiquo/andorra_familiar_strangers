@@ -42,12 +42,12 @@ def find_mult_enc_single_week(week_path,destination_path, friend_graph, n=2):
 					distance = get_graph_distance(caller, caller_enc, friend_graph)
 					row = {'caller': caller,
 							'caller_enc': caller_enc,
-							'first_times:': times,
+							'first_times': times,
 							'next_time': next_time,
 							'delta_days': delta_days,
 							'delta_seconds': delta_seconds,
 							'first_tower': tower,
-							'distance': distance
+							'distance': distance,
 							'next_tower': next_tower}
 					json.dump(row,json_out)
 					json_out.write('\n')
