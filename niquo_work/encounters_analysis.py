@@ -30,6 +30,7 @@ def create_graphs_on_tower_type(encounters_json, destination_path, n, bins=150, 
 		x_vals = filter_xvals(encounters_json, filter_func)
 		print 'found ', len(x_vals), 'values to plot'
 		if len(x_vals) == 0:
+			print 'did not find any x values to fit criterion'
 			return False
 		y_axis = get_axis_range_for_max(get_max_occurs(x_vals), axis_ranges)
 		save_file = create_file_name(encounters_json, str(first), str(second), n, False)
@@ -46,6 +47,7 @@ def create_graphs_on_times(encounters_json, destination_path, n, bins=150, bin_r
 		x_vals = filter_xvals(encounters_json, filter_func)
 		print 'found ', len(x_vals), 'values to plot'
 		if len(x_vals) == 0:
+			print 'did not find any x values to fit criterion'
 			return False
 		y_axis = get_axis_range_for_max(get_max_occurs(x_vals), axis_ranges)
 		save_file = create_file_name(encounters_json, first.func_name, second.func_name, n, False)
@@ -57,16 +59,16 @@ def create_loc_filter_func(first, second, n, towers_map):
 	first_times = 'first_times'
 	first_tower = 'first_tower'
 	next_tower = 'next_tower'
-	return lambda row: (len(row[first_times]) >= n) and (first in get_tower_code(row,first_tower, towers_map)) and (second in get_tower_code(row,next_tower,towers_map))
+	return lambda row: (len(row[first_times]) == n) and (first in get_tower_code(row,first_tower, towers_map)) and (second in get_tower_code(row,next_tower,towers_map))
 
 def create_times_filter_func(first_cond,second_cond, n, use_majority=True):
 	first_times = 'first_times'
 	next_time = 'next_time'
 	last_element = -1
 	if use_majority:
-		return lambda row: (len(row[first_times]) >= n) and majority_check(row[first_times],first_cond) and second_cond(row[next_time])
+		return lambda row: (len(row[first_times]) == n) and majority_check(row[first_times],first_cond) and second_cond(row[next_time])
 	else:
-		return lambda row: (len(row[first_times]) >= n) and first_cond(row[first_times][last_element]) and second_cond(row[next_time])
+		return lambda row: (len(row[first_times]) == n) and first_cond(row[first_times][last_element]) and second_cond(row[next_time])
 
 def create_encounters_count_filter(n):
 	return lambda row: ((row['first_times'] > n) and (row['distance'] > 0))
@@ -78,6 +80,7 @@ def create_friend_dist_graph(encounters_json, destination_path, n,  bins=150, bi
 	x_vals = filter_xvals(encounters_json, filter_func)
 	print 'found ', len(x_vals), 'values to plot'
 	if len(x_vals) == 0:
+		print 'did not find any x values to fit criterion'
 		return False
 	y_axis = get_axis_range_for_max(get_max_occurs(x_vals), axis_ranges)
 	save_file = create_file_name(encounters_json, None, None, n, True)
