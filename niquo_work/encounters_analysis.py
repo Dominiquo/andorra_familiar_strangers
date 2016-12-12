@@ -75,7 +75,7 @@ def create_times_filter_func(first_cond,second_cond, n, use_majority=True):
 		return lambda row: (len(row[first_times]) == n) and first_cond(row[first_times][last_element]) and second_cond(row[next_time])
 
 def create_encounters_count_filter(n):
-	return lambda row: ((row['first_times'] == n) and (row['distance'] > 0))
+	return lambda row: ((len(row['first_times']) == n) and (row['distance'] > 0))
 
 def create_friend_dist_graph(encounters_json, destination_path, n,  bins=100, bin_range=[0,100]):
 	filter_func = create_encounters_count_filter(n)
