@@ -15,7 +15,8 @@ def create_encounter(data_path, dest_path, friend_graph_path):
 		full_path = os.path.join(data_path, week_path)
 		dest_base = '%s_encounter.json' % (week_path)
 		full_destination = os.path.join(dest_path,dest_base)
-		encs.find_mult_enc_single_week(full_path,full_destination,friend_graph)
+		if not os.path.isfile(full_destination):
+			encs.find_mult_enc_single_week(full_path,full_destination,friend_graph)
 
 def Main(root_path='../niquo_data/v2_data_root', data_path='../niquo_data/filtered_data/06_2017_no_data.csv', graph_path='../niquo_data/filtered_data/network_object_100.p'):
 
