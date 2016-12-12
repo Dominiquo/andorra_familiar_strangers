@@ -19,7 +19,7 @@ def read_json_file_generator(json_filename,limit=float('inf')):
 def filter_xvals(json_filename,filter_func=lambda row:True):
 	return [convert_row(row) for row in read_json_file_generator(json_filename) if filter_func(row)]
 
-def graph_filter_vals(encounters_json, filter_func):
+def graph_filter_vals(json_filename, filter_func):
 	return [row['distance'] for row in read_json_file_generator(json_filename) if filter_func(row)]	
 
 def create_graphs_on_tower_type(encounters_json, destination_path, n, bins=150, bin_range=[0,180]):
