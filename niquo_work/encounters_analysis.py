@@ -91,7 +91,7 @@ def create_box_plot():
 # *************HELPER FUNCTIONS*************
 
 def create_file_name(json_filename, first, second, n, is_graph):
-	dir_name = os.path.dirname(json_filename)
+	dir_name = '/'.join(f.split('/')[:-2])
 	suffix = '.png'
 	if is_graph:
 		filename = os.path.basename(json_filename)[:21] + '_' + 'DISTANCES' + 'N_' + str(n)
