@@ -88,7 +88,7 @@ def create_friend_dist_graph(encounters_json, destination_path, n,  bins=100, bi
 		return False
 	max_val, max_occurs = get_max_occurs(x_vals)
 	bin_range = [0, max_val]
-	y_axis = get_axis_range_for_max(get_max_occurs(x_vals), axis_ranges)
+	y_axis = get_axis_range_for_max(max_occurs, axis_ranges)
 	save_file = create_file_name(encounters_json, None, None, n, True)
 	print 'creating graph to be stored at ', save_file
 	create_dist_histogram(x_vals, bins, bin_range, y_axis,  save_file)
