@@ -179,7 +179,7 @@ def Main():
 
 	for n in range(2,20,4):
 		print 'creating graphs for n =', n
-		create_graphs_on_tower_type(encounters_json, destination_path, n)
+		# create_graphs_on_tower_type(encounters_json, destination_path, n)
 		create_graphs_on_times(encounters_json, destination_path, n)
 		create_friend_dist_graph(encounters_json, destination_path, n)
 
