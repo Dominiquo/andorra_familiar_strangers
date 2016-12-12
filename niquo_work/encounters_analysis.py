@@ -32,6 +32,7 @@ def create_graphs_on_tower_type(encounters_json, destination_path, n, bins=150, 
 			return False
 		y_axis = get_axis_range_for_max(max(x_vals), axis_ranges)
 		save_file = create_file_name(encounters_json, str(first), str(second), n, False)
+		print 'creating graph to be stored at ', save_file
 		create_dist_histogram(x_vals, bins, bin_range, y_axis,  save_file)
 	return True
 
@@ -47,6 +48,7 @@ def create_graphs_on_times(encounters_json, destination_path, n, bins=150, bin_r
 			return False
 		y_axis = get_axis_range_for_max(max(x_vals), axis_ranges)
 		save_file = create_file_name(encounters_json, first.func_name, second.func_name, n, False)
+		print 'creating graph to be stored at ', save_file
 		create_dist_histogram(x_vals, bins, bin_range, y_axis,  save_file)
 	return True
 
@@ -77,6 +79,7 @@ def create_friend_dist_graph(encounters_json, destination_path, n):
 		return False
 	y_axis = get_axis_range_for_max(max(x_vals), axis_ranges)
 	save_file = create_file_name(encounters_json, None, None, n, True)
+	print 'creating graph to be stored at ', save_file
 	create_dist_histogram(x_vals, bins, bin_range, y_axis,  save_file)
 	return True
 
