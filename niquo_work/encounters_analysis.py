@@ -42,7 +42,7 @@ def create_graphs_on_times(encounters_json, destination_path, n, bins=150, bin_r
 		create_dist_histogram(x_vals, bins, bin_range, y_axis,  save_file)
 	return True
 
-def create_loc_filter_func(first, second, location_map):
+def create_loc_filter_func(first, second, towers_map):
 	first_times = 'first_times'
 	first_tower = 'first_tower'
 	next_tower = 'next_tower'
