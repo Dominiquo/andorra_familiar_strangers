@@ -10,7 +10,7 @@ import itertools
 
 
 def read_json_file_generator(json_filename,limit=float('inf')):
-	with open(filename) as infile:
+	with open(json_filename) as infile:
 		for line in infile:
 			yield json.loads(line)
 
