@@ -24,7 +24,7 @@ def create_graphs_on_tower_type(encounters_json, destination_path, n, bins=150, 
 	tower_types = get_tower_types(tower_map)
 	axis_ranges = [50, 200, 500, 1000, 2000, 50000]
 	for first, second in itertools.permutations(tower_types, 2):
-		filter_func = create_loc_filter_func(first, second, n)
+		filter_func = create_loc_filter_func(first, second, n, tower_map)
 		x_vals = filter_xvals(encounters_json, filter_func)
 		y_axis = get_axis_range_for_max(max(x_vals), axis_ranges)
 		save_file = create_file_name(encounters_json, str(first), str(second), n, False)
@@ -42,7 +42,7 @@ def create_graphs_on_times(encounters_json, destination_path, n, bins=150, bin_r
 		create_dist_histogram(x_vals, bins, bin_range, y_axis,  save_file)
 	return True
 
-def create_loc_filter_func(first, second, towers_map):
+def create_loc_filter_func(first, second, n, towers_map):
 	first_times = 'first_times'
 	first_tower = 'first_tower'
 	next_tower = 'next_tower'
