@@ -197,7 +197,7 @@ def print_percentages(dist_graph):
 	vals = sorted(dist_graph.keys())
 	for v in vals:
 		distance_dist = dist_graph[v]
-		total = sum([val for key,val in distance_dist.iteritems])
+		total = sum([val for key,val in distance_dist.iteritems()])
 		print '***************************'
 		print 'DISTRIBUTION FOR ENCOUNTERS N = ', v
 		for dist, count in distance_dist.iteritems():
