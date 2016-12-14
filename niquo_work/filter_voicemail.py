@@ -19,7 +19,7 @@ def filter_calls_voicemail():
 	raw_data = raw.RawCDRCSV(unfiltered_data)
 	count = 0
 	with open(outgoing_only, 'wb') as outfile:
-		for row in raw_data.row_generator():
+		for row in raw_data.rows_generator():
 			start_time = row[start_index]
 			end_time = row[end_index]
 			caller = row[caller_index]
