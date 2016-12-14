@@ -209,6 +209,7 @@ def print_percentages(dist_graph):
 			else:
 				sys.stdout.write("  " + str(dist) + ":  ", + percentage +  ",   ")
 			sys.stdout.write("\n")
+	return True
 		
 
 
