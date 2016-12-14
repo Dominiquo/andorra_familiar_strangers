@@ -207,7 +207,7 @@ def print_percentages(dist_graph):
 			elif dist == -2:
 				sys.stdout.write("Not in Map: " + percentage + ",   ")
 			else:
-				sys.stdout.write("  " + str(dist) + ":  ", + percentage +  ",   ")
+				sys.stdout.write("  " + str(dist) + ":  " + percentage +  ",   ")
 			sys.stdout.write("\n")
 	return True
 		
