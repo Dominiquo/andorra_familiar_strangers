@@ -200,14 +200,15 @@ def print_percentages(dist_graph):
 		total = sum([val for key,val in distance_dist.iteritems()])
 		print '***************************'
 		print 'DISTRIBUTION FOR ENCOUNTERS N = ', v
+		print 'Distribution has total ', total, 'encounterees'
 		for dist, count in distance_dist.iteritems():
-			percentage = str(float(count)/total)
+			percentage = str(float(count)/total) * 100
 			if dist == -1:
-				sys.stdout.write("Not Connected: "  + percentage + ",    ")
+				sys.stdout.write("Not Connected: "  + percentage + "%,    ")
 			elif dist == -2:
-				sys.stdout.write("Not in Map: " + percentage + ",   ")
+				sys.stdout.write("Not in Map: " + percentage + "%,   ")
 			else:
-				sys.stdout.write("  " + str(dist) + ":  " + percentage +  ",   ")
+				sys.stdout.write("  " + str(dist) + ":  " + percentage +  "%,   ")
 			sys.stdout.write("\n")
 	return True
 		
