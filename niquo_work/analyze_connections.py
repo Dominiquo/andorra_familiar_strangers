@@ -202,7 +202,7 @@ def print_percentages(dist_graph):
 		print 'DISTRIBUTION FOR ENCOUNTERS N = ', v
 		print 'Distribution has total ', total, 'encounterees'
 		for dist, count in distance_dist.iteritems():
-			percentage = str(float(count)/total) * 100
+			percentage = str((float(count)/total* 100)
 			if dist == -1:
 				sys.stdout.write("Not Connected: "  + percentage + "%,    ")
 			elif dist == -2:
