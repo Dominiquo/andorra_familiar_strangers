@@ -194,7 +194,7 @@ def time_of_days():
 
 
 def print_percentages(dist_graph):
-	vals = dist_graph.keys().sort()
+	vals = sorted(dist_graph.keys())
 	for v in vals:
 		distance_dist = dist_graph[v]
 		total = sum([val for key,val in distance_dist.iteritems])
