@@ -193,6 +193,26 @@ def time_of_days():
 	print 'done plotting images to be put in ', images_dir
 
 
+def print_percentages(dist_graph):
+	vals = dist_graph.keys().sort()
+	for v in vals():
+		distance_dist = dist_graph[v]
+		total = sum([val for key,val in distance_dist.iteritems])
+		print '***************************'
+		print 'DISTRIBUTION FOR ENCOUNTERS N = ', v
+		for dist, count in distance_dist.iteritems():
+			percentage = str(float(count)/total)
+			if dist == -1:
+				sys.stdout.write("Not Connected: "  + percentage + ",    ")
+			elif dist == -2:
+				sys.stdout.write("Not in Map: " + percentage + ",   ")
+			else:
+				sys.stdout.write("  " + str(dist) + ":  ", + percentage +  ",   ")
+			sys.stdout.write("\n")
+		
+
+
+
 def tower_types():
 	encounters_dir = '../niquo_data/CURRENT_DATA'
 	images_dir = '../niquo_data/CURRENT_PLOTS'
