@@ -117,7 +117,7 @@ def generate_median_per_tower(encounters_json,save_file='../niquo_data/filtered_
 	for line in open(encounters_json):
 		row = json.loads(line)
 		encs_count = len(row['first_times'])
-		lat_lon = id_latlon(row['first_tower'][10:-2])
+		lat_lon = id_latlon[row['first_tower'][10:-2]]
 		if lat_lon not in encs_vals:
 			encs_vals[lat_lon] = [encs_count]
 		else:
