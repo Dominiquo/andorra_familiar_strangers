@@ -42,6 +42,8 @@ def walk_through_pairs(csv_data=filtered_data):
 				elif f_comm == 'MOC':
 					f_caller = first[caller_index]
 					f_receiver = first[receiver_index]
+				else:
+					continue
 
 				if s_comm == 'MTC':
 					s_caller = second[receiver_index]
@@ -49,6 +51,8 @@ def walk_through_pairs(csv_data=filtered_data):
 				elif s_comm == 'MOC':
 					s_caller = second[caller_index]
 					s_reciever = second[receiver_index]
+				else:
+					continue
 
 				if (f_receiver == s_caller) or (s_reciever == f_caller):
 					count += 1
@@ -58,7 +62,7 @@ def walk_through_pairs(csv_data=filtered_data):
 					outfile.write('\n')
 					json.dump(obj2,outfile)
 					outfile.write('\n')
-					
+
 	print 'wrote ', count, 'objects to file'
 
 
