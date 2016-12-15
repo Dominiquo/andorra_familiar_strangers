@@ -108,7 +108,7 @@ def create_voicemail_dict(json_file):
 
 def create_new_graph(csv_file, user_map, cleaned_path, threshold=100):
 	csvData = raw.RawCDRCSV(csv_file)
-	# friend_graph = nx.Graph()
+	friend_graph = nx.Graph()
 	caller_index = 0
 	receiver_index = 16
 	remapped_rec = 0
@@ -124,7 +124,7 @@ def create_new_graph(csv_file, user_map, cleaned_path, threshold=100):
 			# friend_graph.add_edge(caller,user_map[receiver])
 		elif caller in user_map and (user_map[caller] != receiver ):
 			diff_rec += 1
-		elif call_in_map in user_map and (user_map[caller] == receiver):
+		elif caller in user_map and (user_map[caller] == receiver):
 			same_rec += 1
 		else:
 			normal += 1
