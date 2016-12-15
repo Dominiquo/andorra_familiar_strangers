@@ -19,6 +19,7 @@ end_index = 4
 def walk_through_pairs(csv_data=filtered_data):
 	all_values = []
 	count = 0
+	i = 0
 	raw_data = raw.RawCDRCSV(csv_data)
 	for row in raw_data.rows_generator():
 		all_values.append(row)
