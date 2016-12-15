@@ -111,8 +111,27 @@ def create_box_plot(encounter_json,save_file='../niquo_data/plots/box_plot_50.pn
 	plt.savefig(save_file)
 
 
-def generate_median_per_tower(encounters_json,save_file='../niquo_data/plots/lat_lon_median.csv'):\
-
+def generate_median_per_tower(encounters_json,save_file='../niquo_data/filtered_data/lat_lon_median.csv'):
+	encs_vals = {}
+	id_latlon = maps.id_to_lat_long()
+	for line in open(encounter_json):
+		row = json.loads(line)
+		encs_count = len(row['first_times'])
+		lat_lon = id_latlon(row['first_tower'][10:-2])
+		if lat_lon not in encs_vals:
+			encs_vals[lat_lon] = [encs_count]
+		else:
+			encs_vals[lat_lon].append(encs_count)
+	with open(save_file, 'wb') as outfile:
+		csvout = csv.writer(outfile,delimiter=';')
+		first_row = ['latitude','longitude','median','mean']
+		csvout.writerow(first_row)
+		for lat_lon, all_encs in encs_vals.iteritems():
+			lat = lat_lon[0]
+			lon = lat_lon[1]
+			med = np.median(all_encs)
+			mean = np.mean(all_encs)
+			csvout.writerow([lat,lon,med,mean])
 	return True
 
 
