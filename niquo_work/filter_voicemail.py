@@ -10,6 +10,7 @@ filtered_data = '../niquo_data/filtered_data/06_2017_no_data.csv'
 outgoing_only = '../niquo_data/filtered_data/outgoingonly_calls_june.csv'
 voicemail_map = '../niquo_data/filtered_data/voicemail_map.p'
 sorted_rows = '../niquo_data/filtered_data/sorted_rows.p'
+network_raw_obj = '../niquo_data/filtered_data/network_object.p'
 comm_type_index = 10
 caller_index = 0
 receiver_index = 16
@@ -72,32 +73,6 @@ def walk_through_pairs(csv_data=filtered_data):
 
 
 
-
-
-def filter_calls_voicemail(csv_data=filtered_data):
-	raw_data = raw.RawCDRCSV(csv_data)
-	count = 0
-	with open(outgoing_only, 'wb') as outfile:
-		for row in raw_data.rows_generator():
-			start_time = row[start_index]
-			end_time = row[end_index]
-			caller = row[caller_index]
-			receiver = row[receiver_index]
-			comm_type = row[comm_type_index]
-
-			if (start_time == end_time) and (comm_type == 'MOC'):
-				obj = {'caller': caller, 'receiver': receiver, 'time': start_time}
-				json.dump(obj, outfile)
-				outfile.write('\n')
-				count += 1
-
-			elif (start_time == end_time) and (comm_type == 'MTC'):
-				obj = {'caller': receiver, 'receiver': caller, 'time': start_time}
-				json.dump(obj, outfile)
-				outfile.write('\n')
-				count += 1
-		print 'wrote', count,'new lines of possible voicemail calls'
-
 def create_voicemail_dict(json_file):
 	user_hash_dict = {}
 	possiblilites = [val for val in json_generator(json_file)]
@@ -124,8 +99,42 @@ def create_voicemail_dict(json_file):
 					print 'overwriting data for key: ',first['receiver']
 					overwritten_keys.add(second['receiver'])
 				user_hash_dict[second['receiver']] = first['receiver']
-	return user_hash_dict,overwritten_keys
+	
+	for rep_key in overwritten_keys:
+		user_hash_dict.pop(rep_key,None)
 
+	return user_hash_dict
+
+
+def create_new_graph(csv_file, user_map, cleaned_path, threshold=100):
+	csvData = raw.RawCDRCSV(csv_file)
+	friend_graph = nx.Graph()
+	caller_index = 0
+	receiver_index = 16
+	remapped_rec = 0
+	diff_rec = 0
+	same_rec = 0
+	normal = 0
+
+	for row in csvData.rows_generator():
+		caller = row[caller_index]
+		receiver = row[receiver_index]
+		if receiver in user_map:
+			remapped_rec += 1
+			# friend_graph.add_edge(caller,user_map[receiver])
+		elif caller in user_map and (user_map[caller] != receiver ):
+			diff_rec += 1
+		elif call_in_map in user_map and (user_map[caller] == receiver):
+			same_rec += 1
+		else:
+			normal += 1
+
+	print 'receiver in map', remapped_rec
+	print 'caller in map but not same receiver', diff_rec
+	print 'call in map and same receiver ', same_rec
+	print 'normal entries ', normal
+	# cPickle.dump(friend_graph, open(store_path,'wb'))
+	return True
 
 
 
@@ -136,7 +145,9 @@ def json_generator(json_filename):
 
 
 def main():
-	filter_calls_voicemail()
+	user_hash_dict = create_voicemail_dict(outgoing_only)
+	new_network = '../niquo_data/filtered_data/network_remapped.p'
+	create_new_graph(filtered_data, user_hash_dict, new_network)
 
 if __name__ == '__main__':
     main()
