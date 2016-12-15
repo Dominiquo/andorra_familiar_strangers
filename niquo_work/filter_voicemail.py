@@ -50,7 +50,7 @@ def create_voicemail_dict(json_file):
 		else:
 			times_dict[time] = [val]
 
-	for time,values in times_dict:
+	for time,values in times_dict.iteritems():
 		if len(values) < 2:
 			continue
 		for first, second in itertools.combinations(values, 2):
