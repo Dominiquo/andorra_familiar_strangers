@@ -97,7 +97,7 @@ def create_friend_dist_graph(encounters_json, destination_path, n,  bins=100, bi
 def create_box_plot(encounter_json,save_file='../niquo_data/plots/box_plot_50.png'):
 	dist_vals = {}
 	for line in open(encounter_json):
-		row = json.load(line)
+		row = json.loads(line)
 		dist = row['distance']
 		n_val = len(row['first_times'])
 		if (n_val not in dist_vals):
