@@ -30,9 +30,11 @@ def walk_through_pairs(csv_data=filtered_data):
 	print 'cycling through values...'
 	outfile = open(outgoing_only, 'wb')
 	while (i+1) < len(all_values):
-		print i
 		first = all_values[i]
 		second = all_values[i+1]
+		i += 1
+		if (i % 100) == 0:
+			print "currently on ", i ,'/',len(all_values)
 		f_start = first[start_index]
 		f_end = first[end_index]
 		s_start = second[start_index]
@@ -66,9 +68,6 @@ def walk_through_pairs(csv_data=filtered_data):
 				outfile.write('\n')
 				json.dump(obj2,outfile)
 				outfile.write('\n')
-		if (i % 100) == 0:
-			print "currently on ", i ,'/',len(all_values)
-		i += 1
 	print 'wrote ', count, 'objects to file'
 
 

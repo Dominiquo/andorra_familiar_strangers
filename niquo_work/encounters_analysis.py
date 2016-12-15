@@ -111,6 +111,10 @@ def create_box_plot(encounter_json,save_file='../niquo_data/plots/box_plot_50.pn
 	plt.savefig(save_file)
 
 
+def generate_median_per_tower(encounters_json,save_file='../niquo_data/plots/lat_lon_median.csv'):\
+
+	return True
+
 
 
 # *************HELPER FUNCTIONS*************
