@@ -8,7 +8,6 @@ import RawCRDData as raw
 
 filtered_data = '../niquo_data/filtered_data/06_2017_no_data.csv'
 outgoing_only = '../niquo_data/filtered_data/outgoingonly_calls_june.csv'
-intersecting_callers = ''
 voicemail_map = '../niquo_data/filtered_data/voicemail_map.p'
 sorted_rows = '../niquo_data/filtered_data/sorted_rows.p'
 comm_type_index = 10
@@ -26,6 +25,7 @@ def walk_through_pairs(csv_data=filtered_data):
 		all_values.append(row)
 	print 'sorting data..'
 	all_values.sort(key=lambda row: row[3])
+	print 'all values count:', len(all_values)
 	print 'data sorted.'
 	print 'cycling through values...'
 	with open(outgoing_only, 'wb') as outfile:
@@ -65,9 +65,9 @@ def walk_through_pairs(csv_data=filtered_data):
 					outfile.write('\n')
 					json.dump(obj2,outfile)
 					outfile.write('\n')
-			i += 1
 			if (i % 100) == 0:
 				print "currently on ", i ,'/',len(all_values)
+			i += 1
 	print 'wrote ', count, 'objects to file'
 
 
