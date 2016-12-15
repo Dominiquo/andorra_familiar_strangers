@@ -114,7 +114,7 @@ def create_box_plot(encounter_json,save_file='../niquo_data/plots/box_plot_50.pn
 def generate_median_per_tower(encounters_json,save_file='../niquo_data/filtered_data/lat_lon_median.csv'):
 	encs_vals = {}
 	id_latlon = maps.id_to_lat_long()
-	for line in open(encounter_json):
+	for line in open(encounters_json):
 		row = json.loads(line)
 		encs_count = len(row['first_times'])
 		lat_lon = id_latlon(row['first_tower'][10:-2])
