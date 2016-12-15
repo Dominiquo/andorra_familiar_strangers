@@ -15,8 +15,8 @@ start_index = 3
 end_index = 4
 
 
-def filter_calls_voicemail():
-	raw_data = raw.RawCDRCSV(unfiltered_data)
+def filter_calls_voicemail(csv_data=unfiltered_data):
+	raw_data = raw.RawCDRCSV(csv_data)
 	count = 0
 	with open(outgoing_only, 'wb') as outfile:
 		for row in raw_data.rows_generator():
@@ -38,6 +38,35 @@ def filter_calls_voicemail():
 				outfile.write('\n')
 				count += 1
 		print 'wrote', count,'new lines of possible voicemail calls'
+
+def create_voicemail_dict(json_file):
+	user_hash_dict = {}
+	possiblilites = [val for val in json_generator(json_file)]
+	times_dict = {}
+	for val in possiblilites:
+		time = val['time']
+		if time in times_dict:
+			times_dict[time].append(val)
+		else:
+			times_dict[time] = [val]
+
+	for time,values in times_dict:
+		if len(values) < 2:
+			continue
+		for first, second in itertools.combinations(values, 2):
+			if first['receiver'] == second['caller']:
+				user_hash_dict[first['receiver']] = second['receiver']
+			elif second['receiver'] == first['caller']:
+				user_hash_dict[second['receiver']] = first['receiver']
+	return user_hash_dict
+
+
+
+
+def json_generator(json_filename):
+	with open(json_filename) as infile:
+		for line in infile:
+			yield json.loads(line)
 
 
 def main():
