@@ -65,7 +65,8 @@ def walk_through_pairs(csv_data=filtered_data):
 					outfile.write('\n')
 					json.dump(obj2,outfile)
 					outfile.write('\n')
-
+			i += 1
+			print "currently on ", i ,'/',len(all_values)
 	print 'wrote ', count, 'objects to file'
 
 
