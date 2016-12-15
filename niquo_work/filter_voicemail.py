@@ -16,9 +16,13 @@ receiver_index = 16
 start_index = 3
 end_index = 4
 
-def walk_through_pairs(sorted_rows_file=sorted_rows):
-	all_values = cPickle.load(open(sorted_rows_file))
+def walk_through_pairs(csv_data=filtered_data):
+	all_values = []
 	count = 0
+	raw_data = raw.RawCDRCSV(csv_data)
+	for row in raw_data.rows_generator():
+		all_values.append(row)
+	all_values.sort(key=lambda row: row[3])
 	with open(outgoing_only, 'wb') as outfile:
 		while (i+1) < len(all_values):
 			first = all_values[i]
