@@ -24,7 +24,10 @@ def walk_through_pairs(csv_data=filtered_data):
 	raw_data = raw.RawCDRCSV(csv_data)
 	for row in raw_data.rows_generator():
 		all_values.append(row)
+	print 'sorting data..'
 	all_values.sort(key=lambda row: row[3])
+	print 'data sorted.'
+	print 'cycling through values...'
 	with open(outgoing_only, 'wb') as outfile:
 		while (i+1) < len(all_values):
 			first = all_values[i]

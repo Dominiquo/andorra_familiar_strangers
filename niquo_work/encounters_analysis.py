@@ -94,8 +94,21 @@ def create_friend_dist_graph(encounters_json, destination_path, n,  bins=100, bi
 	create_dist_histogram(x_vals, bins, bin_range, y_axis,  save_file)
 	return True
 
-def create_box_plot():
-	return True
+def create_box_plot(encounter_json):
+	dist_vals = {}
+	for line in open(encounter_json):
+		row = json.load(line)
+		dist = row['distance']
+		n_val = len(row['first_times'])
+		if (n_val not in dist_vals):
+			dist_vals[n_val] = [dist]
+		else:
+			dist_vals[n_val].append(dist)
+
+	keys = sorted(dist_vals.keys())[:50]
+	data = [dist_vals[n] for n in keys]
+	plt.boxplot(data)
+
 
 
 
