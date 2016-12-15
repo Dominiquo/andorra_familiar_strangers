@@ -33,8 +33,8 @@ def walk_through_pairs(csv_data=filtered_data):
 		first = all_values[i]
 		second = all_values[i+1]
 		i += 1
-		if (i % 100) == 0:
-			print "currently on ", i ,'/',len(all_values)
+		if (i % 1000) == 0:
+			print "currently on ", float(i)/len(all_values)*100,'%'
 		f_start = first[start_index]
 		f_end = first[end_index]
 		s_start = second[start_index]
@@ -104,7 +104,7 @@ def create_voicemail_dict(json_file):
 	times_dict = {}
 	overwritten_keys = set([])
 	for val in possiblilites:
-		time = val['time']
+		time = (val['s_time'],val['e_time'])
 		if time in times_dict:
 			times_dict[time].append(val)
 		else:
