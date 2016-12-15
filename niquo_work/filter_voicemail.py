@@ -2,6 +2,7 @@ import cPickle
 import networkx
 import json
 import csv
+import itertools
 import RawCRDData as raw
 
 
