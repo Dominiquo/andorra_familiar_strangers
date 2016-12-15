@@ -8,6 +8,7 @@ import RawCRDData as raw
 
 filtered_data = '../niquo_data/filtered_data/06_2017_no_data.csv'
 outgoing_only = '../niquo_data/filtered_data/outgoingonly_calls_june.csv'
+intersecting_callers = ''
 voicemail_map = '../niquo_data/filtered_data/voicemail_map.p'
 sorted_rows = '../niquo_data/filtered_data/sorted_rows.p'
 comm_type_index = 10
@@ -33,17 +34,31 @@ def walk_through_pairs(csv_data=filtered_data):
 			s_start = second[start_index]
 			s_end = second[end_index]
 			if (f_start == s_start) and (f_end == s_end):
-				count += 1
-				f_caller = first[caller_index]
-				f_receiver = first[receiver_index]
-				s_caller = second[caller_index]
-				s_reciever = second[receiver_index]
-				obj1 = {'caller': f_caller, 'receiver': f_receiver, 's_time': f_start, 'e_time': f_end}
-				obj2 = {'caller': s_caller, 'receiver': s_reciever, 's_time': s_start, 'e_time': s_end}
-				json.dump(obj1,outfile)
-				outfile.write('\n')
-				json.dump(obj2,outfile)
-				outfile.write('\n')
+				f_comm = first[comm_type_index]
+				s_comm = second[comm_type_index]
+				if f_comm == 'MTC':
+					f_caller = first[receiver_index]
+					f_receiver = first[caller_index]
+				elif f_comm == 'MOC':
+					f_caller = first[caller_index]
+					f_receiver = first[receiver_index]
+
+				if s_comm == 'MTC':
+					s_caller = second[receiver_index]
+					s_reciever = second[caller_index]	
+				elif s_comm == 'MOC':
+					s_caller = second[caller_index]
+					s_reciever = second[receiver_index]
+
+				if (f_receiver == s_caller) or (s_reciever == f_caller):
+					count += 1
+					obj1 = {'caller': f_caller, 'receiver': f_receiver, 's_time': f_start, 'e_time': f_end}
+					obj2 = {'caller': s_caller, 'receiver': s_reciever, 's_time': s_start, 'e_time': s_end}
+					json.dump(obj1,outfile)
+					outfile.write('\n')
+					json.dump(obj2,outfile)
+					outfile.write('\n')
+					
 	print 'wrote ', count, 'objects to file'
 
 
