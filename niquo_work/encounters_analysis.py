@@ -94,7 +94,7 @@ def create_friend_dist_graph(encounters_json, destination_path, n,  bins=100, bi
 	create_dist_histogram(x_vals, bins, bin_range, y_axis,  save_file)
 	return True
 
-def create_box_plot(encounter_json):
+def create_box_plot(encounter_json,save_file='../niquo_data/plots/box_plot_50.png'):
 	dist_vals = {}
 	for line in open(encounter_json):
 		row = json.load(line)
@@ -108,6 +108,7 @@ def create_box_plot(encounter_json):
 	keys = sorted(dist_vals.keys())[:50]
 	data = [dist_vals[n] for n in keys]
 	plt.boxplot(data)
+	plt.savefig(save_file)
 
 
 
