@@ -56,8 +56,12 @@ def create_voicemail_dict(json_file):
 			continue
 		for first, second in itertools.combinations(values, 2):
 			if first['receiver'] == second['caller']:
+				if (first['receiver'] in user_hash_dict) and user_hash_dict[first['receiver']] != second['receiver']:
+					print 'overwriting data for key: ',first['receiver']
 				user_hash_dict[first['receiver']] = second['receiver']
 			elif second['receiver'] == first['caller']:
+				if (second['receiver'] in user_hash_dict) and user_hash_dict[second['receiver']] != first['receiver']:
+					print 'overwriting data for key: ',first['receiver']
 				user_hash_dict[second['receiver']] = first['receiver']
 	return user_hash_dict
 
