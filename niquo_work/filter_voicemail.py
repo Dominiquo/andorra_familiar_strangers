@@ -28,46 +28,47 @@ def walk_through_pairs(csv_data=filtered_data):
 	print 'all values count:', len(all_values)
 	print 'data sorted.'
 	print 'cycling through values...'
-	with open(outgoing_only, 'wb') as outfile:
-		while (i+1) < len(all_values):
-			first = all_values[i]
-			second = all_values[i+1]
-			f_start = first[start_index]
-			f_end = first[end_index]
-			s_start = second[start_index]
-			s_end = second[end_index]
-			if (f_start == s_start) and (f_end == s_end):
-				f_comm = first[comm_type_index]
-				s_comm = second[comm_type_index]
-				if f_comm == 'MTC':
-					f_caller = first[receiver_index]
-					f_receiver = first[caller_index]
-				elif f_comm == 'MOC':
-					f_caller = first[caller_index]
-					f_receiver = first[receiver_index]
-				else:
-					continue
+	outfile = open(outgoing_only, 'wb')
+	while (i+1) < len(all_values):
+		print i
+		first = all_values[i]
+		second = all_values[i+1]
+		f_start = first[start_index]
+		f_end = first[end_index]
+		s_start = second[start_index]
+		s_end = second[end_index]
+		if (f_start == s_start) and (f_end == s_end):
+			f_comm = first[comm_type_index]
+			s_comm = second[comm_type_index]
+			if f_comm == 'MTC':
+				f_caller = first[receiver_index]
+				f_receiver = first[caller_index]
+			elif f_comm == 'MOC':
+				f_caller = first[caller_index]
+				f_receiver = first[receiver_index]
+			else:
+				continue
 
-				if s_comm == 'MTC':
-					s_caller = second[receiver_index]
-					s_reciever = second[caller_index]	
-				elif s_comm == 'MOC':
-					s_caller = second[caller_index]
-					s_reciever = second[receiver_index]
-				else:
-					continue
+			if s_comm == 'MTC':
+				s_caller = second[receiver_index]
+				s_reciever = second[caller_index]	
+			elif s_comm == 'MOC':
+				s_caller = second[caller_index]
+				s_reciever = second[receiver_index]
+			else:
+				continue
 
-				if (f_receiver == s_caller) or (s_reciever == f_caller):
-					count += 1
-					obj1 = {'caller': f_caller, 'receiver': f_receiver, 's_time': f_start, 'e_time': f_end}
-					obj2 = {'caller': s_caller, 'receiver': s_reciever, 's_time': s_start, 'e_time': s_end}
-					json.dump(obj1,outfile)
-					outfile.write('\n')
-					json.dump(obj2,outfile)
-					outfile.write('\n')
-			if (i % 100) == 0:
-				print "currently on ", i ,'/',len(all_values)
-			i += 1
+			if (f_receiver == s_caller) or (s_reciever == f_caller):
+				count += 1
+				obj1 = {'caller': f_caller, 'receiver': f_receiver, 's_time': f_start, 'e_time': f_end}
+				obj2 = {'caller': s_caller, 'receiver': s_reciever, 's_time': s_start, 'e_time': s_end}
+				json.dump(obj1,outfile)
+				outfile.write('\n')
+				json.dump(obj2,outfile)
+				outfile.write('\n')
+		if (i % 100) == 0:
+			print "currently on ", i ,'/',len(all_values)
+		i += 1
 	print 'wrote ', count, 'objects to file'
 
 
