@@ -91,12 +91,10 @@ def create_voicemail_dict(json_file):
 		for first, second in itertools.combinations(values, 2):
 			if first['receiver'] == second['caller']:
 				if (first['receiver'] in user_hash_dict) and user_hash_dict[first['receiver']] != second['receiver']:
-					print 'overwriting data for key: ',first['receiver']
 					overwritten_keys.add(first['receiver'])
 				user_hash_dict[first['receiver']] = second['receiver']
 			elif second['receiver'] == first['caller']:
 				if (second['receiver'] in user_hash_dict) and user_hash_dict[second['receiver']] != first['receiver']:
-					print 'overwriting data for key: ',first['receiver']
 					overwritten_keys.add(second['receiver'])
 				user_hash_dict[second['receiver']] = first['receiver']
 	
@@ -108,7 +106,7 @@ def create_voicemail_dict(json_file):
 
 def create_new_graph(csv_file, user_map, cleaned_path, threshold=100):
 	csvData = raw.RawCDRCSV(csv_file)
-	friend_graph = nx.Graph()
+	# friend_graph = nx.Graph()
 	caller_index = 0
 	receiver_index = 16
 	remapped_rec = 0
