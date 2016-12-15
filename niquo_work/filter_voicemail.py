@@ -119,7 +119,7 @@ def create_new_graph(csv_file, user_map, cleaned_path, threshold=100):
 		if comm_type == 'MTC':
 			caller = row[receiver_index]
 			receiver = row[caller_index]
-		elif comm_type == 'MOC'
+		elif comm_type == 'MOC':
 			caller = row[caller_index]
 			receiver = row[receiver_index]
 		else:
