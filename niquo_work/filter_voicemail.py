@@ -44,6 +44,7 @@ def create_voicemail_dict(json_file):
 	user_hash_dict = {}
 	possiblilites = [val for val in json_generator(json_file)]
 	times_dict = {}
+	overwritten_keys = set([])
 	for val in possiblilites:
 		time = val['time']
 		if time in times_dict:
@@ -58,12 +59,14 @@ def create_voicemail_dict(json_file):
 			if first['receiver'] == second['caller']:
 				if (first['receiver'] in user_hash_dict) and user_hash_dict[first['receiver']] != second['receiver']:
 					print 'overwriting data for key: ',first['receiver']
+					overwritten_keys.add(first['receiver'])
 				user_hash_dict[first['receiver']] = second['receiver']
 			elif second['receiver'] == first['caller']:
 				if (second['receiver'] in user_hash_dict) and user_hash_dict[second['receiver']] != first['receiver']:
 					print 'overwriting data for key: ',first['receiver']
+					overwritten_keys.add(second['receiver'])
 				user_hash_dict[second['receiver']] = first['receiver']
-	return user_hash_dict
+	return user_hash_dict,overwritten_keys
 
 
 
