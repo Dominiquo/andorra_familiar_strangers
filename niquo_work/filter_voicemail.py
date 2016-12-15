@@ -115,8 +115,15 @@ def create_new_graph(csv_file, user_map, cleaned_path, threshold=100):
 	normal = 0
 
 	for row in csvData.rows_generator():
-		caller = row[caller_index]
-		receiver = row[receiver_index]
+		comm_type = row[comm_type_index]
+		if comm_type == 'MTC':
+			caller = row[receiver_index]
+			receiver = row[caller_index]
+		elif comm_type == 'MOC'
+			caller = row[caller_index]
+			receiver = row[receiver_index]
+		else:
+			continue
 		if receiver in user_map:
 			remapped_rec += 1
 			# friend_graph.add_edge(caller,user_map[receiver])
@@ -132,6 +139,9 @@ def create_new_graph(csv_file, user_map, cleaned_path, threshold=100):
 	print 'call in map and same receiver ', same_rec
 	print 'normal entries ', normal
 	# cPickle.dump(friend_graph, open(store_path,'wb'))
+	return True
+
+def update_distance_values(json_file,user_map,destination_file):
 	return True
 
 
