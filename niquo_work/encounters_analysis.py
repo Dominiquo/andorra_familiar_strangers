@@ -2,6 +2,7 @@ import cPickle
 import csv
 import os
 import sys
+import networkx as nx
 import numpy as np
 import json
 import getMaps as maps
@@ -111,19 +112,40 @@ def create_box_plot(encounter_json,save_file='../niquo_data/plots/box_plot_50.pn
 	plt.savefig(save_file)
 
 
-def generate_median_per_tower(encounters_json,save_file='../niquo_data/filtered_data/lat_lon_median.csv'):
+def generate_stats_per_tower(encounters_json,save_file='../niquo_data/filtered_data/lat_lon_median.csv'):
 	encs_vals = {}
+	tower_graph = nx.DiGraph()
+	all_vertices = set([])
 	id_latlon = maps.id_to_lat_long()
+
 	for line in open(encounters_json):
 		row = json.loads(line)
-		encs_count = len(row['first_times'])
+		encs_count = row['encs_count']
+		raw_distance = row['distance']
 		lat_lon = id_latlon[row['first_tower'][10:-2]]
+		lat_lon_other = id_latlon[row['next_tower'][10:-2]]
+		delta_d = row['delta_days']
+		delta_s = row['delta_seconds']
+		delta_h = days_seconds_to_hours(int(delta_d),int(delta_s))
+
+		if lat_lon not in all_vertices:
+			tower_graph.add_edge(lat_lon,lat_lon_other,weight=1)
+			tower_graph[lat_lon][lat_lon_other]['times'] = [delta_h]
+		else: 
+			if lat_lon_other in tower_graph.neighbors(lat_lon):
+				tower_graph[lat_lon][lat_lon_other]['weight'] += 1
+				tower_graph[lat_lon][lat_lon_other]['times'].append(delta_h)
+			else:
+				tower_graph.add_edge(lat_lon,lat_lon_other,weight=1)
+				tower_graph[lat_lon][lat_lon_other]['times'] = [delta_h]
+					
 		if lat_lon not in encs_vals:
 			encs_vals[lat_lon] = [encs_count]
 		else:
 			encs_vals[lat_lon].append(encs_count)
+
 	with open(save_file, 'wb') as outfile:
-		csvout = csv.writer(outfile,delimiter=';')
+		csvout = csv.writer(outfile,delimiter=',')
 		first_row = ['latitude','longitude','median','mean']
 		csvout.writerow(first_row)
 		for lat_lon, all_encs in encs_vals.iteritems():
@@ -131,8 +153,15 @@ def generate_median_per_tower(encounters_json,save_file='../niquo_data/filtered_
 			lon = lat_lon[1]
 			med = np.median(all_encs)
 			mean = np.mean(all_encs)
+			towers_graph[lat_lon]['median_soc_dist'] = med
+			towers_graph[lat_lon]['mean_soc_dist'] = mean
 			csvout.writerow([lat,lon,med,mean])
-	return True
+
+	for source,dest in towers_graph.edges():
+		towers_graph[source][dest]['mean_hours'] = np.mean(towers_graph[source][dest]['times'])
+		towers_graph[source][dest]['med_hours'] = np.median(towers_graph[source][dest]['times'])
+
+	return towers_graph
 
 
 

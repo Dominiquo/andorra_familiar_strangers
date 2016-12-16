@@ -12,6 +12,7 @@ def add_element_json(old_json, new_json):
 				old_val['encs_count'] = encs_count
 				json.dump(old_val, outfile)
 				outfile.write('\n')
+				count += 1
 	print 'wrote', count, 'new values to ', new_json
 
 
