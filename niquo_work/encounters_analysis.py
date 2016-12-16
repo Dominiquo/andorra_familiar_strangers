@@ -115,7 +115,7 @@ def create_box_plot(encounter_json,save_file='../niquo_data/plots/box_plot_50.pn
 def generate_stats_per_tower(encounters_json,save_file='../niquo_data/filtered_data/lat_lon_median.csv'):
 	encs_vals = {}
 	tower_graph = nx.DiGraph()
-	all_vertices = set([])
+	all_sources = set([])
 	id_latlon = maps.id_to_lat_long()
 
 	for line in open(encounters_json):
@@ -128,9 +128,10 @@ def generate_stats_per_tower(encounters_json,save_file='../niquo_data/filtered_d
 		delta_s = row['delta_seconds']
 		delta_h = days_seconds_to_hours(int(delta_d),int(delta_s))
 
-		if lat_lon not in all_vertices:
+		if lat_lon not in all_sources:
 			tower_graph.add_edge(lat_lon,lat_lon_other,weight=1)
 			tower_graph[lat_lon][lat_lon_other]['times'] = [delta_h]
+			all_sources.add(lat_lon)
 		else: 
 			if lat_lon_other in tower_graph.neighbors(lat_lon):
 				tower_graph[lat_lon][lat_lon_other]['weight'] += 1
@@ -157,9 +158,9 @@ def generate_stats_per_tower(encounters_json,save_file='../niquo_data/filtered_d
 			tower_graph[lat_lon]['mean_soc_dist'] = mean
 			csvout.writerow([lat,lon,med,mean])
 
-	# for source,dest in tower_graph.edges():
-	# 	tower_graph[source][dest]['mean_hours'] = np.mean(tower_graph[source][dest]['times'])
-	# 	tower_graph[source][dest]['med_hours'] = np.median(tower_graph[source][dest]['times'])
+	for source,dest in tower_graph.edges():
+		tower_graph[source][dest]['mean_hours'] = np.mean(tower_graph[source][dest]['times'])
+		tower_graph[source][dest]['med_hours'] = np.median(tower_graph[source][dest]['times'])
 
 	return tower_graph
 
