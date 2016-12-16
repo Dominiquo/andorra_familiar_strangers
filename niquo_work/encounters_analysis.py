@@ -127,6 +127,8 @@ def generate_stats_per_tower(encounters_json,save_file='../niquo_data/filtered_d
 		delta_d = row['delta_days']
 		delta_s = row['delta_seconds']
 		delta_h = days_seconds_to_hours(int(delta_d),int(delta_s))
+		if delta_h < 0:
+			print delta_d, delta_s
 
 		if lat_lon not in all_sources:
 			tower_graph.add_edge(lat_lon,lat_lon_other,weight=1)
