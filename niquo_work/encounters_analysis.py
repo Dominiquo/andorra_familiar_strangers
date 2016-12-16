@@ -157,9 +157,9 @@ def generate_stats_per_tower(encounters_json,save_file='../niquo_data/filtered_d
 			tower_graph[lat_lon]['mean_soc_dist'] = mean
 			csvout.writerow([lat,lon,med,mean])
 
-	for source,dest in tower_graph.edges():
-		tower_graph[source][dest]['mean_hours'] = np.mean(tower_graph[source][dest]['times'])
-		tower_graph[source][dest]['med_hours'] = np.median(tower_graph[source][dest]['times'])
+	# for source,dest in tower_graph.edges():
+	# 	tower_graph[source][dest]['mean_hours'] = np.mean(tower_graph[source][dest]['times'])
+	# 	tower_graph[source][dest]['med_hours'] = np.median(tower_graph[source][dest]['times'])
 
 	return tower_graph
 
