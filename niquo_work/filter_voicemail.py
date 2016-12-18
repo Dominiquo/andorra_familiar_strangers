@@ -104,15 +104,11 @@ def create_voicemail_dict(json_file):
 	return user_hash_dict
 
 
-def create_new_graph(csv_file, user_map, cleaned_path, threshold=100):
+def create_new_graph(csv_file, friend_graph, user_map, threshold=100):
 	csvData = raw.RawCDRCSV(csv_file)
-	# friend_graph = nx.Graph()
+	new_graph = nx.Graph()
 	caller_index = 0
 	receiver_index = 16
-	remapped_rec = 0
-	diff_rec = 0
-	same_rec = 0
-	normal = 0
 
 	for row in csvData.rows_generator():
 		comm_type = row[comm_type_index]
@@ -139,9 +135,6 @@ def create_new_graph(csv_file, user_map, cleaned_path, threshold=100):
 	print 'call in map and same receiver ', same_rec
 	print 'normal entries ', normal
 	# cPickle.dump(friend_graph, open(store_path,'wb'))
-	return True
-
-def update_distance_values(json_file,user_map,destination_file):
 	return True
 
 

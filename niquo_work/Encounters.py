@@ -3,6 +3,7 @@ import os
 import cPickle
 import itertools
 import encounters_analysis as encs_anal
+import update_encoutners as up_encs
 from datetime import datetime
 from Network import get_graph_distance
 import time
@@ -46,6 +47,7 @@ def find_mult_enc_single_week(week_path,destination_path, friend_graph):
 							'first_times': times,
 							'next_time': next_time,
 							'delta_days': delta_days,
+							'encs_count': up_encs.get_new_enc_count(times),
 							'delta_seconds': delta_seconds,
 							'first_tower': tower,
 							'distance': distance,
