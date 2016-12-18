@@ -79,14 +79,11 @@ def find_next_encounter(tower,caller,caller_enc,last_time,all_maps):
 
 
 def find_nearest_time(encs_list,last_encounter):
-	encs_list.sort()
+	encs_list = sorted([encs_anal.get_time_obj(t) for t in encs_list])
 	min_time_met = encs_list[0]
-	if min_time_met > last_encounter:
-		return min_time_met
-	else:
-		for min_time_met in encs_list:
-			if min_time_met > last_encounter:
-				return min_time_met
+	for min_time_met in encs_list:
+		if min_time_met > last_encounter:
+			return encs_anal.time_obj_to_string(min_time_met)
 	return None
 
 def time_difference(first_time,second_time):
