@@ -77,14 +77,14 @@ def filter_voicemail_nodes_graph(csv_file, old_graph, new_graph, user_hash_map, 
 		if (comm_type == 'MOC') and (receiver in user_hash_map):
 			new_neighbor = user_hash_map[receiver]
 			if get_graph_distance(caller, new_neighbor, old_map) == 2:
-				add_edge += 1
+				added_edges += 1
 				new_graph_obj.add_edge(caller,new_neighbor)	
 			else:
 				new_graph_obj.add_edge(caller,receiver)
 		elif (comm_type == 'MTC') and (caller in user_hash_map):
 			new_neighbor = user_hash_map[caller]
 			if get_graph_distance(receiver, new_neighbor, old_map) == 2:
-				add_edge += 1
+				added_edges += 1
 				new_graph_obj.add_edge(new_neighbor, receiver)
 			else:
 				new_graph_obj.add_edge(caller,receiver)
