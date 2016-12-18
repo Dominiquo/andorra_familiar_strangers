@@ -136,7 +136,7 @@ def main():
 	new_graph = '../niquo_data/filtered_data/network_object_100_removed_voicemail.p'
 	filtered_data = '../niquo_data/filtered_data/06_2017_no_data.csv'
 	user_hash_dict = fv.create_voicemail_dict(fv.outgoing_only)
-	filter_voicemail_nodes_graph(filtered_data, old_graph, new_graph, user_hash_dict, limit=100):
+	filter_voicemail_nodes_graph(filtered_data, old_graph, new_graph, user_hash_dict, limit=100)
 
 
 
