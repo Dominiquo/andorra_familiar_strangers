@@ -83,8 +83,10 @@ def find_next_encounter(tower,caller,caller_enc,last_time,all_maps):
 def find_nearest_time(encs_list,last_encounter):
 	encs_list = sorted([encs_anal.get_time_obj(t) for t in encs_list])
 	min_time_met = encs_list[0]
+	last_encounter_time_obj = encs_anal.get_time_obj(last_encounter)
+	
 	for min_time_met in encs_list:
-		if min_time_met > last_encounter:
+		if min_time_met > last_encounter_time_obj:
 			return encs_anal.time_obj_to_string(min_time_met)
 	return None
 
