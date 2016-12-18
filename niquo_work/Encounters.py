@@ -3,7 +3,7 @@ import os
 import cPickle
 import itertools
 import encounters_analysis as encs_anal
-import update_encoutners as up_encs
+import update_encounters as up_encs
 from datetime import datetime
 from Network import get_graph_distance
 import time
