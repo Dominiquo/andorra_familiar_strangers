@@ -56,7 +56,9 @@ def get_distribution_encounters(encoutners_csv,network_object_path,destination_p
 	return True
 
 def filter_voicemail_nodes_graph(csv_file, old_graph, new_graph, user_hash_map, limit=100):
+	print 'loading graph from memory:', old_graph
 	old_map = cPickle.load(open(old_graph))
+	print 'graph loaded.'
 	csvData = raw.RawCDRCSV(csv_file)
 	new_graph_obj = friend_graph = nx.Graph()
 	caller_index = 0
@@ -66,7 +68,7 @@ def filter_voicemail_nodes_graph(csv_file, old_graph, new_graph, user_hash_map, 
 	# with A-->C
 	added_edges = 0
 	skipped_edges = 0
-
+	print 'csv file rows...'
 	for row in csvData.rows_generator():
 		caller = row[caller_index]
 		receiver = row[receiver_index]
@@ -74,14 +76,14 @@ def filter_voicemail_nodes_graph(csv_file, old_graph, new_graph, user_hash_map, 
 		# FIRST TWO CASES, REPLACING A--->B with A-->C
 		if (comm_type == 'MOC') and (receiver in user_hash_map):
 			new_neighbor = user_hash_map[receiver]
-			if get_graph_distance(caller, new_neighbor) == 2:
+			if get_graph_distance(caller, new_neighbor, old_map) == 2:
 				add_edge += 1
 				new_graph_obj.add_edge(caller,new_neighbor)	
 			else:
 				new_graph_obj.add_edge(caller,receiver)
 		elif (comm_type == 'MTC') and (caller in user_hash_map):
 			new_neighbor = user_hash_map[caller]
-			if get_graph_distance(receiver, new_neighbor) == 2:
+			if get_graph_distance(receiver, new_neighbor, old_map) == 2:
 				add_edge += 1
 				new_graph_obj.add_edge(new_neighbor, receiver)
 			else:
