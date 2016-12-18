@@ -54,6 +54,13 @@ def Main(root_path='../niquo_data/v2_data_root', data_path='../niquo_data/filter
 	create_encounter(combo_path, encounters_path, graph_path)
 	return True
 
+def v3Data():
+	data_path = '../niquo_data/v2_data_root/combined_callers'
+	store_path = '../niquo_data/v3_data_root/encounters_files'
+	new_graph = '../niquo_data/filtered_data/network_object_100_removed_voicemail.p'
+	create_encounter(data_path, store_path, new_graph)
+
 
 if __name__ == '__main__':
-    Main()
+    # Main()
+    v3Data()
