@@ -73,6 +73,7 @@ def create_loc_filter_func(first, second, n, towers_map,ignore_n=False):
 
 def create_times_filter_func(first_cond,second_cond, n, use_majority=True, ignore_n=False):
 	encs_count = 'encs_count'
+	first_times = 'first_times'
 	next_time = 'next_time'
 	last_element = -1
 	if ignore_n:
@@ -88,7 +89,7 @@ def create_times_filter_func(first_cond,second_cond, n, use_majority=True, ignor
 
 
 def create_encounters_count_filter(n):
-	return lambda row: ((len(row['first_times']) == n) and (row['distance'] > 0))
+	return lambda row: ((int(row['encs_count']) == n) and (row['distance'] > 0))
 
 def create_friend_dist_graph(encounters_json, destination_path, n,  bins=100, bin_range=[0,100]):
 	filter_func = create_encounters_count_filter(n)
