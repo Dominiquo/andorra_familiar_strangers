@@ -202,6 +202,36 @@ def generate_stats_per_tower(encounters_json,save_file='../niquo_data/filtered_d
 	return tower_graph
 
 
+def locations_encounters_data(encounters_json,destination_path):
+	locs_data = maps.tower_to_activity()
+	first_tower = 'first_tower'
+	next_tower = 'next_tower'
+	# get_tower_code(row,first_tower, towers_map)
+	total_encs = 0
+	total_entered = 0
+	with open(encounters_json) as infile:
+		for line in infile:
+			total_encs += 1
+			row = json.loads(row)
+			f_tower_set = get_tower_code(row,first_tower, locs_data)
+			s_tower_set = get_tower_code(row,next_tower, locs_data)
+			for source,dest in itertools.product(f_tower_set, s_tower_set):
+				total_entered += 1
+				if source not in locs_data:
+					locs_data[source] = {dest: 1}
+				elif dest not in locs_data[source]:
+					locs_data[source][dest] = 1
+				else:
+					locs_data[source][dest] += 1
+
+	for source,dest_dict in locs_data.iteritems():
+		for dest,count in dest_dict.iteritems():
+			locs_data[source][dest] = float(count)/total_encs
+
+	return locs_data
+
+
+
 
 # *************HELPER FUNCTIONS*************
 
