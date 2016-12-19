@@ -53,6 +53,26 @@ def update_distance_val_json(old_json,new_json,friendship_graph):
 	print 'wrote', count, 'new values to ', new_json
 
 
+def create_user_pair_dict(encounters_json):
+	users_enc_dict = {}
+	with open(encounters_json) as json_in:
+		for line in json_in:
+			val = json.loads(line)
+			caller = val['caller']
+			caller_enc = val['caller_enc']
+			if caller > caller_enc:
+				key = (caller,caller_enc)
+			else:
+				key = (caller_enc,caller)
+
+			if key not in users_enc_dict:
+				users_enc_dict[key] = [val]
+			else:
+				users_enc_dict[key].append(val)
+
+	return users_enc_dict
+
+
 def Main():
 	new_graph = '../niquo_data/filtered_data/network_object_100_removed_voicemail_UPDATED.p'
 	encounters_json = '../niquo_data/v3_data_root/encounters_files/2016.07.01_2016.07.07_encounter.json'
