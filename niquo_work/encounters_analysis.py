@@ -24,7 +24,7 @@ def filter_xvals(json_filename,filter_func=lambda row:True):
 def graph_filter_vals(json_filename, filter_func):
 	return [row['distance'] for row in read_json_file_generator(json_filename) if filter_func(row)]	
 
-def create_graphs_on_tower_type(encounters_json, destination_path, n, bins=150, bin_range=[0,180], use_majority=True,ignore_n=False):
+def create_graphs_on_tower_type(encounters_json, destination_path, n, bins=150, bin_range=[0,180], ignore_n=False):
 	tower_map = maps.tower_to_activity()
 	tower_types = get_tower_types(tower_map)
 	axis_ranges = [50, 200, 500, 1000, 2000, 5000]
@@ -43,7 +43,7 @@ def create_graphs_on_tower_type(encounters_json, destination_path, n, bins=150, 
 		create_dist_histogram(x_vals, bins, bin_range, y_axis,  save_file)
 	return True
 
-def create_graphs_on_times(encounters_json, destination_path, n, bins=150, bin_range=[0,180],ignore_n=False):
+def create_graphs_on_times(encounters_json, destination_path, n, bins=150, bin_range=[0,180], use_majority=True, ignore_n=False):
 	all_conditions = [isMorning,isHome,isNight]
 	axis_ranges = [50, 200, 500, 1000, 2000, 5000]
 	for first, second in itertools.permutations(all_conditions, 2):
