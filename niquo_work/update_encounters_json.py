@@ -54,7 +54,7 @@ def Main():
 	new_graph = '../niquo_data/filtered_data/network_object_100_removed_voicemail_UPDATED.p'
 	encounters_json = '../niquo_data/v3_data_root/encounters_files/2016.07.01_2016.07.07_encounter.json'
 	new_encounters_json = '../niquo_data/v3_data_root/encounters_files/2016.07.01_2016.07.07_encounter_dist_UPDATED.json'
-	update_distance_val_json()
+	update_distance_val_json(encounters_json, new_encounters_json, new_graph)
 
 if __name__ == '__main__':
     Main()
