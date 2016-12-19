@@ -216,7 +216,9 @@ def locations_encounters_data(encounters_json,destination_path):
 			row = json.loads(line)
 			f_tower_set = get_tower_code(row,first_tower, locs_data)
 			s_tower_set = get_tower_code(row,next_tower, locs_data)
-			for source,dest in itertools.product(f_tower_set, s_tower_set):
+			for source_s,dest_s in itertools.product(f_tower_set, s_tower_set):
+				source = int(source_s)
+				dest = int(dest_s)
 				total_entered += 1
 				if source not in locs_matrix:
 					locs_matrix[source] = {dest: 1}
