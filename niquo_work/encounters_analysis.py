@@ -101,6 +101,8 @@ def create_box_plot(encounter_json,save_file='../niquo_data/plots/box_plot_50.pn
 	for line in open(encounter_json):
 		row = json.loads(line)
 		dist = row['distance']
+		if dist < 0:
+			continue
 		n_val = row['encs_count']
 		if (n_val not in dist_vals):
 			dist_vals[n_val] = [dist]
