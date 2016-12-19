@@ -196,7 +196,7 @@ def main():
 	INTERMEDIATE_DOUBLES = '../niquo_data/filtered_data/INTERMEDIATE_DOUBLES.csv'
 	user_hash_dict = fv.create_voicemail_dict(fv.outgoing_only)
 	make_new_csv_without_B(filtered_data, user_hash_dict, INTERMEDIATE_DOUBLES)
-	make_new_friendship_graph(INTERMEDIATE_DOUBLES,new_graph, 100)
+	make_new_friendship_graph(INTERMEDIATE_DOUBLES,new_graph, float('inf'))
 
 
 
