@@ -130,15 +130,15 @@ def generate_stats_per_tower(encounters_json,save_file='../niquo_data/filtered_d
 
 		if lat_lon not in all_sources:
 			tower_graph.add_edge(lat_lon,lat_lon_other,weight=1)
-			tower_graph[lat_lon][lat_lon_other]['times'] = [delta_h]
+			nx.set_edge_attributes(tower_graph,'times',{(lat_lon,lat_lon_other): [delta_h]})
 			all_sources.add(lat_lon)
 		else: 
 			if lat_lon_other in tower_graph.neighbors(lat_lon):
-				tower_graph[lat_lon][lat_lon_other]['weight'] += 1
-				tower_graph[lat_lon][lat_lon_other]['times'].append(delta_h)
+				tower_graph.edge[lat_lon][lat_lon_other]['weight'] += 1
+				tower_graph.edge[lat_lon][lat_lon_other]['times'].append(delta_h)
 			else:
 				tower_graph.add_edge(lat_lon,lat_lon_other,weight=1)
-				tower_graph[lat_lon][lat_lon_other]['times'] = [delta_h]
+				nx.set_edge_attributes(tower_graph,'times',{(lat_lon,lat_lon_other): [delta_h]})
 					
 		if lat_lon not in encs_vals:
 			encs_vals[lat_lon] = [encs_count]
@@ -154,13 +154,13 @@ def generate_stats_per_tower(encounters_json,save_file='../niquo_data/filtered_d
 			lon = lat_lon[1]
 			med = np.median(all_encs)
 			mean = np.mean(all_encs)
-			# tower_graph[lat_lon]['median_soc_dist'] = med
-			# tower_graph[lat_lon]['mean_soc_dist'] = mean
+			tower_graph.node[lat_lon]['median_soc_dist'] = med
+			tower_graph.node[lat_lon]['mean_soc_dist'] = mean
 			csvout.writerow([lat,lon,med,mean])
 
-	# for source,dest in tower_graph.edges():
-	# 	tower_graph[source][dest]['mean_hours'] = np.mean(tower_graph[source][dest]['times'])
-	# 	tower_graph[source][dest]['med_hours'] = np.median(tower_graph[source][dest]['times'])
+	for source,dest in tower_graph.edges():
+		tower_graph.edge[source][dest]['mean_hours'] = np.mean(tower_graph.edge[source][dest]['times'])
+		tower_graph.edge[source][dest]['med_hours'] = np.median(tower_graph.edge[source][dest]['times'])
 
 	return tower_graph
 
