@@ -42,7 +42,7 @@ def update_distance_val_json(old_json,new_json,friendship_graph):
 				prev_distance = old_val[distance_key]
 				caller = old_val[caller_key]
 				caller_enc = old_val[caller_enc_key]
-				new_dis = net.get_graph_distance(caller, caller_enc, friendship_graph)
+				new_dis = net.get_graph_distance(caller, caller_enc, friend_graph)
 				old_val[distance_key] = new_dis
 				json.dump(old_val, outfile)
 				outfile.write('\n')
