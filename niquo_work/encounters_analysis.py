@@ -227,10 +227,12 @@ def locations_encounters_data(encounters_json,destination_path):
 				else:
 					locs_matrix[source][dest] += 1
 
-	for source,dest_dict in locs_matrix.iteritems():
-		for dest,count in dest_dict.iteritems():
-			locs_matrix[source][dest] = float(count)/total_encs
+	# for source,dest_dict in locs_matrix.iteritems():
+	# 	for dest,count in dest_dict.iteritems():
+	# 		locs_matrix[source][dest] = float(count)/total_encs
 
+	print 'total encounters count: ', total_encs
+	print 'total values entered count:', total_entered
 	return locs_matrix
 
 
