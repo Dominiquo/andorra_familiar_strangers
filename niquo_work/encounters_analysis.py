@@ -315,13 +315,15 @@ def Main():
 	create_friend_dist_graph(encounters_json, destination_path, -1,  bins=100, bin_range=[0,100],ignore_n=True)
 	create_graphs_on_tower_type(encounters_json, destination_path, -1, bins=150, bin_range=[0,180], ignore_n=True)
 
-	for n in range(2,20,4):
+	for n in range(1,20):
+		sub_dir = '/graphs_for_n_%d' % n
+		dest_path = os.path.join(destination_path,sub_dir)
 		print 'creating graphs for n =', n
-		create_graphs_on_times(encounters_json, destination_path, n)
+		create_graphs_on_times(encounters_json, dest_path, n)
 		print 'created graph for encounter times for n =', n
-		create_friend_dist_graph(encounters_json, destination_path, n)
+		create_friend_dist_graph(encounters_json, dest_path, n)
 		print 'created friend distance graph for n = ', n
-		create_graphs_on_tower_type(encounters_json, destination_path, n)
+		create_graphs_on_tower_type(encounters_json, dest_path, n)
 		print 'create tower type graph for n = ', n
 
 	return True
