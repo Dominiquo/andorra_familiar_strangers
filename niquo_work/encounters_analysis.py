@@ -112,6 +112,10 @@ def create_box_plot(encounter_json,save_file='../niquo_data/plots/box_plot_50.pn
 	keys = sorted(dist_vals.keys())[:25]
 	data = [dist_vals[n] for n in keys]
 	plt.boxplot(data)
+	plt.xlabel('Encounters Count')
+	plt.ylabel('User Friendship Distance')
+	plt.title('Friendship Distance Distribution as a Function of Encounters Count')
+	plt.xticks(range(25),keys)
 	plt.savefig(save_file)
 
 
