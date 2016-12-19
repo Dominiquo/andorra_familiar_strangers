@@ -60,7 +60,17 @@ def v3Data():
 	new_graph = '../niquo_data/filtered_data/network_object_100_removed_voicemail.p'
 	create_encounter(data_path, store_path, new_graph)
 
+def v4Data():
+	data_path = '../niquo_data/v2_data_root/partitioned_towers'
+	root_path = '../niquo_data/v3_data_root/'
+	paired_path = os.path.join(root_path,'encounters_files')
+	partitioned = TP.TowersPartitioned(data_path)
+	partitioned.pair_users_from_towers(paired_path)
+
+
+
 
 if __name__ == '__main__':
     # Main()
-    v3Data()
+    # v3Data()
+    v4Data()
