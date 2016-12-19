@@ -55,6 +55,60 @@ def get_distribution_encounters(encoutners_csv,network_object_path,destination_p
 						pass	
 	return True
 
+def make_new_csv_without_B(csv_file,user_hash_dict,destination_path):
+	csvData = raw.RawCDRCSV(csv_file)
+	caller_index = 0
+	comm_type_index = 10
+	receiver_index = 16
+	nodes_converted = 0
+	with open(destination_path,'wb') as outfile:
+		csvout = csv.writer(outfile,delimiter=';')
+		for row in csvData.rows_generator():
+			caller = row[caller_index]
+			receiver = row[receiver_index]
+			comm_type = row[comm_type_index]
+			if caller in user_hash_dict:
+				nodes_converted += 1
+				caller = user_hash_dict[caller]
+			if receiver in user_hash_dict:
+				nodes_converted += 1
+				receiver = user_hash_dict[receiver]
+			csvout.writerow([caller,receiver,comm_type])
+
+	print 'total number of nodes mapped to another node:', nodes_converted
+	return True
+
+def make_new_friendship_graph(doubled_CSV, destination_path, limit=100):
+	new_graph_obj = friend_graph = nx.Graph()
+	csvData = raw.RawCDRCSV(doubled_CSV)
+	caller_index = 0
+	receiver_index = 1
+	comm_type_index = 2
+	skipped_rows = 0
+	for row in csvData.rows_generator():
+		caller = row[caller_index]
+		receiver = row[receiver_index]
+		comm_type = row[comm_type_index]
+		if caller != receiver:
+			new_graph_obj.add_edge(caller,receiver)
+		else:
+			skipped_rows += 1
+	print 'total number of rows skipped:', skipped_rows
+	print 'filtering out nodes of degree', limit, 'or higher'
+
+	nodes = nx.nodes(new_graph_obj)
+	degrees_dict = nx.degree(new_graph_obj,nodes)
+	count = 0
+	for node, degree in degrees_dict.iteritems():
+		if degree > limit:
+			new_graph_obj.remove_node(node)
+			count += 1
+	print 'removed ', count, 'nodes from the graph'
+	print 'writing new graph to ', destination_path
+
+
+
+
 def filter_voicemail_nodes_graph(csv_file, old_graph, new_graph, user_hash_map, limit=100):
 	print 'loading graph from memory:', old_graph
 	old_map = cPickle.load(open(old_graph))
@@ -88,7 +142,7 @@ def filter_voicemail_nodes_graph(csv_file, old_graph, new_graph, user_hash_map, 
 				new_graph_obj.add_edge(new_neighbor, receiver)
 			else:
 				new_graph_obj.add_edge(caller,receiver)
-		# NEXT TWO CASES checking to not add B--> C
+		# NEXT TWO CASES checking to not add B-->C
 		elif (comm_type == 'MOC') and (caller in user_hash_map):
 			if user_hash_map[caller] != receiver:
 				new_graph_obj.add_edge(caller,receiver)
@@ -114,8 +168,8 @@ def filter_voicemail_nodes_graph(csv_file, old_graph, new_graph, user_hash_map, 
 			new_graph_obj.remove_node(node)
 			count += 1
 	print 'removed ', count, 'nodes from the graph'
-	print 'writing new graph to ', new_graph
-	cPickle.dump(new_graph_obj, open(new_graph,'wb'))
+	print 'writing new graph to ', destination_path
+	cPickle.dump(new_graph_obj, open(destination_path,'wb'))
 	return new_graph_obj
 
 def get_graph_distance(user1, user2, friend_graph):
@@ -134,11 +188,14 @@ def main():
 	# dest = '../niquo_data/CURRENT_DATA/friend_dis_n2.csv'
 	# get_distribution_encounters(encs_csv,new_obj_clean,dest)
 
-	old_graph = '../niquo_data/filtered_data/network_object_100.p'
-	new_graph = '../niquo_data/filtered_data/network_object_100_removed_voicemail.p'
+	# old_graph = '../niquo_data/filtered_data/network_object_100.p'
+	new_graph = '../niquo_data/filtered_data/network_object_100_removed_voicemail_UPDATED.p'
 	filtered_data = '../niquo_data/filtered_data/06_2017_no_data.csv'
+	INTERMEDIATE_DOUBLES = '../niquo_data/filtered_data/INTERMEDIATE_DOUBLES.csv'
 	user_hash_dict = fv.create_voicemail_dict(fv.outgoing_only)
-	filter_voicemail_nodes_graph(filtered_data, old_graph, new_graph, user_hash_dict, limit=100)
+	make_new_csv_without_B(filtered_data, user_hash_dict, destination_path)
+	make_new_friendship_graph(INTERMEDIATE_DOUBLES,new_graph, 100)
+
 
 
 
