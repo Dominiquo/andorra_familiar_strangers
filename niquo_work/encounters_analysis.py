@@ -130,6 +130,7 @@ def create_box_plot(encounter_json,save_file='../niquo_data/plots/box_plot_50.pn
 	ax2.set_xticklabels([transform(v) for v in data])
 
 	plt.savefig(save_file)
+	return dist_vals
 
 
 def generate_stats_per_tower(encounters_json,save_file='../niquo_data/filtered_data/lat_lon_median.csv'):
@@ -290,8 +291,8 @@ def create_dist_histogram(x_vals,bins, bin_range, y_axis, save_file):
 	return True
 
 def Main():
-	encounters_json = '../niquo_data/v2_data_root/encounters_files/2016.07.08_2016.07.14_encounter.json'
-	destination_path = '../niquo_data/v2_data_root/plots'
+	encounters_json = '../niquo_data/v3_data_root/encounters_files/2016.07.08_2016.07.14_encounter.json'
+	destination_path = '../niquo_data/v3_data_root/plots'
 
 	for n in range(2,20,4):
 		print 'creating graphs for n =', n
