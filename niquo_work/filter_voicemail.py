@@ -101,7 +101,7 @@ def create_voicemail_dict(json_file):
 	for rep_key in overwritten_keys:
 		user_hash_dict.pop(rep_key,None)
 
-	return user_hash_dict
+	return dict((v,k) for k,v in user_hash_dict.iteritems())
 
 
 def create_new_graph(csv_file, friend_graph, user_map, threshold=100):
