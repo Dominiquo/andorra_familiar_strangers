@@ -35,6 +35,7 @@ def update_distance_val_json(old_json,new_json,friendship_graph):
 	caller_key = 'caller'
 	caller_enc_key = 'caller_enc'
 	print 'reading json file...'
+	count = 0 
 	with open(old_json) as infile:
 		with open(new_json, 'wb') as outfile:
 			for line in infile:
