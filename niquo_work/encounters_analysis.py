@@ -5,6 +5,7 @@ import sys
 import networkx as nx
 import numpy as np
 import json
+import seaborn
 import getMaps as maps
 from collections import defaultdict
 import matplotlib.pyplot as plt
@@ -100,13 +101,13 @@ def create_box_plot(encounter_json,save_file='../niquo_data/plots/box_plot_50.pn
 	for line in open(encounter_json):
 		row = json.loads(line)
 		dist = row['distance']
-		n_val = len(row['first_times'])
+		n_val = row['encs_count']
 		if (n_val not in dist_vals):
 			dist_vals[n_val] = [dist]
 		else:
 			dist_vals[n_val].append(dist)
 
-	keys = sorted(dist_vals.keys())[:50]
+	keys = sorted(dist_vals.keys())[:25]
 	data = [dist_vals[n] for n in keys]
 	plt.boxplot(data)
 	plt.savefig(save_file)
