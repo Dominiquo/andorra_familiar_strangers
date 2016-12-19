@@ -61,20 +61,31 @@ def create_graphs_on_times(encounters_json, destination_path, n, bins=150, bin_r
 		create_dist_histogram(x_vals, bins, bin_range, y_axis,  save_file)
 	return True
 
-def create_loc_filter_func(first, second, n, towers_map):
-	first_times = 'first_times'
+def create_loc_filter_func(first, second, n, towers_map,ignore_n=False):
+	encs_count = 'encs_count'
 	first_tower = 'first_tower'
 	next_tower = 'next_tower'
-	return lambda row: (len(row[first_times]) == n) and (first in get_tower_code(row,first_tower, towers_map)) and (second in get_tower_code(row,next_tower,towers_map))
+	if ignore_n
+		return lambda row: (first in get_tower_code(row,first_tower, towers_map)) and (second in get_tower_code(row,next_tower,towers_map))
+	else:
+		return lambda row: (int(row[encs_count]) == n) and (first in get_tower_code(row,first_tower, towers_map)) and (second in get_tower_code(row,next_tower,towers_map))
+		
 
-def create_times_filter_func(first_cond,second_cond, n, use_majority=True):
-	first_times = 'first_times'
+def create_times_filter_func(first_cond,second_cond, n, use_majority=True, ignore_n=False):
+	encs_count = 'encs_count'
 	next_time = 'next_time'
 	last_element = -1
-	if use_majority:
-		return lambda row: (len(row[first_times]) == n) and majority_check(row[first_times],first_cond) and second_cond(row[next_time])
+	if ignore_n:
+		if use_majority:
+			return lambda row: majority_check(row[first_times],first_cond) and second_cond(row[next_time])
+		else:
+			return lambda row: first_cond(row[first_times][last_element]) and second_cond(row[next_time])
 	else:
-		return lambda row: (len(row[first_times]) == n) and first_cond(row[first_times][last_element]) and second_cond(row[next_time])
+		if use_majority:
+			return lambda row: (int(row[encs_count]) == n) and majority_check(row[first_times],first_cond) and second_cond(row[next_time])
+		else:
+			return lambda row: (int(row[encs_count]) == n) and first_cond(row[first_times][last_element]) and second_cond(row[next_time])
+
 
 def create_encounters_count_filter(n):
 	return lambda row: ((len(row['first_times']) == n) and (row['distance'] > 0))
@@ -291,7 +302,7 @@ def create_dist_histogram(x_vals,bins, bin_range, y_axis, save_file):
 	return True
 
 def Main():
-	encounters_json = '../niquo_data/v3_data_root/encounters_files/2016.07.08_2016.07.14_encounter.json'
+	encounters_json = '../niquo_data/v3_data_root/encounters_files/2016.07.01_2016.07.07_encounter.json'
 	destination_path = '../niquo_data/v3_data_root/plots'
 
 	for n in range(2,20,4):
