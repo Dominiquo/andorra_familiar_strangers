@@ -5,7 +5,7 @@ import sys
 import networkx as nx
 import numpy as np
 import json
-import seaborn
+import seaborn as sns
 import getMaps as maps
 from collections import defaultdict
 import matplotlib.pyplot as plt
