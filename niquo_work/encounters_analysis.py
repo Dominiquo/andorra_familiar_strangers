@@ -65,11 +65,11 @@ def create_loc_filter_func(first, second, n, towers_map,ignore_n=False):
 	encs_count = 'encs_count'
 	first_tower = 'first_tower'
 	next_tower = 'next_tower'
-	if ignore_n
+	if ignore_n:
 		return lambda row: (first in get_tower_code(row,first_tower, towers_map)) and (second in get_tower_code(row,next_tower,towers_map))
 	else:
 		return lambda row: (int(row[encs_count]) == n) and (first in get_tower_code(row,first_tower, towers_map)) and (second in get_tower_code(row,next_tower,towers_map))
-		
+
 
 def create_times_filter_func(first_cond,second_cond, n, use_majority=True, ignore_n=False):
 	encs_count = 'encs_count'
