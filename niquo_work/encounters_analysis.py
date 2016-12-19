@@ -212,7 +212,7 @@ def locations_encounters_data(encounters_json,destination_path):
 	with open(encounters_json) as infile:
 		for line in infile:
 			total_encs += 1
-			row = json.loads(row)
+			row = json.loads(line)
 			f_tower_set = get_tower_code(row,first_tower, locs_data)
 			s_tower_set = get_tower_code(row,next_tower, locs_data)
 			for source,dest in itertools.product(f_tower_set, s_tower_set):
