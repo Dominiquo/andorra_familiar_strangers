@@ -105,6 +105,8 @@ def make_new_friendship_graph(doubled_CSV, destination_path, limit=100):
 			count += 1
 	print 'removed ', count, 'nodes from the graph'
 	print 'writing new graph to ', destination_path
+	cPickle.dump(new_graph_obj, open(destination_path,'wb'))
+	return new_graph_obj
 
 
 
