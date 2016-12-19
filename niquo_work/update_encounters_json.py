@@ -20,3 +20,8 @@ def get_new_enc_count(times_list):
 	hour_index_cutoff = 13
 	hours_set = set([t[:13] for t in times_list])
 	return len(hours_set)
+
+def get_new_hours_encs(times_list):
+	hour_index_cutoff = 13
+	hours_set = set([t[:13] for t in times_list])
+	return [(t + ':00:00') for t in hours_set]

@@ -6,6 +6,7 @@ import networkx as nx
 import numpy as np
 import json
 import seaborn as sns
+import update_encounters_json as up_encs
 import getMaps as maps
 from collections import defaultdict
 import matplotlib.pyplot as plt
@@ -88,11 +89,14 @@ def create_times_filter_func(first_cond,second_cond, n, use_majority=True, ignor
 			return lambda row: (int(row[encs_count]) == n) and first_cond(row[first_times][last_element]) and second_cond(row[next_time])
 
 
-def create_encounters_count_filter(n):
-	return lambda row: ((int(row['encs_count']) == n) and (row['distance'] > 0))
+def create_encounters_count_filter(n,ignore_n=False):
+	if ignore_n:
+		return lambda row: (row['distance'] > 0)
+	else:
+		return lambda row: ((int(row['encs_count']) == n) and (row['distance'] > 0))
 
-def create_friend_dist_graph(encounters_json, destination_path, n,  bins=100, bin_range=[0,100]):
-	filter_func = create_encounters_count_filter(n)
+def create_friend_dist_graph(encounters_json, destination_path, n,  bins=100, bin_range=[0,100],ignore_n=False):
+	filter_func = create_encounters_count_filter(n,ignore_n)
 	print 'retreiving x vals for friend distance with n = ', n
 	axis_ranges = [50, 200, 500, 1000, 2000, 5000]
 	x_vals = graph_filter_vals(encounters_json, filter_func)
@@ -252,7 +256,8 @@ def get_tower_types(towers_map):
 	return list(tower_codes)
 
 def majority_check(all_times,filter_func):
-	n = len(all_times)
+	check_times = up_encs.get_new_hours_encs(all_times)
+	n = len(check_times)
 	positive_vals = sum([1 for time_str in all_times if filter_func(time_str)])
 	if (n % 2) == 0:
 		return (positive_vals >= (n/2))
@@ -305,6 +310,10 @@ def create_dist_histogram(x_vals,bins, bin_range, y_axis, save_file):
 def Main():
 	encounters_json = '../niquo_data/v3_data_root/encounters_files/2016.07.01_2016.07.07_encounter.json'
 	destination_path = '../niquo_data/v3_data_root/plots'
+
+	create_graphs_on_times(encounters_json,destination_path,-1,150,[0,180],True,True)
+	create_friend_dist_graph(encounters_json, destination_path, -1,  bins=100, bin_range=[0,100],ignore_n=True)
+	create_graphs_on_tower_type(encounters_json, destination_path, -1, bins=150, bin_range=[0,180], ignore_n=True)
 
 	for n in range(2,20,4):
 		print 'creating graphs for n =', n
