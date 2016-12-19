@@ -220,7 +220,7 @@ def locations_encounters_data(encounters_json,destination_path):
 				total_entered += 1
 				if source not in locs_matrix:
 					locs_matrix[source] = {dest: 1}
-				elif dest not in locs_data[source]:
+				elif dest not in locs_matrix[source]:
 					locs_matrix[source][dest] = 1
 				else:
 					locs_matrix[source][dest] += 1
