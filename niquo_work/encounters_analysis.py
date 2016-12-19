@@ -115,7 +115,7 @@ def create_box_plot(encounter_json,save_file='../niquo_data/plots/box_plot_50.pn
 	plt.xlabel('Encounters Count')
 	plt.ylabel('User Friendship Distance')
 	plt.title('Friendship Distance Distribution as a Function of Encounters Count')
-	plt.xticks(range(25),keys)
+	plt.xticks(range(1,26),keys)
 	plt.savefig(save_file)
 
 
