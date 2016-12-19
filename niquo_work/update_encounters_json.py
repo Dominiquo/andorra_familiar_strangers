@@ -30,7 +30,7 @@ def get_new_hours_encs(times_list):
 
 def update_distance_val_json(old_json,new_json,friendship_graph):
 	print 'loading graph...'
-	friend_graph = cPickle.load(open(friend_graph))
+	friend_graph = cPickle.load(open(friendship_graph))
 	distance_key = 'distance'
 	caller_key = 'caller'
 	caller_enc_key = 'caller_enc'
