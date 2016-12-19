@@ -35,7 +35,7 @@ def create_graphs_on_tower_type(encounters_json, destination_path, n, bins=150, 
 		print 'found ', len(x_vals), 'values to plot'
 		if len(x_vals) == 0:
 			print 'did not find any x values to fit criterion'
-			return continue
+			continue
 		max_val, max_occurs = get_max_occurs(x_vals)
 		y_axis = get_axis_range_for_max(max_occurs, axis_ranges)
 		save_file = create_file_name(encounters_json, str(first), str(second), n, False)
