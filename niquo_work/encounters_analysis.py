@@ -129,7 +129,6 @@ def create_box_plot(encounter_json,save_file='../niquo_data/plots/box_plot_50.pn
 	ax2.set_xticks(new_tick_locations)
 	ax2.set_xticklabels([transform(v) for v in tick_locs])
 
-	plt.boxplot(data)
 	plt.savefig(save_file)
 
 
