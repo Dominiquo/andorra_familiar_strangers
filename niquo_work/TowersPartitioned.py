@@ -43,7 +43,7 @@ class TowersPartitioned(object):
 	def pair_users_single_file(self,tower_path,dest_pickle_file,limit):
 		all_callers = ex.read_csv(tower_path,float('inf'))
 		# TODO: SWITCH LIMIT LATER
-		if len(all_callers) > limit:
+		if len(all_callers) < limit:
 					# print '******************************************'
 					# print 'EXCEDEDS FILE LIMIT WITH LEN', len(all_callers)
 					# print 'RE RUN: ', tower_path, 'LATER'
