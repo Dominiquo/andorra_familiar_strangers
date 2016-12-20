@@ -63,7 +63,7 @@ def v3Data():
 def v4Data():
 	data_path = '../niquo_data/v2_data_root/partitioned_towers'
 	root_path = '../niquo_data/v4_data_root/'
-	paired_path = os.path.join(root_path,'encounters_files')
+	paired_path = os.path.join(root_path,'paired_callers')
 	partitioned = TP.TowersPartitioned(data_path)
 	partitioned.pair_users_from_towers(paired_path)
 
