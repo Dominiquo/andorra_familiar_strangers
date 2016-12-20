@@ -41,6 +41,9 @@ class TowersPartitioned(object):
 	def pair_users_single_file(self,tower_path,dest_pickle_file,limit):
 		all_callers = ex.read_csv(tower_path,float('inf'))
 		if len(all_callers) > limit:
+					print '*********************************************'
+					print 'EXCEDEDS FILE LIMIT WITH LEN', len(all_callers)
+					print 'RE RUN: ', tower_path, 'LATER'
 					return False
 		print 'sorting rows...'
 		all_callers.sort(key=lambda val:val[START_TIME_INDEX])
@@ -52,12 +55,9 @@ class TowersPartitioned(object):
 		pair_map = {}
 		print 'building map for pairs to be stored at', dest_pickle_file
 		for first,second in pairs:
-			first_number = first[CALLER_INDEX]
-			first_call_time = first[START_TIME_INDEX]
-			second_number = second[CALLER_INDEX]
-			second_call_time = second[START_TIME_INDEX]
-			avg_call_time = average_call_times(first_call_time,second_call_time)
-			tower_id = first[TOWER_INDEX]
+			first_number = max(first[CALLER_INDEX],second[CALLER_INDEX])
+			second_number = min(first[CALLER_INDEX],second[CALLER_INDEX])
+			avg_call_time = average_call_times(first[START_TIME_INDEX],second[CALLER_INDEX])
 			if first_number in pair_map:
 				first_num_dict = pair_map[first_number]
 				if second_number in first_num_dict:
