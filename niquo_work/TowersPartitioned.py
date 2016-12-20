@@ -41,7 +41,7 @@ class TowersPartitioned(object):
 	def pair_users_single_file(self,tower_path,dest_pickle_file,limit):
 		all_callers = ex.read_csv(tower_path,float('inf'))
 		if len(all_callers) > limit:
-					print '*********************************************'
+					print '******************************************'
 					print 'EXCEDEDS FILE LIMIT WITH LEN', len(all_callers)
 					print 'RE RUN: ', tower_path, 'LATER'
 					return False
@@ -57,7 +57,7 @@ class TowersPartitioned(object):
 		for first,second in pairs:
 			first_number = max(first[CALLER_INDEX],second[CALLER_INDEX])
 			second_number = min(first[CALLER_INDEX],second[CALLER_INDEX])
-			avg_call_time = average_call_times(first[START_TIME_INDEX],second[CALLER_INDEX])
+			avg_call_time = average_call_times(first[START_TIME_INDEX],second[START_TIME_INDEX])
 			if first_number in pair_map:
 				first_num_dict = pair_map[first_number]
 				if second_number in first_num_dict:
@@ -140,17 +140,10 @@ def average_call_times(time_stamp_1,time_stamp_2):
 	head = time_stamp_1[:DATE_INDEX]
 	time1 = time_stamp_1[DATE_INDEX+1:]
 	time2 = time_stamp_2[DATE_INDEX+1:]
-	try:
-		avgh = (int(time1[hour_s:hour_f]) + int(time2[hour_s:hour_f]))/2
-		avgm = (int(time1[min_s:min_f]) + int(time2[min_s:min_f]))/2
-		avgs = (int(time1[sec_s:sec_f]) + int(time2[sec_s:sec_f]))/2
-		zero_pad = lambda v: '0' + str(v) if v < 10 else str(v)
-	except Exception as e:
-		print time_stamp_1
-		print time_stamp_2
-		print time1[hour_s:hour_f]
-		print time2[hour_s:hour_f]
-		return None
+	avgh = (int(time1[hour_s:hour_f]) + int(time2[hour_s:hour_f]))/2
+	avgm = (int(time1[min_s:min_f]) + int(time2[min_s:min_f]))/2
+	avgs = (int(time1[sec_s:sec_f]) + int(time2[sec_s:sec_f]))/2
+	zero_pad = lambda v: '0' + str(v) if v < 10 else str(v)
 	return head + ' ' + zero_pad(avgh) + ':' + zero_pad(avgm) + ':' + str(avgs)
 
 
