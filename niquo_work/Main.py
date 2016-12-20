@@ -65,8 +65,8 @@ def v4Data():
 	root_path = '../niquo_data/v4_data_root/'
 
 	paired_path = os.path.join(root_path,'paired_callers')
-	partitioned = TP.TowersPartitioned(data_path)
-	partitioned.pair_users_from_towers(paired_path)
+	# partitioned = TP.TowersPartitioned(data_path)
+	# partitioned.pair_users_from_towers(paired_path)
 
 	combo_dir_name = 'combined_callers'
 	combo_path = os.path.join(root_path,combo_dir_name)
