@@ -63,11 +63,26 @@ def v3Data():
 def v4Data():
 	data_path = '../niquo_data/v2_data_root/partitioned_towers'
 	root_path = '../niquo_data/v4_data_root/'
+
 	paired_path = os.path.join(root_path,'paired_callers')
 	partitioned = TP.TowersPartitioned(data_path)
 	partitioned.pair_users_from_towers(paired_path)
 
+	combo_dir_name = 'combined_callers'
+	combo_path = os.path.join(root_path,combo_dir_name)
+	if not os.path.exists(combo_path):
+				os.makedirs(combo_path)
+	print 'combining encounters maps to be stored at ', combo_path
+	all_days_maps_dir = imap.InteractionMap.createInteractionMapsSet(paired_path)
+	imap.InteractionMap.combine_interaction_maps(all_days_maps_dir,combo_path)	
 
+	encounters_dir_name = 'encounters_files'
+	graph_path = '../niquo_data/filtered_data/network_object_100_removed_voicemail_UPDATED.p'
+	encounters_path = os.path.join(root_path,encounters_dir_name)
+	if not os.path.exists(encounters_path):
+				os.makedirs(encounters_path)
+	print 'creating encounters files to be stored at ', encounters_path
+	create_encounter(combo_path, encounters_path, graph_path)
 
 
 if __name__ == '__main__':

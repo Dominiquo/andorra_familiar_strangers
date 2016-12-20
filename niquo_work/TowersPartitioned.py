@@ -20,6 +20,8 @@ class TowersPartitioned(object):
 
 	def pair_users_from_towers(self,destination_path,limit=10000):
 		for date_dir in self.generate_dates():
+			if date_dir > "2016.07.07":
+				break
 			print 'checking tower csv files for date: ', date_dir
 			date_path = os.path.join(self.directory,date_dir)
 			tower_files = set(os.listdir(date_path))
@@ -40,10 +42,12 @@ class TowersPartitioned(object):
 
 	def pair_users_single_file(self,tower_path,dest_pickle_file,limit):
 		all_callers = ex.read_csv(tower_path,float('inf'))
+		# TODO: SWITCH LIMIT LATER
 		if len(all_callers) > limit:
-					print '******************************************'
-					print 'EXCEDEDS FILE LIMIT WITH LEN', len(all_callers)
-					print 'RE RUN: ', tower_path, 'LATER'
+					# print '******************************************'
+					# print 'EXCEDEDS FILE LIMIT WITH LEN', len(all_callers)
+					# print 'RE RUN: ', tower_path, 'LATER'
+					print 'skipping this one since I only want to work on the larger files..'
 					return False
 		print 'sorting rows...'
 		all_callers.sort(key=lambda val:val[START_TIME_INDEX])
