@@ -223,9 +223,19 @@ def generate_stats_per_tower(encounters_json):
 		nx.set_node_attributes(tower_graph, 'total_encs',{lat_lon: len(all_encs)})
 		tower_graph.node[lat_lon]['mean_soc_distance'] = np.mean(tower_graph.node[lat_lon]['soc_distances'])
 		tower_graph.node[lat_lon]['med_soc_distance'] = np.median(tower_graph.node[lat_lon]['soc_distances'])
-		tower_graph.node[lat_lon]['percent_neighbors'] = tower_graph.node[lat_lon]['soc_neighbors']/float(len(all_encs))
-		tower_graph.node[lat_lon]['percent_disconnected'] = tower_graph.node[lat_lon]['soc_disconnected']/float(len(all_encs))
-		tower_graph.node[lat_lon]['percent_pruned'] = tower_graph.node[lat_lon]['pruned']/float(len(all_encs))
+		if 'soc_neighbors' in tower_graph.node[lat_lon]:
+			tower_graph.node[lat_lon]['percent_neighbors'] = tower_graph.node[lat_lon]['soc_neighbors']/float(len(all_encs))
+		else:
+			tower_graph.node[lat_lon]['percent_neighbors'] = 0
+		if 'percent_disconnected' in tower_graph.node[lat_lon]['soc_disconnected']:
+			tower_graph.node[lat_lon]['percent_disconnected'] = tower_graph.node[lat_lon]['soc_disconnected']/float(len(all_encs))
+		else:
+			tower_graph.node[lat_lon]['percent_disconnected']
+		if 'percent_pruned' in tower_graph.node[lat_lon]['pruned']:
+			tower_graph.node[lat_lon]['percent_pruned'] = tower_graph.node[lat_lon]['pruned']/float(len(all_encs))
+		else:
+			tower_graph.node[lat_lon]['percent_pruned'] = 0
+
 
 	for source,dest in tower_graph.edges():
 		tower_graph.edge[source][dest]['mean_hours'] = np.mean(tower_graph.edge[source][dest]['times'])
