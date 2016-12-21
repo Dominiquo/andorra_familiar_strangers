@@ -153,6 +153,28 @@ def create_box_plot(encounter_json,save_file='../niquo_data/plots/box_plot_50.pn
 	plt.savefig(save_file)
 	return dist_vals
 
+def update_distances(lat_lon,raw_distance,tower_graph):
+	if raw_distance > 1:
+		if 'soc_distances' in tower_graph.node[lat_lon]:
+			tower_graph.node[lat_lon]['soc_distances'].append(raw_distance)
+		else:
+			nx.set_node_attributes(tower_graph,'soc_distances',{lat_lon: [raw_distance]})
+	elif raw_distance == 1:
+		if 'soc_neighbors' in tower_graph.node[lat_lon]:
+			tower_graph.node[lat_lon]['soc_neighbors'] += 1
+		else:
+			nx.set_node_attributes(tower_graph,'soc_neighbors',{lat_lon: 1})
+	elif raw_distance == -1:
+		if 'soc_disconnected' tower_graph.node[lat_lon]:
+			tower_graph.node[lat_lon]['soc_disconnected'] += 1
+		else:
+			nx.set_node_attributes(tower_graph,'soc_disconnected',{lat_lon: 1})
+	else:
+		if 'pruned' in tower_graph.node[lat_lon]:
+			tower_graph.node[lat_lon]['pruned'] += 1
+		else:
+			nx.set_node_attributes(tower_graph,'pruned',{lat_lon: 1})
+
 
 def generate_stats_per_tower(encounters_json):
 	encs_vals = {}
@@ -174,44 +196,17 @@ def generate_stats_per_tower(encounters_json):
 			tower_graph.add_edge(lat_lon,lat_lon_other,weight=1)
 			nx.set_edge_attributes(tower_graph,'times',{(lat_lon,lat_lon_other): [delta_h]})
 			all_sources.add(lat_lon)
-			if raw_distance > 1:
-				nx.set_node_attributes(tower_graph,'soc_distances',{lat_lon: [raw_distance]})
-				nx.set_node_attributes(tower_graph,'soc_neighbors',{lat_lon: 0})
-				nx.set_node_attributes(tower_graph,'soc_disconnected',{lat_lon: 0})
-				nx.set_node_attributes(tower_graph,'pruned',{lat_lon: 0})
-			elif raw_distance == 1:
-				nx.set_node_attributes(tower_graph,'soc_distances',{lat_lon: [0]})
-				nx.set_node_attributes(tower_graph,'soc_neighbors',{lat_lon: 1})
-			elif raw_distance == -1:
-				nx.set_node_attributes(tower_graph,'soc_distances',{lat_lon: [0]})
-				nx.set_node_attributes(tower_graph,'soc_disconnected',{lat_lon: 1})
-			else:
-				nx.set_node_attributes(tower_graph,'soc_distances',{lat_lon: [0]})
-				nx.set_node_attributes(tower_graph,'pruned',{lat_lon: 1})
+			update_distances(lat_lon,raw_distance,tower_graph)
 			
 		else: 
 			if lat_lon_other in tower_graph.neighbors(lat_lon):
 				tower_graph.edge[lat_lon][lat_lon_other]['weight'] += 1
 				tower_graph.edge[lat_lon][lat_lon_other]['times'].append(delta_h)
-				if raw_distance > 1:
-					tower_graph.node[lat_lon]['soc_distances'].append(raw_distance)
-				elif raw_distance == 1:
-					tower_graph.node[lat_lon]['soc_neighbors'] += 1
-				elif raw_distance == -1:
-					tower_graph.node[lat_lon]['soc_disconnected'] += 1
-				else:
-					tower_graph.node[lat_lon]['pruned'] += 1
+				update_distances(lat_lon,raw_distance,tower_graph)
 			else:	
 				tower_graph.add_edge(lat_lon,lat_lon_other,weight=1)
 				nx.set_edge_attributes(tower_graph,'times',{(lat_lon,lat_lon_other): [delta_h]})
-				if raw_distance > 1:
-					tower_graph.node[lat_lon]['soc_distances'].append(raw_distance)
-				elif raw_distance == 1:
-					tower_graph.node[lat_lon]['soc_neighbors'] += 1
-				elif raw_distance == -1:
-					tower_graph.node[lat_lon]['soc_disconnected'] += 1
-				else:
-					tower_graph.node[lat_lon]['pruned'] += 1
+				update_distances(lat_lon,raw_distance,tower_graph)
 					
 		if lat_lon not in encs_vals:
 			encs_vals[lat_lon] = [encs_count]
