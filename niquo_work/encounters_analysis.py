@@ -25,6 +25,12 @@ def filter_xvals(json_filename,filter_func=lambda row:True):
 def graph_filter_vals(json_filename, filter_func):
 	return [row['distance'] for row in read_json_file_generator(json_filename) if filter_func(row)]	
 
+def create_dist_everything(encounters_json, destination_path,bins=150, bin_range=[0,180]):
+	x_vals = filter_xvals(encounters_json, lambda x: True)
+	save_file = os.path.join(destination_path,'ALL_ENCOUNTERS_DIST.png')
+
+
+
 def create_graphs_on_tower_type(encounters_json, destination_path, n, bins=150, bin_range=[0,180], ignore_n=False):
 	tower_map = maps.tower_to_activity()
 	tower_types = get_tower_types(tower_map)
@@ -87,7 +93,6 @@ def create_times_filter_func(first_cond,second_cond, n, use_majority=True, ignor
 			return lambda row: (int(row[encs_count]) == n) and majority_check(row[first_times],first_cond) and second_cond(row[next_time])
 		else:
 			return lambda row: (int(row[encs_count]) == n) and first_cond(row[first_times][last_element]) and second_cond(row[next_time])
-
 
 def create_encounters_count_filter(n,ignore_n=False):
 	if ignore_n:
@@ -168,14 +173,24 @@ def generate_stats_per_tower(encounters_json,save_file='../niquo_data/filtered_d
 		if lat_lon not in all_sources:
 			tower_graph.add_edge(lat_lon,lat_lon_other,weight=1)
 			nx.set_edge_attributes(tower_graph,'times',{(lat_lon,lat_lon_other): [delta_h]})
+			if raw_distance > 0:
+				nx.set_edge_attributes(tower_graph,'soc_distances',{(lat_lon,lat_lon_other): [raw_distance]})
+			else:
+				nx.set_edge_attributes(tower_graph,'soc_distances',{(lat_lon,lat_lon_other): []})
 			all_sources.add(lat_lon)
 		else: 
 			if lat_lon_other in tower_graph.neighbors(lat_lon):
 				tower_graph.edge[lat_lon][lat_lon_other]['weight'] += 1
 				tower_graph.edge[lat_lon][lat_lon_other]['times'].append(delta_h)
-			else:
+				if raw_distance > 0:
+					tower_graph.edge[lat_lon][lat_lon_other]['soc_distances'].append(raw_distance)
+			else:	
 				tower_graph.add_edge(lat_lon,lat_lon_other,weight=1)
 				nx.set_edge_attributes(tower_graph,'times',{(lat_lon,lat_lon_other): [delta_h]})
+				if raw_distance > 0:
+					nx.set_edge_attributes(tower_graph,'soc_distances',{(lat_lon,lat_lon_other): [raw_distance]})
+				else:
+					nx.set_edge_attributes(tower_graph,'soc_distances',{(lat_lon,lat_lon_other): [raw_distance]})
 					
 		if lat_lon not in encs_vals:
 			encs_vals[lat_lon] = [encs_count]
@@ -198,6 +213,8 @@ def generate_stats_per_tower(encounters_json,save_file='../niquo_data/filtered_d
 	for source,dest in tower_graph.edges():
 		tower_graph.edge[source][dest]['mean_hours'] = np.mean(tower_graph.edge[source][dest]['times'])
 		tower_graph.edge[source][dest]['med_hours'] = np.median(tower_graph.edge[source][dest]['times'])
+		tower_graph.edge[source][dest]['mean_soc_distance'] = np.mean(tower_graph[source][dest]['soc_distances'])
+		tower_graph.edge[source][dest]['med_soc_distance'] = np.median(tower_graph[source][dest]['soc_distances'])
 
 	return tower_graph
 
