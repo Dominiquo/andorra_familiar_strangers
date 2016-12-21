@@ -230,7 +230,7 @@ def generate_stats_per_tower(encounters_json):
 		if 'soc_disconnected' in tower_graph.node[lat_lon]:
 			tower_graph.node[lat_lon]['percent_disconnected'] = tower_graph.node[lat_lon]['soc_disconnected']/float(len(all_encs))
 		else:
-			tower_graph.node[lat_lon]['percent_disconnected']
+			tower_graph.node[lat_lon]['percent_disconnected'] = 0
 		if 'pruned' in tower_graph.node[lat_lon]:
 			tower_graph.node[lat_lon]['percent_pruned'] = tower_graph.node[lat_lon]['pruned']/float(len(all_encs))
 		else:
