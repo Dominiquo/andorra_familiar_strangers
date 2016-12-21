@@ -206,8 +206,8 @@ def generate_stats_per_tower(encounters_json,save_file='../niquo_data/filtered_d
 			lon = lat_lon[1]
 			med = np.median(all_encs)
 			mean = np.mean(all_encs)
-			tower_graph.node[lat_lon]['median_soc_dist'] = med
-			tower_graph.node[lat_lon]['mean_soc_dist'] = mean
+			tower_graph.node[lat_lon]['median_encs_count'] = med
+			tower_graph.node[lat_lon]['mean_encs_count'] = mean
 			csvout.writerow([lat,lon,med,mean])
 
 	for source,dest in tower_graph.edges():
