@@ -165,7 +165,7 @@ def update_distances(lat_lon,raw_distance,tower_graph):
 		else:
 			nx.set_node_attributes(tower_graph,'soc_neighbors',{lat_lon: 1})
 	elif raw_distance == -1:
-		if 'soc_disconnected' tower_graph.node[lat_lon]:
+		if 'soc_disconnected' in tower_graph.node[lat_lon]:
 			tower_graph.node[lat_lon]['soc_disconnected'] += 1
 		else:
 			nx.set_node_attributes(tower_graph,'soc_disconnected',{lat_lon: 1})
