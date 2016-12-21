@@ -205,8 +205,8 @@ def generate_stats_per_tower(encounters_json):
 		tower_graph.node[lat_lon]['median_encs_count'] = med
 		tower_graph.node[lat_lon]['mean_encs_count'] = mean
 		nx.set_node_attributes(tower_graph, 'total_encs',{lat_lon: len(all_encs)})
-		tower_graph.node[source]['mean_soc_distance'] = np.mean(tower_graph[source]['soc_distances'])
-		tower_graph.node[source]['med_soc_distance'] = np.median(tower_graph[source]['soc_distances'])
+		tower_graph.node[lat_lon]['mean_soc_distance'] = np.mean(tower_graph[source]['soc_distances'])
+		tower_graph.node[lat_lon]['med_soc_distance'] = np.median(tower_graph[source]['soc_distances'])
 
 	for source,dest in tower_graph.edges():
 		tower_graph.edge[source][dest]['mean_hours'] = np.mean(tower_graph.edge[source][dest]['times'])
