@@ -173,24 +173,45 @@ def generate_stats_per_tower(encounters_json):
 		if lat_lon not in all_sources:
 			tower_graph.add_edge(lat_lon,lat_lon_other,weight=1)
 			nx.set_edge_attributes(tower_graph,'times',{(lat_lon,lat_lon_other): [delta_h]})
-			if raw_distance > 0:
+			all_sources.add(lat_lon)
+			if raw_distance > 1:
 				nx.set_node_attributes(tower_graph,'soc_distances',{lat_lon: [raw_distance]})
+				nx.set_node_attributes(tower_graph,'soc_neighbors',{lat_lon: 0})
+				nx.set_node_attributes(tower_graph,'soc_disconnected',{lat_lon: 0})
+				nx.set_node_attributes(tower_graph,'pruned',{lat_lon: 0})
+			elif raw_distance == 1:
+				nx.set_node_attributes(tower_graph,'soc_distances',{lat_lon: [0]})
+				nx.set_node_attributes(tower_graph,'soc_neighbors',{lat_lon: 1)
+			elif raw_distance == -1:
+				nx.set_node_attributes(tower_graph,'soc_distances',{lat_lon: [0]})
+				nx.set_node_attributes(tower_graph,'soc_disconnected',{lat_lon: 1})
 			else:
 				nx.set_node_attributes(tower_graph,'soc_distances',{lat_lon: [0]})
-			all_sources.add(lat_lon)
+				nx.set_node_attributes(tower_graph,'pruned',{lat_lon: 1})
+			
 		else: 
 			if lat_lon_other in tower_graph.neighbors(lat_lon):
 				tower_graph.edge[lat_lon][lat_lon_other]['weight'] += 1
 				tower_graph.edge[lat_lon][lat_lon_other]['times'].append(delta_h)
 				if raw_distance > 1:
 					tower_graph.node[lat_lon]['soc_distances'].append(raw_distance)
+				elif raw_distance == 1:
+					tower_graph.node[lat_lon]['soc_neighbors'] += 1
+				elif raw_distance == -1:
+					tower_graph.node[lat_lon]['soc_disconnected'] += 1
+				else:
+					tower_graph.node[lat_lon]['pruned'] += 1
 			else:	
 				tower_graph.add_edge(lat_lon,lat_lon_other,weight=1)
 				nx.set_edge_attributes(tower_graph,'times',{(lat_lon,lat_lon_other): [delta_h]})
 				if raw_distance > 1:
-					nx.set_node_attributes(tower_graph,'soc_distances',{lat_lon: [raw_distance]})
+					tower_graph.node[lat_lon]['soc_distances'].append(raw_distance)
+				elif raw_distance == 1:
+					tower_graph.node[lat_lon]['soc_neighbors'] += 1
+				elif raw_distance == -1:
+					tower_graph.node[lat_lon]['soc_disconnected'] += 1
 				else:
-					nx.set_node_attributes(tower_graph,'soc_distances',{lat_lon: [0]})
+					tower_graph.node[lat_lon]['pruned'] += 1
 					
 		if lat_lon not in encs_vals:
 			encs_vals[lat_lon] = [encs_count]
@@ -207,6 +228,9 @@ def generate_stats_per_tower(encounters_json):
 		nx.set_node_attributes(tower_graph, 'total_encs',{lat_lon: len(all_encs)})
 		tower_graph.node[lat_lon]['mean_soc_distance'] = np.mean(tower_graph.node[lat_lon]['soc_distances'])
 		tower_graph.node[lat_lon]['med_soc_distance'] = np.median(tower_graph.node[lat_lon]['soc_distances'])
+		tower_graph.node[lat_lon]['percent_neighbors'] = tower_graph.node[lat_lon]['soc_neighbors']/float(len(all_encs))
+		tower_graph.node[lat_lon]['percent_disconnected'] = tower_graph.node[lat_lon]['soc_disconnected']/float(len(all_encs))
+		tower_graph.node[lat_lon]['percent_pruned'] = tower_graph.node[lat_lon]['pruned']/float(len(all_encs))
 
 	for source,dest in tower_graph.edges():
 		tower_graph.edge[source][dest]['mean_hours'] = np.mean(tower_graph.edge[source][dest]['times'])
