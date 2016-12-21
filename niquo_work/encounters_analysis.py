@@ -182,12 +182,12 @@ def generate_stats_per_tower(encounters_json):
 			if lat_lon_other in tower_graph.neighbors(lat_lon):
 				tower_graph.edge[lat_lon][lat_lon_other]['weight'] += 1
 				tower_graph.edge[lat_lon][lat_lon_other]['times'].append(delta_h)
-				if raw_distance > 0:
+				if raw_distance > 1:
 					tower_graph.node[lat_lon]['soc_distances'].append(raw_distance)
 			else:	
 				tower_graph.add_edge(lat_lon,lat_lon_other,weight=1)
 				nx.set_edge_attributes(tower_graph,'times',{(lat_lon,lat_lon_other): [delta_h]})
-				if raw_distance > 0:
+				if raw_distance > 1:
 					nx.set_node_attributes(tower_graph,'soc_distances',{lat_lon: [raw_distance]})
 				else:
 					nx.set_node_attributes(tower_graph,'soc_distances',{lat_lon: [0]})
