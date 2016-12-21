@@ -181,7 +181,7 @@ def generate_stats_per_tower(encounters_json):
 				nx.set_node_attributes(tower_graph,'pruned',{lat_lon: 0})
 			elif raw_distance == 1:
 				nx.set_node_attributes(tower_graph,'soc_distances',{lat_lon: [0]})
-				nx.set_node_attributes(tower_graph,'soc_neighbors',{lat_lon: 1)
+				nx.set_node_attributes(tower_graph,'soc_neighbors',{lat_lon: 1})
 			elif raw_distance == -1:
 				nx.set_node_attributes(tower_graph,'soc_distances',{lat_lon: [0]})
 				nx.set_node_attributes(tower_graph,'soc_disconnected',{lat_lon: 1})
