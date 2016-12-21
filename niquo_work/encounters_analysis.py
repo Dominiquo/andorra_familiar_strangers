@@ -154,7 +154,7 @@ def create_box_plot(encounter_json,save_file='../niquo_data/plots/box_plot_50.pn
 	return dist_vals
 
 
-def generate_stats_per_tower(encounters_json,save_file='../niquo_data/filtered_data/lat_lon_median.csv'):
+def generate_stats_per_tower(encounters_json):
 	encs_vals = {}
 	tower_graph = nx.DiGraph()
 	all_sources = set([])
@@ -174,47 +174,43 @@ def generate_stats_per_tower(encounters_json,save_file='../niquo_data/filtered_d
 			tower_graph.add_edge(lat_lon,lat_lon_other,weight=1)
 			nx.set_edge_attributes(tower_graph,'times',{(lat_lon,lat_lon_other): [delta_h]})
 			if raw_distance > 0:
-				nx.set_edge_attributes(tower_graph,'soc_distances',{(lat_lon,lat_lon_other): [raw_distance]})
+				nx.set_node_attributes(tower_graph,'soc_distances',{lat_lon: [raw_distance]})
 			else:
-				nx.set_edge_attributes(tower_graph,'soc_distances',{(lat_lon,lat_lon_other): [0]})
+				nx.set_node_attributes(tower_graph,'soc_distances',{lat_lon: [0]})
 			all_sources.add(lat_lon)
 		else: 
 			if lat_lon_other in tower_graph.neighbors(lat_lon):
 				tower_graph.edge[lat_lon][lat_lon_other]['weight'] += 1
 				tower_graph.edge[lat_lon][lat_lon_other]['times'].append(delta_h)
 				if raw_distance > 0:
-					tower_graph.edge[lat_lon][lat_lon_other]['soc_distances'].append(raw_distance)
+					tower_graph.node[lat_lon]['soc_distances'].append(raw_distance)
 			else:	
 				tower_graph.add_edge(lat_lon,lat_lon_other,weight=1)
 				nx.set_edge_attributes(tower_graph,'times',{(lat_lon,lat_lon_other): [delta_h]})
 				if raw_distance > 0:
-					nx.set_edge_attributes(tower_graph,'soc_distances',{(lat_lon,lat_lon_other): [raw_distance]})
+					nx.set_node_attributes(tower_graph,'soc_distances',{lat_lon: [raw_distance]})
 				else:
-					nx.set_edge_attributes(tower_graph,'soc_distances',{(lat_lon,lat_lon_other): [0]})
+					nx.set_node_attributes(tower_graph,'soc_distances',{lat_lon: [0]})
 					
 		if lat_lon not in encs_vals:
 			encs_vals[lat_lon] = [encs_count]
 		else:
 			encs_vals[lat_lon].append(encs_count)
 
-	with open(save_file, 'wb') as outfile:
-		csvout = csv.writer(outfile,delimiter=',')
-		first_row = ['latitude','longitude','median','mean']
-		csvout.writerow(first_row)
-		for lat_lon, all_encs in encs_vals.iteritems():
-			lat = lat_lon[0]
-			lon = lat_lon[1]
-			med = np.median(all_encs)
-			mean = np.mean(all_encs)
-			tower_graph.node[lat_lon]['median_encs_count'] = med
-			tower_graph.node[lat_lon]['mean_encs_count'] = mean
-			csvout.writerow([lat,lon,med,mean])
+	for lat_lon, all_encs in encs_vals.iteritems():
+		lat = lat_lon[0]
+		lon = lat_lon[1]
+		med = np.median(all_encs)
+		mean = np.mean(all_encs)
+		tower_graph.node[lat_lon]['median_encs_count'] = med
+		tower_graph.node[lat_lon]['mean_encs_count'] = mean
+		nx.set_node_attributes(tower_graph, 'total_encs',{lat_lon: len(all_encs)})
+		tower_graph.node[source]['mean_soc_distance'] = np.mean(tower_graph[source]['soc_distances'])
+		tower_graph.node[source]['med_soc_distance'] = np.median(tower_graph[source]['soc_distances'])
 
 	for source,dest in tower_graph.edges():
 		tower_graph.edge[source][dest]['mean_hours'] = np.mean(tower_graph.edge[source][dest]['times'])
 		tower_graph.edge[source][dest]['med_hours'] = np.median(tower_graph.edge[source][dest]['times'])
-		tower_graph.edge[source][dest]['mean_soc_distance'] = np.mean(tower_graph[source][dest]['soc_distances'])
-		tower_graph.edge[source][dest]['med_soc_distance'] = np.median(tower_graph[source][dest]['soc_distances'])
 
 	return tower_graph
 
