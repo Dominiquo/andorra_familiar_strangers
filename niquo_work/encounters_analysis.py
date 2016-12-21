@@ -176,7 +176,7 @@ def generate_stats_per_tower(encounters_json,save_file='../niquo_data/filtered_d
 			if raw_distance > 0:
 				nx.set_edge_attributes(tower_graph,'soc_distances',{(lat_lon,lat_lon_other): [raw_distance]})
 			else:
-				nx.set_edge_attributes(tower_graph,'soc_distances',{(lat_lon,lat_lon_other): []})
+				nx.set_edge_attributes(tower_graph,'soc_distances',{(lat_lon,lat_lon_other): [0]})
 			all_sources.add(lat_lon)
 		else: 
 			if lat_lon_other in tower_graph.neighbors(lat_lon):
@@ -190,7 +190,7 @@ def generate_stats_per_tower(encounters_json,save_file='../niquo_data/filtered_d
 				if raw_distance > 0:
 					nx.set_edge_attributes(tower_graph,'soc_distances',{(lat_lon,lat_lon_other): [raw_distance]})
 				else:
-					nx.set_edge_attributes(tower_graph,'soc_distances',{(lat_lon,lat_lon_other): [raw_distance]})
+					nx.set_edge_attributes(tower_graph,'soc_distances',{(lat_lon,lat_lon_other): [0]})
 					
 		if lat_lon not in encs_vals:
 			encs_vals[lat_lon] = [encs_count]
