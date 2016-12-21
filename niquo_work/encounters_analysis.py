@@ -184,7 +184,6 @@ def generate_stats_per_tower(encounters_json):
 				tower_graph.edge[lat_lon][lat_lon_other]['times'].append(delta_h)
 				if raw_distance > 0:
 					tower_graph.node[lat_lon]['soc_distances'].append(raw_distance)
-
 			else:	
 				tower_graph.add_edge(lat_lon,lat_lon_other,weight=1)
 				nx.set_edge_attributes(tower_graph,'times',{(lat_lon,lat_lon_other): [delta_h]})
@@ -195,10 +194,6 @@ def generate_stats_per_tower(encounters_json):
 					
 		if lat_lon not in encs_vals:
 			encs_vals[lat_lon] = [encs_count]
-								if raw_distance > 0:
-						nx.set_node_attributes(tower_graph,'soc_distances',{lat_lon: [raw_distance]})
-					else:
-						nx.set_node_attributes(tower_graph,'soc_distances',{lat_lon: [0]})
 		else:
 			encs_vals[lat_lon].append(encs_count)
 
