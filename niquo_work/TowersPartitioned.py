@@ -42,12 +42,10 @@ class TowersPartitioned(object):
 
 	def pair_users_single_file(self,tower_path,dest_pickle_file,limit):
 		all_callers = ex.read_csv(tower_path,float('inf'))
-		# TODO: SWITCH LIMIT LATER
-		if len(all_callers) < limit:
-					# print '******************************************'
-					# print 'EXCEDEDS FILE LIMIT WITH LEN', len(all_callers)
-					# print 'RE RUN: ', tower_path, 'LATER'
-					print 'skipping this one since I only want to work on the larger files..'
+		if len(all_callers) > limit:
+					print '******************************************'
+					print 'EXCEDEDS FILE LIMIT WITH LEN', len(all_callers)
+					print 'RE RUN: ', tower_path, 'LATER'
 					return False
 		print 'sorting rows...'
 		all_callers.sort(key=lambda val:val[START_TIME_INDEX])
