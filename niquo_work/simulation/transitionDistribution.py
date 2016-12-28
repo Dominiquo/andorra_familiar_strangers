@@ -64,6 +64,6 @@ def get_minute_location_dist(data):
 	data['minute_start'] = data.apply(lambda row: row['DT_CDDATAINICI'][11:16], axis=1)
 	time_loc_dist = {}
 	for name, group in data.groupby('minute_start'):
-		time_loc_dist[name] = loc_type_dist(group)
+		time_loc_dist[name] = location_type_dist(group)
 	return time_loc_dist
 
