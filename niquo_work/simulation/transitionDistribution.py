@@ -49,9 +49,9 @@ def location_type_dist(latlon_dist):
 	loc_type_dist = {}
 	total = 0
 	for latlon,dist in latlon_dist.iteritems():
-		total += dist
 		locations = latlon_activity[latlon] 
 		for loc in locations:
+			total += dist
 			if loc in loc_type_dist:
 				loc_type_dist[loc] += dist
 			else:
