@@ -31,7 +31,7 @@ def get_basic_tower_dist(data):
 	latlon_count = {}
 	data['latlon'] = data.apply(get_latlon,axis=1)
 	for name,group in data.groupby('latlon'):
-		latlon_dist[name] = len(group)
+		latlon_count[name] = len(group)
 		count += len(group)
 	return {key:float(val)/total for key,val in latlon_count.iteritems}
 
