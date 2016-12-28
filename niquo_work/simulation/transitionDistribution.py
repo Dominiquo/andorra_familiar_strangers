@@ -33,7 +33,7 @@ def get_basic_tower_dist(data):
 	for name,group in data.groupby('latlon'):
 		latlon_count[name] = len(group)
 		count += len(group)
-	return {key:float(val)/count for key,val in latlon_count.iteritems}
+	return {key:float(val)/count for key,val in latlon_count.iteritems()}
 
 def get_minute_tower_dist(data):
 	# add row for just the minute of a start tiem
