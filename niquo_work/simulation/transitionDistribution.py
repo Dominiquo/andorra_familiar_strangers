@@ -39,7 +39,7 @@ def get_minute_tower_dist(data):
 	# add row for just the minute of a start tiem
 	data['minute_start'] = data.apply(lambda row: row['DT_CDDATAINICI'][11:16])
 	time_tower_dist = {}
-	for name, group data.groupby('minute_start'):
+	for name, group in data.groupby('minute_start'):
 		time_tower_dist[name] = get_basic_tower_dist(group)
 	return time_tower_dist
 
