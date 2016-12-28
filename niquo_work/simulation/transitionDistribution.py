@@ -36,10 +36,34 @@ def get_basic_tower_dist(data):
 	return {key:float(val)/count for key,val in latlon_count.iteritems()}
 
 def get_minute_tower_dist(data):
-	# add row for just the minute of a start tiem
-	data['minute_start'] = data.apply(lambda row: row['DT_CDDATAINICI'][11:16])
+	# add row for just the minute of a start time
+	data['minute_start'] = data.apply(lambda row: row['DT_CDDATAINICI'][11:16], axis=1)
 	time_tower_dist = {}
 	for name, group in data.groupby('minute_start'):
 		time_tower_dist[name] = get_basic_tower_dist(group)
 	return time_tower_dist
+
+
+def location_type_dist(latlon_dist):
+	latlon_activity
+	loc_type_dist = {}
+	total = 0
+	for latlon,dist in latlon_dist.iteritems():
+		total += dist
+		locations = latlon_activity[latlon] 
+		for loc in locations:
+			if loc in loc_type_dist:
+				loc_type_dist[loc] += dist
+			else:
+				loc_type_dist[loc] = dist
+	return {key: float(val)/total for key,val in loc_type_dist.iteritems()}
+
+
+def get_minute_location_dist(data):
+	# add row for just the minute of a start time
+	data['minute_start'] = data.apply(lambda row: row['DT_CDDATAINICI'][11:16], axis=1)
+	time_loc_dist = {}
+	for name, group in data.groupby('minute_start'):
+		time_loc_dist[name] = loc_type_dist(group)
+	return time_loc_dist
 
