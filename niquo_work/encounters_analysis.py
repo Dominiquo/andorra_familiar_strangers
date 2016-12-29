@@ -385,20 +385,20 @@ def create_dist_histogram(x_vals,bins, bin_range, y_axis, save_file):
 	return True
 
 def Main():
-	encounters_json = '../niquo_data/v3_data_root/encounters_files/2016.07.01_2016.07.07_encounter.json'
-	destination_path = '../niquo_data/v3_data_root/plots'
+	encounters_json = '../niquo_data/v4_data_root/encounters_files/2016.07.01_2016.07.07_encounter.json'
+	destination_path = '../niquo_data/v4_data_root/plots'
 
 	create_graphs_on_times(encounters_json,destination_path,-1,150,[0,180],True,True)
-	create_friend_dist_graph(encounters_json, destination_path, -1,  bins=100, bin_range=[0,100],ignore_n=True)
+	# create_friend_dist_graph(encounters_json, destination_path, -1,  bins=100, bin_range=[0,100],ignore_n=True)
 	create_graphs_on_tower_type(encounters_json, destination_path, -1, bins=150, bin_range=[0,180], ignore_n=True)
 
-	for n in range(1,20):
+	for n in range(1,20,4):
 		sub_dir = '/graphs_for_n_%d' % n
 		dest_path = os.path.join(destination_path,sub_dir)
 		print 'creating graphs for n =', n
 		create_graphs_on_times(encounters_json, dest_path, n)
 		print 'created graph for encounter times for n =', n
-		create_friend_dist_graph(encounters_json, dest_path, n)
+		# create_friend_dist_graph(encounters_json, dest_path, n)
 		print 'created friend distance graph for n = ', n
 		create_graphs_on_tower_type(encounters_json, dest_path, n)
 		print 'create tower type graph for n = ', n
