@@ -10,11 +10,11 @@ usecols = ['DS_CDNUMORIGEN','DT_CDDATAINICI','ID_CELLA_INI','ID_CDTIPUSCOM','ID_
 id_latlon = cPickle.load(open(id_latlon_path))
 latlon_activity = cPickle.load(open(latlon_act_path))
 
-def get_data(limit=None):
+def get_data(data_path,limit=None):
 	if limit:
-		data = pd.read_csv(raw_data, sep=';', index_col=False, usecols=usecols,nrows=limit)
+		data = pd.read_csv(data_path, sep=';', index_col=False, usecols=usecols,nrows=limit)
 	else:
-		data = pd.read_csv(raw_data, sep=';', index_col=False, usecols=usecols)
+		data = pd.read_csv(data_path, sep=';', index_col=False, usecols=usecols)
 	# add latlon row to dataframe
 	data['latlon'] = data.apply(get_latlon,axis=1)
 	return data
@@ -68,3 +68,25 @@ def get_minute_location_dist(data):
 		time_loc_dist[name] = location_type_dist(tower_dist)
 	return time_loc_dist
 
+
+
+def Main():
+	dest_root = '../../niquo_data/filtered_data'
+	data = get_data(raw_data) 
+	basic_path = os.path.join(dest_root,'basic_tower_dist.p')
+	cPickle.dump(get_basic_tower_dist(data),open(basic_path,'wb'))
+
+	minute_path = os.path.join(dest_root,'minute_tower_dist.p')
+	cPickle.dump(get_minute_tower_dist(data),open(minute_path,'wb'))
+
+	basic_loc_path = os.path.join(dest_root,'basic_location_dist.p')
+	cPickle.dump(location_type_dist(get_basic_tower_dist(data)), open(basic_loc_path,'wb'))
+
+	minute_loc_path = os.path.join(dest_root,'minute_location_dist.p')
+	cPickle.dump(get_minute_location_dist(data),open(minute_loc_path,'wb'))
+
+	print "DONE."
+
+
+if __name__ == '__main__':
+    Main()
