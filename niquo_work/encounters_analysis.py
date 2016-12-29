@@ -388,13 +388,16 @@ def Main():
 	encounters_json = '../niquo_data/v4_data_root/encounters_files/2016.07.01_2016.07.07_encounter.json'
 	destination_path = '../niquo_data/v4_data_root/plots'
 
-	create_graphs_on_times(encounters_json,destination_path,-1,150,[0,180],True,True)
+	# create_graphs_on_times(encounters_json,destination_path,-1,150,[0,180],True,True)
 	# create_friend_dist_graph(encounters_json, destination_path, -1,  bins=100, bin_range=[0,100],ignore_n=True)
-	create_graphs_on_tower_type(encounters_json, destination_path, -1, bins=150, bin_range=[0,180], ignore_n=True)
+	# create_graphs_on_tower_type(encounters_json, destination_path, -1, bins=150, bin_range=[0,180], ignore_n=True)
 
 	for n in range(1,20,4):
 		sub_dir = '/graphs_for_n_%d' % n
 		dest_path = os.path.join(destination_path,sub_dir)
+		if not os.path.exists(dest_path):
+  			print 'made directory',dest_path
+			os.makedirs(dest_path)	
 		print 'creating graphs for n =', n
 		create_graphs_on_times(encounters_json, dest_path, n)
 		print 'created graph for encounter times for n =', n
