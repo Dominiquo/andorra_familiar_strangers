@@ -393,7 +393,7 @@ def Main():
 	# create_graphs_on_tower_type(encounters_json, destination_path, -1, bins=150, bin_range=[0,180], ignore_n=True)
 
 	for n in range(1,20,4):
-		sub_dir = '/graphs_for_n_%d' % n
+		sub_dir = 'graphs_for_n_%d' % n
 		dest_path = os.path.join(destination_path,sub_dir)
 		if not os.path.exists(dest_path):
   			print 'made directory',dest_path
