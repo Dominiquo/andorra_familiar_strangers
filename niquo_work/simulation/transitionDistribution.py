@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import cPickle
+import os
 
 
 raw_data = '../../niquo_data/filtered_data/06_2017_no_data.csv'
