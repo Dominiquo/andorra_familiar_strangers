@@ -116,6 +116,9 @@ def Main():
 	minute_loc_path = os.path.join(dest_root,'minute_location_dist.p')
 	cPickle.dump(get_minute_location_dist(data),open(minute_loc_path,'wb'))
 
+	user_transition_path = os.path.join(dest_root,'user_transition_dist.p')
+	cPickle.dump(get_transition_probability_dist(data), open(user_transition_path,'wb'))
+
 	print "DONE."
 
 
