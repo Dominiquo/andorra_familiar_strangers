@@ -96,7 +96,7 @@ def normalize_trans_dist(transition_dist):
 	for source, source_dict in transition_dist.iteritems():
 		factor = 1.0/sum(source_dict.itervalues())
 		for dest,prev_val in source_dict.iteritems():
-			normalized_dict[source][dest] = prev_val*factor
+			normalized_dict[source] = {dest: prev_val*factor}
 	return normalized_dict
 
 
