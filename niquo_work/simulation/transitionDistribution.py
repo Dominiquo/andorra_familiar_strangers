@@ -46,7 +46,6 @@ def get_minute_tower_dist(data):
 
 
 def location_type_dist(latlon_dist):
-	latlon_activity
 	loc_type_dist = {}
 	total = 0
 	for latlon,dist in latlon_dist.iteritems():
@@ -69,6 +68,36 @@ def get_minute_location_dist(data):
 		time_loc_dist[name] = location_type_dist(tower_dist)
 	return time_loc_dist
 
+
+def get_transition_probability_dist(data):
+	transition_dist = {}
+	for caller, caller_dataframe in data.groupby('DS_CDNUMORIGEN'):
+		visited_towers_set = set([])
+		for index, row in caller_dataframe.sort_values(['DT_CDDATAINICI']).iterrows():
+			latlon = row['latlon']
+			if latlon != None:
+				for source in visited_towers_set:
+					udpate_trans_dist(transition_dist,source,latlon)
+				visited_towers_set.add(latlon)
+	return normalize_trans_dist(transition_dist)
+
+
+def udpate_trans_dist(transition_dist,source,dest):
+	if (source in transition_dist) and (dest in transition_dist[source]):
+		transition_dist[source][dest] += 1
+	elif (source in transition_dist) and (dest not in transition_dist[source]):
+		transition_dist[source][dest] = 1
+	elif (source not in transition_dist):
+		transition_dist[source] = {dest: 1}
+
+
+def normalize_trans_dist(transition_dist):
+	normalized_dict = {}
+	for source, source_dict in transition_dist.iteritems():
+		factor = 1.0/sum(source_dict.itervalues())
+		for dest,prev_val in source_dict.iteritems():
+			normalized_dict[source][dest] = prev_val*factor
+	return normalized_dict
 
 
 def Main():
