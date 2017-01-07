@@ -181,7 +181,7 @@ def generate_stats_per_tower(encounters_json):
 	encs_vals = {}
 	tower_graph = nx.DiGraph()
 	all_sources = set([])
-	id_latlon = maps.id_to_lat_long()
+	id_latlon = maps.id_to_lat_lon()
 
 	for line in open(encounters_json):
 		row = json.loads(line)
@@ -280,11 +280,10 @@ def locations_encounters_data(encounters_json,destination_path):
 
 def get_degree_encs_count(encs_csv_path, network_object_path):
 	net_obj = cPickle.load(open(network_object_path, 'rb'))
-	encs_df = pd.read_csv(data_path, index_col=False)
+	encs_df = pd.read_csv(encs_csv_path, index_col=False)
 	nodes = net_obj.nodes()
-	all_users = dict.fromkeys(nodes,{'degree': 0,'encs': 0})
-	for key,val in all_users.iteritems():
-		all_users['degree'] = net_obj.degree(key)
+	degrees_dict = nx.degree(net_obj,nodes)
+	all_users = {user: {'degree': degrees_dict[user], 'encs': 0} for user in nodes}
 
 	caller_groups = encs_df.groupby('caller')
 	caller_enc_groups = encs_df.groupby('caller_enc')

@@ -7,7 +7,7 @@ import time
 import file_constants as constants
 
 
-def id_to_lat_long(filepath=constants.TOWERS_ID):
+def id_to_lat_lon(filepath=constants.TOWERS_ID):
 	geo_map = {}
 	lat_index = 2
 	lon_index = 3
@@ -31,7 +31,7 @@ def id_to_lat_long(filepath=constants.TOWERS_ID):
 
 
 def tower_map_id():
-	geo_map = id_to_lat_long()
+	geo_map = id_to_lat_lon()
 	loc_id = {}
 	tower_map = {}
 	for tower_id,lat_lon in geo_map.iteritems():
