@@ -278,28 +278,6 @@ def locations_encounters_data(encounters_json,destination_path):
 	print 'total values entered count:', total_entered
 	return locs_matrix
 
-def get_degree_encs_count(encs_csv_path, network_object_path):
-	net_obj = cPickle.load(open(network_object_path, 'rb'))
-	encs_df = pd.read_csv(encs_csv_path, index_col=False)
-	nodes = net_obj.nodes()
-	degrees_dict = nx.degree(net_obj,nodes)
-	all_users = {user: {'degree': degrees_dict[user], 'encs': 0} for user in nodes}
-
-	caller_groups = encs_df.groupby('caller')
-	caller_enc_groups = encs_df.groupby('caller_enc')
-
-	for caller, caller_df in caller_groups:
-		if caller in all_users:
-			all_users[caller]['encs'] += len(caller_df.index)
-
-	for caller_enc, caller_enc_df in caller_enc_groups:
-		if caller_enc in all_users:
-			all_users[caller_enc]['encs'] += len(caller_enc_df.index)
-
-	return all_users
-
-
-
 # *************HELPER FUNCTIONS*************
 
 def get_max_occurs(x_vals):

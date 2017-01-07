@@ -43,10 +43,35 @@ def make_csv_of_combined_callers(source_path, destination_path, limit=float('inf
 
 
 
+def get_degree_encs_count(encs_csv_path, network_object_path):
+	net_obj = cPickle.load(open(network_object_path, 'rb'))
+	encs_df = pd.read_csv(encs_csv_path, index_col=False)
+	nodes = net_obj.nodes()
+	degrees_dict = nx.degree(net_obj,nodes)
+	all_users = {user: {'degree': degrees_dict[user], 'encs': 0} for user in nodes}
+
+	caller_groups = encs_df.groupby('user_1')
+	caller_enc_groups = encs_df.groupby('user_2')
+
+	for caller, caller_df in caller_groups:
+		if caller in all_users:
+			all_users[caller]['encs'] += sum(caller_df['count'])
+
+	for caller_enc, caller_enc_df in caller_enc_groups:
+		if caller_enc in all_users:
+			all_users[caller_enc]['encs'] += sum(caller_df['count'])
+
+	return all_users
+
+
+
 def Main():
 	source = '../niquo_data/v4_data_root/combined_callers/2016.07.01_2016.07.07/'
 	dest = '../niquo_data/v4_data_root/encounters_files/all_encounters.csv'
-	make_csv_of_combined_callers(source,dest)
+	network_object_path = '../niquo_data/filtered_data/network_object_100_removed_voicemail_UPDATED.p'
+	# make_csv_of_combined_callers(source,dest)
+	all_users = get_degree_encs_count(dest,network_object_path)
+	
 
 
 
