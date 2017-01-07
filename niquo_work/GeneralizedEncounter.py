@@ -46,7 +46,7 @@ def make_csv_of_combined_callers(source_path, destination_path, limit=float('inf
 def Main():
 	source = '../niquo_data/v4_data_root/combined_callers/2016.07.01_2016.07.07/'
 	dest = '../niquo_data/v4_data_root/encounters_files/all_encounters.csv'
-	make_csv_of_combined_callers(source,dest,3)
+	make_csv_of_combined_callers(source,dest)
 
 
 
