@@ -2,6 +2,7 @@ import cPickle
 import getMaps as maps
 import update_encounters_json as up
 import pandas as pd
+import os
 
 
 def towerEncsDictToDataFrame(combined_caller_tower_path):
@@ -39,4 +40,16 @@ def make_csv_of_combined_callers(source_path, destination_path, limit=float('inf
 	print 'saving dataframe to csv at', destination_path
 	final_object.to_csv(destination_path)
 	print 'complete...'
+
+
+
+def Main():
+	source = '../niquo_data/v4_data_root/combined_callers/2016.07.01_2016.07.07/'
+	dest = '../niquo_data/v4_data_root/encounters_files/all_encounters.csv'
+	ge.make_csv_of_combined_callers(source,dest,3)
+
+
+
+if __name__ == '__main__':
+    Main()
 
