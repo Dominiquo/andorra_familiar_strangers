@@ -67,13 +67,14 @@ def get_degree_encs_count(encs_csv_path, network_object_path):
 
 def Main():
 	source = '../niquo_data/v4_data_root/combined_callers/2016.07.01_2016.07.07/'
-	dest = '../niquo_data/v4_data_root/encounters_files/all_encounters.csv'
+	dest_root = '../niquo_data/v4_data_root/encounters_files'
+	dest_base = 'all_encounters.csv'
+	dest = os.path.join(dest_root,dest_base)
+	all_users_path = os.path.join(dest_root, 'all_users_encs_degree.p')
 	network_object_path = '../niquo_data/filtered_data/network_object_100_removed_voicemail_UPDATED.p'
 	# make_csv_of_combined_callers(source,dest)
 	all_users = get_degree_encs_count(dest,network_object_path)
-	
-
-
+	cPickle.dump(all_users,open(all_users_path, 'wb'))
 
 if __name__ == '__main__':
     Main()
