@@ -9,7 +9,7 @@ def towerEncsDictToDataFrame(combined_caller_tower_path):
 	tower_encs_dict = cPickle.load(open(combined_caller_tower_path,'rb'))
 	tower_path_base = os.path.basename(combined_caller_tower_path)
 	id_latlon = maps.id_to_lat_lon()
-	tower_latlon = id_latlon(tower_path_base[10:-2])
+	tower_latlon = id_latlon[tower_path_base[10:-2]]
 	pd_dict = {'user_1': [], 'user_2': [], 'count': [], 'tower': []}
 	if tower_latlon:
 		for first_user,encounters_dict in tower_encs_dict.iteritems():
@@ -46,7 +46,7 @@ def make_csv_of_combined_callers(source_path, destination_path, limit=float('inf
 def Main():
 	source = '../niquo_data/v4_data_root/combined_callers/2016.07.01_2016.07.07/'
 	dest = '../niquo_data/v4_data_root/encounters_files/all_encounters.csv'
-	ge.make_csv_of_combined_callers(source,dest,3)
+	make_csv_of_combined_callers(source,dest,3)
 
 
 
