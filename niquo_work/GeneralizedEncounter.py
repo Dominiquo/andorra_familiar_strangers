@@ -3,7 +3,7 @@ import getMaps as maps
 import update_encounters_json as up
 import pandas as pd
 import os
-
+import networkx as nx
 
 def towerEncsDictToDataFrame(combined_caller_tower_path):
 	tower_encs_dict = cPickle.load(open(combined_caller_tower_path,'rb'))
@@ -44,7 +44,9 @@ def make_csv_of_combined_callers(source_path, destination_path, limit=float('inf
 
 
 def get_degree_encs_count(encs_csv_path, network_object_path):
+	print 'loading net object...'
 	net_obj = cPickle.load(open(network_object_path, 'rb'))
+	print 'loading encounters dataframe...'
 	encs_df = pd.read_csv(encs_csv_path, index_col=False)
 	nodes = net_obj.nodes()
 	degrees_dict = nx.degree(net_obj,nodes)
