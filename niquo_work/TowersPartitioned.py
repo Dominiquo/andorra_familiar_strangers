@@ -6,10 +6,17 @@ import extractData as ex
 from datetime import datetime
 import time
 
-START_TIME_INDEX = 3
-TOWER_INDEX = 6
+# START_TIME_INDEX = 3
+# TOWER_INDEX = 6
+# CALLER_INDEX = 0
+# RECEIVER_INDEX = 16
+# DATE_INDEX = 10
+
+
+START_TIME_INDEX = 1
+TOWER_INDEX = 3
 CALLER_INDEX = 0
-RECEIVER_INDEX = 16
+RECEIVER_INDEX = -1
 DATE_INDEX = 10
 
 

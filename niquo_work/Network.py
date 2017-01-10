@@ -5,11 +5,15 @@ import filter_voicemail as fv
 import cPickle
 import csv
 
-def create_graph(csv_file,store_path):
+def create_graph(csv_file,store_path, sim=False):
 	csvData = raw.RawCDRCSV(csv_file)
 	friend_graph = nx.Graph()
-	caller_index = 0
-	receiver_index = 16
+	if not sim:
+		caller_index = 0
+		receiver_index = 16
+	else:
+		caller_index = 0
+		receiver_index = -1
 
 	for row in csvData.rows_generator():
 		caller = row[caller_index]

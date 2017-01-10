@@ -52,17 +52,20 @@ def get_degree_encs_count(encs_csv_path, network_object_path):
 	degrees_dict = nx.degree(net_obj,nodes)
 	all_users = {user: {'degree': degrees_dict[user], 'encs': 0} for user in nodes}
 
+	print 'creating groups on user_1...'
 	caller_groups = encs_df.groupby('user_1')
+	print 'creating groups on user_2...'
 	caller_enc_groups = encs_df.groupby('user_2')
 
+	print 'adding encounters for user_1 groups'
 	for caller, caller_df in caller_groups:
 		if caller in all_users:
 			all_users[caller]['encs'] += sum(caller_df['count'])
-
+	print 'adding encounters for user_2 groups'
 	for caller_enc, caller_enc_df in caller_enc_groups:
 		if caller_enc in all_users:
 			all_users[caller_enc]['encs'] += sum(caller_df['count'])
-
+	
 	return all_users
 
 

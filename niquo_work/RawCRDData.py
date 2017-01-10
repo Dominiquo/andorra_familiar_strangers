@@ -7,12 +7,20 @@ import itertools
 from datetime import datetime
 import time
 
-START_TIME_INDEX = 3
-TOWER_INDEX = 6
+# START_TIME_INDEX = 3
+# TOWER_INDEX = 6
+# CALLER_INDEX = 0
+# RECEIVER_INDEX = 16
+# COMM_TYPE_INDEX = 10
+# DATE_INDEX = 10
+
+
+START_TIME_INDEX = 1
+TOWER_INDEX = 3
 CALLER_INDEX = 0
-RECEIVER_INDEX = 16
-COMM_TYPE_INDEX = 10
+RECEIVER_INDEX = -1
 DATE_INDEX = 10
+
 
 class RawCDRCSV(object):
 	"""Represents class for raw CDR data given in CSV form and operations related to it"""

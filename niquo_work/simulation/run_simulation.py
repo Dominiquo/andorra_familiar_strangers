@@ -13,7 +13,7 @@ destination_path = '../../niquo_data/simulation'
 graph_path = '../../niquo_data/simulation/simulation_graph.p'
 
 
-Network.create_graph(data_path, graph_path)
+Network.create_graph(data_path, graph_path, True)
 Network.clean_graph(graph_path, graph_path, limit=100)
 
 prev_main.Main(destination_path, data_path, graph_path)
