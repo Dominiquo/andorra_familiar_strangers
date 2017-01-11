@@ -37,6 +37,8 @@ class RawCDRCSV(object):
 		total_ids = set([])
 
 		for row in self.rows_generator():
+			print row
+			print 'len of row: ', len(row)
 			if (row[TOWER_INDEX]== 'ID_CELLA_INI') or (not filter_func(row)):
 				continue
 			pre_funnel_id = row[TOWER_INDEX]
