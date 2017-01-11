@@ -25,6 +25,26 @@ class TowersPartitioned(object):
 	def __init__(self, towers_dir):
 		self.directory = towers_dir
 
+	def create_towers_blacklist(self, destination_path):
+		blacklist = set([])
+		for date_dir in self.generate_dates():
+			if date_dir > "2016.07.07":
+				break
+			print 'checking tower csv files for date: ', date_dir
+			date_path = os.path.join(self.directory,date_dir)
+			tower_files = set(os.listdir(date_path))
+			dest_date_dir = os.path.join(destination_path,date_dir)
+			if not os.path.exists(dest_date_dir):
+				os.makedirs(dest_date_dir)
+			tower_count = 1
+			for tower_name in tower_files:
+				tower_path = os.path.join(date_path,tower_name)
+				all_callers = ex.read_csv(tower_path,float('inf'))
+				if len(all_callers) > limit:
+					blacklist.add((date_dir,tower_name))
+		cPickle.dump(blacklist,open(destination_path,'wb'))
+		return None
+
 	def pair_users_from_towers(self,destination_path,limit=10000):
 		for date_dir in self.generate_dates():
 			if date_dir > "2016.07.07":
