@@ -25,7 +25,7 @@ class TowersPartitioned(object):
 	def __init__(self, towers_dir):
 		self.directory = towers_dir
 
-	def create_towers_blacklist(self, destination_path):
+	def create_towers_blacklist(self, destination_path, limit=10000):
 		blacklist = set([])
 		for date_dir in self.generate_dates():
 			if date_dir > "2016.07.07":
