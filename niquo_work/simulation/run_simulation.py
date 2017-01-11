@@ -24,7 +24,7 @@ sim_encounters_json = '../../niquo_data/simulation/enc'
 encounters_matrix = '../../niquo_data/simulation/'
 tower_stats_map = '../../niquo_data/simulation/'
 
-ea.locations_encounters_data(sim_encounters_json, encounters_matrix)
+# ea.locations_encounters_data(sim_encounters_json, encounters_matrix)
 # cPickle.dump(ea.generate_stats_per_tower(sim_encounters_json), open()
 
 # create_user_pair_dict
