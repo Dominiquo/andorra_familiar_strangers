@@ -38,7 +38,7 @@ def Main(root_path='../niquo_data/v2_data_root', data_path='../niquo_data/filter
 	if not os.path.exists(paired_path):
 				os.makedirs(paired_path)
 	partitioned = TP.TowersPartitioned(towers_path)
-	partitioned.pair_users_from_towers(paired_path,'../niquo_data/simulation/partitioned_blacklist_set.p')
+	partitioned.pair_users_from_towers(paired_path,'../../niquo_data/simulation/partitioned_blacklist_set.p')
 
 	combo_dir_name = 'combined_callers'
 	combo_path = os.path.join(root_path,combo_dir_name)
