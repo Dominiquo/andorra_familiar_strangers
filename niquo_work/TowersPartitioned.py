@@ -33,9 +33,6 @@ class TowersPartitioned(object):
 			print 'checking tower csv files for date: ', date_dir
 			date_path = os.path.join(self.directory,date_dir)
 			tower_files = set(os.listdir(date_path))
-			dest_date_dir = os.path.join(destination_path,date_dir)
-			if not os.path.exists(dest_date_dir):
-				os.makedirs(dest_date_dir)
 			tower_count = 1
 			for tower_name in tower_files:
 				tower_path = os.path.join(date_path,tower_name)
