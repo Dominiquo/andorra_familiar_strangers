@@ -20,7 +20,9 @@ def create_encounter(data_path, dest_path, friend_graph_path):
 			encs.find_mult_enc_single_week(full_path,full_destination,friend_graph)
 
 def Main(root_path='../niquo_data/v2_data_root', data_path='../niquo_data/filtered_data/06_2017_no_data.csv', graph_path='../niquo_data/filtered_data/network_object_100.p'):
-
+	print 'root path: ', root_path
+	print 'data path:', data_path
+	print 'graph path:', graph_path
 	towers_dir_name = 'partitioned_towers'
 	towers_path = os.path.join(root_path, towers_dir_name)
 	if not os.path.exists(towers_path):
