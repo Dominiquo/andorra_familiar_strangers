@@ -69,7 +69,7 @@ class TowersPartitioned(object):
 				self.pair_users_single_file(tower_path,dest_pickle_file,limit)
 		return True
 
-	def pair_users_single_file(self,tower_path,dest_pickle_file,limit,blacklist):
+	def pair_users_single_file(self,tower_path,dest_pickle_file,limit):
 		all_callers = ex.read_csv(tower_path,float('inf'))
 		if len(all_callers) > limit:
 					print '******************************************'
