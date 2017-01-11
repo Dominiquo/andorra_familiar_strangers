@@ -42,7 +42,10 @@ class TowersPartitioned(object):
 		cPickle.dump(blacklist,open(destination_path,'wb'))
 		return None
 
-	def pair_users_from_towers(self,destination_path,limit=10000):
+	def pair_users_from_towers(self,destination_path,blacklist_path=None,limit=10000):
+		blacklist = None
+		if blacklist_path:
+			blacklist = cPickle.load(open(blacklist_path))
 		for date_dir in self.generate_dates():
 			if date_dir > "2016.07.07":
 				break
@@ -54,6 +57,8 @@ class TowersPartitioned(object):
 				os.makedirs(dest_date_dir)
 			tower_count = 1
 			for tower_name in tower_files:
+				if blacklist and ((date_dir, tower_name) in blacklist):
+					continue
 				total_towers = len(tower_files)
 				print 'creating pair map object', tower_count, '/', total_towers,'for day',date_dir
 				tower_count += 1
@@ -64,7 +69,7 @@ class TowersPartitioned(object):
 				self.pair_users_single_file(tower_path,dest_pickle_file,limit)
 		return True
 
-	def pair_users_single_file(self,tower_path,dest_pickle_file,limit):
+	def pair_users_single_file(self,tower_path,dest_pickle_file,limit,blacklist):
 		all_callers = ex.read_csv(tower_path,float('inf'))
 		if len(all_callers) > limit:
 					print '******************************************'
