@@ -228,8 +228,13 @@ def generate_stats_per_tower(encounters_json):
 		tower_graph.node[lat_lon]['median_encs_count'] = med
 		tower_graph.node[lat_lon]['mean_encs_count'] = mean
 		nx.set_node_attributes(tower_graph, 'total_encs',{lat_lon: len(all_encs)})
-		tower_graph.node[lat_lon]['mean_soc_distance'] = np.mean(tower_graph.node[lat_lon]['soc_distances'])
-		tower_graph.node[lat_lon]['med_soc_distance'] = np.median(tower_graph.node[lat_lon]['soc_distances'])
+		if 'soc_distances' in tower_graph.node[lat_lon]:
+			tower_graph.node[lat_lon]['mean_soc_distance'] = np.mean(tower_graph.node[lat_lon]['soc_distances'])
+			tower_graph.node[lat_lon]['med_soc_distance'] = np.median(tower_graph.node[lat_lon]['soc_distances'])
+		else:
+			tower_graph.node[lat_lon]['mean_soc_distance'] = None
+			tower_graph.node[lat_lon]['med_soc_distance'] = None
+
 		if 'soc_neighbors' in tower_graph.node[lat_lon]:
 			tower_graph.node[lat_lon]['percent_neighbors'] = tower_graph.node[lat_lon]['soc_neighbors']/float(len(all_encs))
 		else:
