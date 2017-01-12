@@ -184,7 +184,13 @@ def generate_stats_per_tower(encounters_json):
 	id_latlon = maps.id_to_lat_lon()
 
 	for line in open(encounters_json):
-		row = json.loads(line)
+		try:
+				row = json.loads(line)
+			except Exception as e:
+				print 'FOUND A BAD BAD ROW:'
+				print line
+				print '**********************'
+				continue
 		encs_count = row['encs_count']
 		raw_distance = row['distance']
 		lat_lon = id_latlon[row['first_tower'][10:-2]]
@@ -259,6 +265,9 @@ def locations_encounters_data(encounters_json,destination_path):
 			try:
 				row = json.loads(line)
 			except Exception as e:
+				print 'FOUND A BAD BAD ROW:'
+				print line
+				print '**********************'
 				continue
 			f_tower_set = get_tower_code(row,first_tower, locs_data)
 			s_tower_set = get_tower_code(row,next_tower, locs_data)
