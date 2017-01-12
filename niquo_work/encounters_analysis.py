@@ -186,11 +186,11 @@ def generate_stats_per_tower(encounters_json):
 	for line in open(encounters_json):
 		try:
 				row = json.loads(line)
-			except Exception as e:
-				print 'FOUND A BAD BAD ROW:'
-				print line
-				print '**********************'
-				continue
+		except Exception as e:
+			print 'FOUND A BAD BAD ROW:'
+			print line
+			print '**********************'
+			continue
 		encs_count = row['encs_count']
 		raw_distance = row['distance']
 		lat_lon = id_latlon[row['first_tower'][10:-2]]
