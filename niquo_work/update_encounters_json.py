@@ -58,7 +58,7 @@ def create_user_pair_dict(encounters_json):
 	with open(encounters_json) as json_in:
 		for line in json_in:
 			try:
-					row = json.loads(line)
+				val = json.loads(line)
 			except Exception as e:
 				print 'FOUND A BAD BAD ROW:'
 				print line
