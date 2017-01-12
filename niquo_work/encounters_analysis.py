@@ -121,7 +121,13 @@ def create_friend_dist_graph(encounters_json, destination_path, n,  bins=100, bi
 def create_box_plot(encounter_json,save_file='../niquo_data/plots/box_plot_50.png',count=25):
 	dist_vals = {}
 	for line in open(encounter_json):
-		row = json.loads(line)
+			try:
+				row = json.loads(line)
+			except Exception as e:
+				print 'FOUND A BAD BAD ROW:'
+				print line
+				print '**********************'
+				continue
 		dist = row['distance']
 		if dist < 0:
 			continue
