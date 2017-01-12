@@ -18,10 +18,10 @@ graph_path = '../../niquo_data/simulation/simulation_graph.p'
 # Network.create_graph(data_path, graph_path, True)
 # Network.clean_graph(graph_path, graph_path, threshold=100)
 
-prev_main.Main(destination_path, data_path, graph_path)
+# prev_main.Main(destination_path, data_path, graph_path)
 
 
-sim_encounters_json = '../../niquo_data/simulation/2016.07.01_2016.07.07_encounter.json'
+sim_encounters_json = '../../niquo_data/simulation/encounters_files/2016.07.01_2016.07.07_encounter.json'
 location_matrix_path = '../../niquo_data/simulation/location_matrix_SIM_DATA.p'
 tower_stats_map = '../../niquo_data/simulation/network_tower_graph_SIM_DATA.p'
 encounters_dist = '../../niquo_data/simulation/encounters_dist_map_SIM_DATA.p'
