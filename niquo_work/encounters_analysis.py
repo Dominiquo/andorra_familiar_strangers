@@ -120,6 +120,7 @@ def create_friend_dist_graph(encounters_json, destination_path, n,  bins=100, bi
 
 def create_box_plot(encounter_json,save_file='../niquo_data/plots/box_plot_50.png',count=25):
 	dist_vals = {}
+	print 'checking lines...'
 	for line in open(encounter_json):
 		try:
 			row = json.loads(line)
@@ -136,26 +137,27 @@ def create_box_plot(encounter_json,save_file='../niquo_data/plots/box_plot_50.pn
 			dist_vals[n_val] = [dist]
 		else:
 			dist_vals[n_val].append(dist)
+	# print 'sorting keys..'
+	# keys = sorted(dist_vals.keys())[:count]
+	# print 'keys sorted...'
+	# transform = lambda d: '%d' % len(d)
+	# data = [dist_vals[n] for n in keys]
+	# tick_locs = range(1,)
 
-	keys = sorted(dist_vals.keys())[:count]
-	transform = lambda d: '%d' % len(d)
-	data = [dist_vals[n] for n in keys]
-	tick_locs = range(1,)
-
-	fig = plt.figure()
-	ax1 = fig.add_subplot(111)
-	ax2 = ax1.twiny()
+	# fig = plt.figure()
+	# ax1 = fig.add_subplot(111)
+	# ax2 = ax1.twiny()
 
 
-	ax1.boxplot(data)
-	ax2.set_xlabel('Friendship Distance Distribution as a Function of Encounters Count')
-	ax1.set_xlabel('Encounters Count')
-	ax1.set_ylabel('User Friendship Distance')
-	plt.xticks(range(1,count),keys)
+	# ax1.boxplot(data)
+	# ax2.set_xlabel('Friendship Distance Distribution as a Function of Encounters Count')
+	# ax1.set_xlabel('Encounters Count')
+	# ax1.set_ylabel('User Friendship Distance')
+	# plt.xticks(range(1,count),keys)
 
-	ax2.set_xlim(ax1.get_xlim())
-	ax2.set_xticks(tick_locs)
-	ax2.set_xticklabels([transform(v) for v in data])
+	# ax2.set_xlim(ax1.get_xlim())
+	# ax2.set_xticks(tick_locs)
+	# ax2.set_xticklabels([transform(v) for v in data])
 
 	# plt.savefig(save_file)
 	return dist_vals

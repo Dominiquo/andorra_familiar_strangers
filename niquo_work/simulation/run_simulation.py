@@ -30,12 +30,12 @@ friends_encs_dist = '../../niquo_data/simulation/encounters_dis_map_SIM_DATA.p'
 
 # things to be made
 
-cPickle.dump(ea.locations_encounters_data(sim_encounters_json, location_matrix_path), open(location_matrix_path, 'wb'))
+# cPickle.dump(ea.locations_encounters_data(sim_encounters_json, location_matrix_path), open(location_matrix_path, 'wb'))
 
-cPickle.dump(ea.generate_stats_per_tower(sim_encounters_json), open(tower_stats_map,'wb'))
+# cPickle.dump(ea.generate_stats_per_tower(sim_encounters_json), open(tower_stats_map,'wb'))
 
-user_key = up.create_user_pair_dict(sim_encounters_json)
-cPickle.dump(user_key,open(user_key_encs,'wb'))
+# user_key = up.create_user_pair_dict(sim_encounters_json)
+# cPickle.dump(user_key,open(user_key_encs,'wb'))
 
 dist_vals = ea.create_box_plot(sim_encounters_json, None)
 cPickle.dump(dist_vals,open(friends_encs_dist,'wb'))
