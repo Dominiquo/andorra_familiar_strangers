@@ -55,6 +55,7 @@ def update_distance_val_json(old_json,new_json,friendship_graph):
 
 def create_user_pair_dict(encounters_json):
 	users_enc_dict = {}
+	count = 0
 	with open(encounters_json) as json_in:
 		for line in json_in:
 			try:
@@ -64,6 +65,7 @@ def create_user_pair_dict(encounters_json):
 				print line
 				print '**********************'
 				continue
+			count += 1
 			caller = val['caller']
 			caller_enc = val['caller_enc']
 			if caller > caller_enc:
@@ -75,7 +77,7 @@ def create_user_pair_dict(encounters_json):
 				users_enc_dict[key] = [val]
 			else:
 				users_enc_dict[key].append(val)
-
+	print 'total number of lines added: ', count
 	return users_enc_dict
 
 
