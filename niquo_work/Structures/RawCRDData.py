@@ -1,7 +1,7 @@
 import csv
 import os
-import getMaps as Maps
-import file_constants as constants
+import Misc.getMaps as Maps
+import Misc.file_constants as constants
 import cPickle
 import itertools
 from datetime import datetime
