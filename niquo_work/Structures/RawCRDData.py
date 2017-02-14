@@ -16,10 +16,12 @@ import time
 
 
 START_TIME_INDEX = 1
-TOWER_INDEX = 3
+TOWER_COLUMN = 'ID_CELLA_INI'
+TIMESTAMP = 'DT_CDDATAINICI'
 CALLER_INDEX = 0
 RECEIVER_INDEX = -1
-DATE_INDEX = 10
+YEAR_INDEX = 4
+DATE_INDEX = 5
 
 
 class RawCDRCSV(object):
@@ -27,70 +29,39 @@ class RawCDRCSV(object):
 	def __init__(self, filename):
 		self.filename = filename
 
-	def filter_and_partition(self, destination_dir, filter_func=lambda row: True, chunksize=10**4):
+	def filter_and_partition(self, destination_dir, filter_func=lambda row: True, chunksize=10**4, limit=float('inf')):
 		tower_map = Maps.tower_map_id()
-		tower_file_prefix = 'cdr_tower_'
+		TOWER_NUMBER = 'tower_id'
+		DATE = 'date'
+		date_file_prefix = 'cdr_date_'
 		csv_suffix = '.csv'
-		
+		current_dates = set(os.listdir(destination_dir))
+		lines_count = 0
 
+		for data_chunk in pd.read_csv(self.filename, delimiter=';', chunksize=chunksize):
+			data_chunk[TOWER_NUMBER] = data_chunk[TOWER_COLUMN].apply(lambda tid: tower_map[tid] if tid in tower_map)
+			data_chunk[DATE] = data_chunk[TIMESTAMP].apply(lambda tstamp: trans_timestamp(tstamp))
+			data_chunk = data_chunk[data_chunk[TOWER_NUMBER] != False]
+			data_chunk = data_chunk[data_chunk.apply(lambda row: filter_func(row), axis=1)]
+			lines_count += len(data_chunk)
+			if lines_count > limit:
+				break
+			for date_str, date_group in data_chunk.groupby(DATE):
+				filename = date_file_prefix + date_str + csv_suffix
+				filepath = os.path.join(destination_dir, destination_dir)
+				if filename in current_dates:
+					date_group.to_csv(filepath, mode='a', index=False)
+				else:
+					date_group.to_csv(filepath, index=False)
+		return lines_count
 
-
-
-
-	# def filter_and_partition(self,destination_dir, filter_func=lambda row: True, limit=float('inf')):
-
-	# 	tower_map = Maps.tower_map_id()
-	# 	tower_file_prefix = "cdr_tower_"
-	# 	csv_suffix = ".csv"
-	# 	current_towers = set([])
-	# 	current_count = 0
-	# 	files_count = 1
-	# 	total_ids = set([])
-
-	# 	for row in self.rows_generator():
-	# 		if (row[TOWER_INDEX]== 'ID_CELLA_INI') or (not filter_func(row)):
-	# 			continue
-	# 		pre_funnel_id = row[TOWER_INDEX]
-	# 		if pre_funnel_id not in tower_map:
-	# 			continue
-	# 		else:
-	# 			tower_id = tower_map[pre_funnel_id]
-
-	# 		if tower_id not in total_ids:
-	# 			total_ids.add(tower_id)
-	# 		call_time = row[START_TIME_INDEX]
-	# 		call_date = call_time[:DATE_INDEX]
-	# 		date_path = os.path.join(destination_dir,call_date)
-	# 		# check if the path for the date exists yet
-	# 		if not os.path.exists(date_path):
-	# 			os.makedirs(date_path)
-
-	# 		tower_file = tower_file_prefix + tower_id + csv_suffix
-	# 		tower_path = os.path.join(date_path,tower_file)
-	# 		if tower_path in current_towers:
-	# 			tower_file_obj = open(tower_path, 'a')
-	# 		else:	
-	# 			files_count += 1
-	# 			tower_file_obj = open(tower_path,'wb')
-
-	# 		tower_file_csv = csv.writer(tower_file_obj,delimiter=';')
-	# 		tower_file_csv.writerow(row)
-	# 		tower_file_obj.close()
-
-	# 		if current_count > limit:
-	# 			break
-	# 		current_count += 1
-	# 		current_towers.add(tower_path)			
-	# 	print 'created',files_count,'new files of towers.'
-
-	# def rows_generator(self):
-	# 	print 'opening file to read from as a csv...'
-	# 	with open(self.filename) as csvfile:
-	# 		data_csv = csv.reader(csvfile,delimiter=',')
-	# 		for row in data_csv:
-	# 			yield row
-
-
+def trans_timestamp(timestamp):
+	year_end = 4
+	month_s = 5
+	month_f = 7
+	date_s = 8
+	date_f = 10
+	return timestamp[:year_end] + '_' + timestamp[month_s:month_f] + '_' + timestamp[date_s:date_f]
 
 def is_comm_type_data(row):
 	return row[COMM_TYPE_INDEX] != 'S-CDR'

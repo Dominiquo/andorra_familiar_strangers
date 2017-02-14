@@ -20,7 +20,7 @@ def id_to_lat_lon(filepath=constants.TOWERS_ID):
 			continue
 		t_lat = tower[lat_index]
 		t_lon = tower[lon_index]
-		tower_id = tower[t_index]
+		tower_id = int(tower[t_index])
 		lat_lon = (t_lat,t_lon)
 		try:
    			geo_map[tower_id] = lat_lon
@@ -37,7 +37,7 @@ def tower_map_id():
 	for tower_id,lat_lon in geo_map.iteritems():
 		if lat_lon not in loc_id:
 			loc_id[lat_lon] = tower_id
-			tower_map[tower_id] = tower_id
+			tower_map[inttower_id] = tower_id
 		else:
 			tower_map[tower_id] = loc_id[lat_lon]
 	return tower_map
