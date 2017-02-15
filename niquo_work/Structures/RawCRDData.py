@@ -39,7 +39,7 @@ class RawCDRCSV(object):
 		lines_count = 0
 
 		for data_chunk in pd.read_csv(self.filename, delimiter=';', chunksize=chunksize):
-			data_chunk[TOWER_NUMBER] = data_chunk[TOWER_COLUMN].apply(lambda tid: tower_map[tid] if tid in tower_map)
+			data_chunk[TOWER_NUMBER] = data_chunk[TOWER_COLUMN].apply(lambda tid: tower_map[tid] if tid in tower_map else False)
 			data_chunk[DATE] = data_chunk[TIMESTAMP].apply(lambda tstamp: trans_timestamp(tstamp))
 			data_chunk = data_chunk[data_chunk[TOWER_NUMBER] != False]
 			data_chunk = data_chunk[data_chunk.apply(lambda row: filter_func(row), axis=1)]
