@@ -37,7 +37,7 @@ def tower_map_id():
 	for tower_id,lat_lon in geo_map.iteritems():
 		if lat_lon not in loc_id:
 			loc_id[lat_lon] = tower_id
-			tower_map[inttower_id] = tower_id
+			tower_map[tower_id] = tower_id
 		else:
 			tower_map[tower_id] = loc_id[lat_lon]
 	return tower_map

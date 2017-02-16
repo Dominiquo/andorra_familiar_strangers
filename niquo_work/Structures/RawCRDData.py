@@ -1,5 +1,6 @@
 import csv
 import os
+import pandas as pd
 import Misc.getMaps as Maps
 import Misc.file_constants as constants
 import cPickle
@@ -48,7 +49,7 @@ class RawCDRCSV(object):
 				break
 			for date_str, date_group in data_chunk.groupby(DATE):
 				filename = date_file_prefix + date_str + csv_suffix
-				filepath = os.path.join(destination_dir, destination_dir)
+				filepath = os.path.join(destination_dir, filename)
 				if filename in current_dates:
 					date_group.to_csv(filepath, mode='a', index=False)
 				else:
