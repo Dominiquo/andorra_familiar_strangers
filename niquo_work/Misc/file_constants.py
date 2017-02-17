@@ -4,6 +4,16 @@ TOWERS_ID = '../../workspace/yleng/towers1.csv'
 TOWERS_TYPE = '../../../niquo_data/20151120-towersContainerTrip.csv'
 FILTERED_PARTITIONED = '../../niquo_data/filtered_data/partitioned_towers/'
 
+
+TOWER_COLUMN = 'ID_CELLA_INI'
+TIMESTAMP = 'DT_CDDATAINICI'
+TOWER_NUMBER = 'tower_id'
+DATE_STRING = 'date'
+DAYTIME = 'timestamp'
+ENC_ROOT = 'encounter_root'
+
+
+
 '''	1 = shoppping
 	2 = nature interests
 	3 = wellness interest

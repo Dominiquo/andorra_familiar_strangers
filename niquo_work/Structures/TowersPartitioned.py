@@ -2,22 +2,10 @@ import csv
 import os
 import cPickle
 import itertools
-import extractData as ex
 from datetime import datetime
+import pandas as pd
+import Misc.file_constants as constants
 import time
-
-# START_TIME_INDEX = 3
-# TOWER_INDEX = 6
-# CALLER_INDEX = 0
-# RECEIVER_INDEX = 16
-# DATE_INDEX = 10
-
-
-START_TIME_INDEX = 1
-TOWER_INDEX = 3
-CALLER_INDEX = 0
-RECEIVER_INDEX = -1
-DATE_INDEX = 10
 
 
 class TowersPartitioned(object):
@@ -25,82 +13,42 @@ class TowersPartitioned(object):
 	def __init__(self, towers_dir):
 		self.directory = towers_dir
 
-	def create_towers_blacklist(self, destination_path, limit=10000):
-		blacklist = set([])
-		for date_dir in self.generate_dates():
-			if date_dir > "2016.07.07":
-				break
-			print 'checking tower csv files for date: ', date_dir
-			date_path = os.path.join(self.directory,date_dir)
-			tower_files = set(os.listdir(date_path))
-			tower_count = 1
-			for tower_name in tower_files:
-				tower_path = os.path.join(date_path,tower_name)
-				all_callers = ex.read_csv(tower_path,float('inf'))
-				if len(all_callers) > limit:
-					blacklist.add((date_dir,tower_name))
-		cPickle.dump(blacklist,open(destination_path,'wb'))
-		return None
 
-	def pair_users_from_towers(self,destination_path,blacklist_path=None,limit=10000):
-		blacklist = None
-		if blacklist_path:
-			blacklist = cPickle.load(open(blacklist_path))
-		for date_dir in self.generate_dates():
-			if date_dir > "2016.07.07":
-				break
-			print 'checking tower csv files for date: ', date_dir
-			date_path = os.path.join(self.directory,date_dir)
-			tower_files = set(os.listdir(date_path))
-			dest_date_dir = os.path.join(destination_path,date_dir)
-			if not os.path.exists(dest_date_dir):
-				os.makedirs(dest_date_dir)
-			tower_count = 1
-			for tower_name in tower_files:
-				if blacklist and ((date_dir, tower_name) in blacklist):
-					continue
-				total_towers = len(tower_files)
-				print 'creating pair map object', tower_count, '/', total_towers,'for day',date_dir
-				tower_count += 1
-				tower_path = os.path.join(date_path,tower_name)
-				dest_pickle_file = os.path.join(dest_date_dir, tower_name.split('.')[0] + '.p')
-				if os.path.isfile(dest_pickle_file):
-					continue
-				self.pair_users_single_file(tower_path,dest_pickle_file,limit)
+	def pair_users_from_towers(self,destination_path, enc_window=1):
+		for date_file in self.generate_dates():
+			date_path = os.path.join(self.directory, date_file)
+			date_data = pd.read_csv(date_path)
+			# TODO: switch back to assigned tower number
+			for tower_id in date_data[constants.TOWER_COLUMN].unique():
+				# TODO: Switch back here as well
+				single_tower_data = date_data[date_data[constants.TOWER_COLUMN] == tower_id]
+				single_tower_data = single_tower_data.sort_values([constants.DAYTIME])
+				self.pair_users_single_file(destination_path, single_tower_data, enc_window, tower_id)
+
+
+	def pair_users_single_file(self, destination_path, single_tower_data, enc_window, tower_id):
+		window_secs = 60*60*enc_window
+		all_data = []
+		for index, row in single_tower_data.iterrows():
+			current_timestamp = int(row[constants.DAYTIME])
+			encountered_group = single_tower_data[(single_tower_data[constants.DAYTIME] >= current_timestamp)&
+												(single_tower_data[constants.DAYTIME] <= current_timestamp + window_secs)]
+			encountered_group[constants.ENC_ROOT] = current_timestamp
+			all_data.append(encountered_group)
+		return self.store_encounters(pd.concat(all_data), destination_path, tower_id)
+
+
+	def store_encounters(self, encountered_data, destination_path, tower_id):
+		tower_file_prefix = 'cdr_tower_'
+		csv_suffix = '.csv'
+		tower_filename = tower_file_prefix + str(tower_id) + csv_suffix
+		tower_path = os.path.join(destination_path, tower_filename)
+		if tower_filename in os.listdir(destination_path):
+			encountered_data.to_csv(tower_path, mode='a', index=False)
+		else:
+			encountered_data.to_csv(tower_path, index=False)
 		return True
 
-	def pair_users_single_file(self,tower_path,dest_pickle_file,limit):
-		all_callers = ex.read_csv(tower_path,float('inf'))
-		if len(all_callers) > limit:
-					print '******************************************'
-					print 'EXCEDEDS FILE LIMIT WITH LEN', len(all_callers)
-					print 'RE RUN: ', tower_path, 'LATER'
-					return False
-		print 'sorting rows...'
-		all_callers.sort(key=lambda val:val[START_TIME_INDEX])
-		print 'rows sorted.'
-		print 'total row count', len(all_callers)
-		print 'finding collision pairs...'
-		pairs = find_collisions_from_tower(all_callers)
-		print 'found', len(pairs), 'pairs of collisions.'
-		pair_map = {}
-		print 'building map for pairs to be stored at', dest_pickle_file
-		for first,second in pairs:
-			first_number = max(first[CALLER_INDEX],second[CALLER_INDEX])
-			second_number = min(first[CALLER_INDEX],second[CALLER_INDEX])
-			avg_call_time = average_call_times(first[START_TIME_INDEX],second[START_TIME_INDEX])
-			if first_number in pair_map:
-				first_num_dict = pair_map[first_number]
-				if second_number in first_num_dict:
-					first_num_dict[second_number].append(avg_call_time)
-				else:
-					first_num_dict[second_number] = [avg_call_time]
-			else:
-				pair_map[first_number] = {second_number: [avg_call_time]}
-		print 'dumping pickle file...'
-		cPickle.dump(pair_map,open(dest_pickle_file,'wb'))
-		print 'created file for', dest_pickle_file
-		return True
 
 	def generate_dates(self):
 		all_dates_dirs = sorted(set(os.listdir(self.directory)))
@@ -113,52 +61,6 @@ class TowersPartitioned(object):
 # **********************************************
 # HELPER FUNCTIONS FOR COMPARING RAW FILES
 # **********************************************
-
-
-def find_collisions_from_tower(tower_rows,time_range=1):
-	collision_pairs = set([])
-	total_size = len(tower_rows)
-	lower_edge = 0
-	higher_edge = 0
-	for lower_index in range(len(tower_rows)):
-		for upper_index in range(lower_index+1,len(tower_rows)):
-			lower_row = tower_rows[lower_index]
-			upper_row = tower_rows[upper_index]
-			if users_met(lower_row,upper_row,time_range):
-				collision_pairs.add((tuple(lower_row),tuple(upper_row)))
-			else:
-				break
-	return collision_pairs
-
-
-
-def users_met(cdr_user_1,cdr_user_2,time_range=1):
-	"""ASSUMES SECOND NUMBER IS ALWAYS LATER THAN FIRST"""
-	time_1 = cdr_user_1[START_TIME_INDEX]
-	time_2 = cdr_user_2[START_TIME_INDEX]
-	year_cutoff_index = 10
-	hour_start_index = 11
-	hour_end_index = 13
-	min_start = 14
-	min_finish = 16
-
-	# TODO: refine for corner case of near midnight
-	# overlaps of calls
-	if time_1[:year_cutoff_index] != time_2[:year_cutoff_index]:
-			return False
-	
-	t1_hour = int(time_1[hour_start_index:hour_end_index])
-	t2_hour = int(time_2[hour_start_index:hour_end_index])
-
-	t1_min = int(time_1[min_start:min_finish])
-	t2_min = int(time_2[min_start:min_finish])
-
-	if ((t2_hour - t1_hour) < time_range):
-		return True
-	elif ((t2_hour - t1_hour) == time_range) and (t2_min <= t1_min):
-		return True
-	else:
-		return False 
 
 
 def average_call_times(time_stamp_1,time_stamp_2):
@@ -179,12 +81,7 @@ def average_call_times(time_stamp_1,time_stamp_2):
 
 
 def main():
-	towers_dir = 'some_dir/'
-	dest_path = '/pickle.p'
-	print 'creating user maps for ', towers_dir, 'to be stored at', dest_path
-	partitioned = TowersPartitioned(towers_dir)
-	partitioned.pair_users_from_towers(dest_path)
-	print 'completed pairing users.'
+	return None
 
 if __name__ == '__main__':
     main()
