@@ -19,8 +19,7 @@ class RawCDRCSV(object):
 		self.filename = filename
 
 	def filter_and_partition(self, destination_dir, filter_func=lambda row: True, chunksize=10**4, limit=float('inf')):
-		# TODO: FIX THIS
-		# tower_map = Maps.tower_map_id()
+		tower_map = Maps.tower_map_id()
 		TOWER_NUMBER = 'tower_id'
 		DATE_STRING = 'date'
 		DAYTIME = 'timestamp'
@@ -29,12 +28,10 @@ class RawCDRCSV(object):
 		lines_count = 0
 
 		for data_chunk in pd.read_csv(self.filename, delimiter=',', chunksize=chunksize):
-			# TODO: FIX THIS
-			# data_chunk[TOWER_NUMBER] = data_chunk[TOWER_COLUMN].apply(lambda tid: tower_map[tid] if tid in tower_map else False)
+			data_chunk[TOWER_NUMBER] = data_chunk[TOWER_COLUMN].apply(lambda tid: tower_map[tid] if tid in tower_map else False)
 			data_chunk[DATE_STRING] = data_chunk[TIMESTAMP].apply(lambda tstamp: trans_date_string(tstamp))
 			data_chunk[DAYTIME] = data_chunk[TIMESTAMP].apply(lambda tstamp: int(trans_datetime(tstamp)))
-			# TODO: FIX THIS
-			# data_chunk = data_chunk[data_chunk[TOWER_NUMBER] != False]
+			data_chunk = data_chunk[data_chunk[TOWER_NUMBER] != False]
 			data_chunk = data_chunk[data_chunk.apply(lambda row: filter_func(row), axis=1)]
 			lines_count += len(data_chunk)
 			if lines_count > limit:
@@ -47,6 +44,12 @@ class RawCDRCSV(object):
 				else:
 					date_group.to_csv(filepath, index=False)
 		return lines_count
+
+
+def remove_foreigners(row):
+	id_val = 21303
+	CARRIER = 'ID_CDOPERADORORIGEN'
+	return row[CARRIER] == id_val
 
 def trans_date_string(timestamp):
 	year_end = 4
