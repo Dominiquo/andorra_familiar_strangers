@@ -10,7 +10,7 @@ def Main(root_path = '../niquo_data/spring_data/'):
 
 	tpart = TP.TowersPartitioned(partitioned_data_path)
 	# tpart.pair_users_from_towers(tower_enc_path)
-	tpart.pair_towers_multiple_days(dest_path)
+	tpart.pair_towers_multiple_days(tower_enc_path)
 	return True
 
 
