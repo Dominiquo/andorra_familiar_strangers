@@ -1,9 +1,7 @@
 import os
 import cPickle
-import RawCRDData as raw
-import TowersPartitioned as TP
-import InteractionMap as imap
-import Encounters as encs
+import Structures.RawCRDData as raw
+import Structures.TowersPartitioned as TP
 
 def Main():
 	data_path = '../niquo_data/spring_data/partitioned_data/'
