@@ -42,13 +42,15 @@ class TowersPartitioned(object):
 				print 'loading data from ', date_path
 				date_data = pd.read_csv(date_path)
 				print 'length of data:', len(date_data)
-				tower_day_dfs.append(date_data[date_data[constants.TOWER_COLUMN] == tower_id][:1000])
+				tower_day_dfs.append((date_data[date_data[constants.TOWER_COLUMN] == tower_id][:1000]))
+				print 'tower list length:', len(tower_day_dfs)
 				if (current_date % days_count) == 0:
 					dest = create_date_dir(destination_path, date_file + '_date_range_' + str(current_date))
 					print 'combining data from dates...'
 					combined_data = pd.concat(tower_day_dfs)
+					print len(combined_data)
 					process_date_date(combined_data, dest, tower_id, enc_window)
-				tower_day_dfs = []
+					tower_day_dfs = []
 				current_date += 1
 
 
