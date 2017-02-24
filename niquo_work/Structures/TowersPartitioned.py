@@ -34,23 +34,27 @@ class TowersPartitioned(object):
 
 
 	def pair_towers_multiple_days(self, destination_path, towers=constants.IDS_SET, days_count=7, enc_window=1):
-		for tower_id in towers:
-			current_date = 1
+		Parallel(n_jobs=4)(delayed(parallel_mult_days)(tower_id, self.all_dates, self.directory, days_count, enc_window, destination_path) for tower_id in towers)
+			
+
+
+def parallel_mult_days(tower_id, all_dates, directory, days_count, enc_window, destination_path):
+	current_date = 1
+	tower_day_dfs = []
+	for date_file in all_dates:
+		date_path = os.path.join(directory, date_file)
+		print 'currently working on tower:', tower_id
+		print 'loading data from ', date_path
+		date_data = pd.read_csv(date_path)
+		tower_day_dfs.append(date_data[date_data[constants.TOWER_COLUMN] == tower_id])
+		if ((current_date % days_count) == 0) or (current_date == len(all_dates)):
+			dest = create_date_dir(destination_path, date_file + '_date_range_' + str(current_date))
+			print 'combining data from dates...'
+			sys.stdout.flush()
+			combined_data = pd.concat(tower_day_dfs)
+			process_date_date(combined_data, dest, tower_id, enc_window)
 			tower_day_dfs = []
-			for date_file in self.all_dates:
-				date_path = os.path.join(self.directory, date_file)
-				print 'loading data from ', date_path
-				date_data = pd.read_csv(date_path)
-				towers = towers.union(set(date_data[constants.TOWER_COLUMN].unique()))
-				tower_day_dfs.append(date_data[date_data[constants.TOWER_COLUMN] == tower_id])
-				if ((current_date % days_count) == 0) or (current_date == len(self.all_dates)):
-					dest = create_date_dir(destination_path, date_file + '_date_range_' + str(current_date))
-					print 'combining data from dates...'
-					sys.stdout.flush()
-					combined_data = pd.concat(tower_day_dfs)
-					process_date_date(combined_data, dest, tower_id, enc_window)
-					tower_day_dfs = []
-				current_date += 1
+		current_date += 1
 
 
 
@@ -77,6 +81,7 @@ def pair_users_single_file(destination_path, single_tower_data, enc_window, towe
 	for index, row in single_tower_data.iterrows():
 		if index % 500 == 0:
 			print 'single tower progress', index, '/', total_values
+			sys.stdout.flush()
 		if index == len(single_tower_data):
 			break
 		domain_values = single_tower_data[index + 1:]
