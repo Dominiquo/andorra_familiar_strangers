@@ -1,5 +1,6 @@
 import csv
 import os
+import sys
 import cPickle
 import itertools
 import networkx as nx
@@ -29,26 +30,24 @@ class TowersPartitioned(object):
 			date_data = pd.read_csv(date_path)
 			date_dir = create_date_dir(destination_path, date_file)
 			total = len(date_data[constants.TOWER_COLUMN].unique())
-			# for tower_id in date_data[constants.TOWER_COLUMN].unique():
 			Parallel(n_jobs=4)(delayed(process_date_date)(date_data[date_data[constants.TOWER_COLUMN] == tower_id], date_dir, tower_id, enc_window) for tower_id in date_data[constants.TOWER_COLUMN].unique())
 
-	def pair_towers_multiple_days(self, destination_path, towers=['471'], days_count=3, enc_window=1):
+
+	def pair_towers_multiple_days(self, destination_path, towers=constants.IDS_SET, days_count=7, enc_window=1):
 		for tower_id in towers:
 			current_date = 1
 			tower_day_dfs = []
-			# TODO: REMOVE THIS BLOCK
-			for date_file in self.all_dates[:days_count]:
+			for date_file in self.all_dates:
 				date_path = os.path.join(self.directory, date_file)
 				print 'loading data from ', date_path
 				date_data = pd.read_csv(date_path)
-				print 'length of data:', len(date_data)
-				tower_day_dfs.append((date_data[date_data[constants.TOWER_COLUMN] == tower_id][:1000]))
-				print 'tower list length:', len(tower_day_dfs)
-				if (current_date % days_count) == 0:
+				towers = towers.union(set(date_data[constants.TOWER_COLUMN].unique()))
+				tower_day_dfs.append(date_data[date_data[constants.TOWER_COLUMN] == tower_id])
+				if ((current_date % days_count) == 0) or (current_date == len(self.all_dates)):
 					dest = create_date_dir(destination_path, date_file + '_date_range_' + str(current_date))
 					print 'combining data from dates...'
+					sys.stdout.flush()
 					combined_data = pd.concat(tower_day_dfs)
-					print len(combined_data)
 					process_date_date(combined_data, dest, tower_id, enc_window)
 					tower_day_dfs = []
 				current_date += 1
@@ -56,7 +55,6 @@ class TowersPartitioned(object):
 
 
 # PARALLEL FUNCTIONS THAT CAN'T BE A PART OF THE CLASS
-
 def process_date_date(single_tower_data, destination_path, tower_id, enc_window):
 	print 'started process for tower id:', tower_id
 	single_tower_data = single_tower_data.sort_values([constants.DAYTIME])
