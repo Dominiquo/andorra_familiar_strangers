@@ -32,7 +32,7 @@ class TowersPartitioned(object):
 			# for tower_id in date_data[constants.TOWER_COLUMN].unique():
 			Parallel(n_jobs=4)(delayed(process_date_date)(date_data[date_data[constants.TOWER_COLUMN] == tower_id], date_dir, tower_id, enc_window) for tower_id in date_data[constants.TOWER_COLUMN].unique())
 
-	def pair_towers_multiple_days(self, destination_path, towers=['471'], days_count=3, enc_window=1):
+	def pair_towers_multiple_days(self, destination_path, towers=['471'], days_count=1, enc_window=1):
 		for tower_id in towers:
 			current_date = 1
 			tower_day_dfs = []
@@ -97,7 +97,7 @@ def add_edges_network(encs_graph, source_row, encountered_df):
 			continue
 		second_time = source_row[constants.TIMESTAMP]
 		avg_time = average_call_times(first_time, second_time)
-		attr_dict = {'time':avg_time}
+		attr_dict = {'time':avg_time, 'tower_id': enc_tower, 'source_comm_type': 'VALUE', 'dest_comm_type': 'VALUE'}
 		encs_graph.add_edge(source_user, dest_user, attr_dict=attr_dict)
 
 
