@@ -40,7 +40,7 @@ class TowersPartitioned(object):
 			for date_file in self.all_dates[:days_count]:
 				date_path = os.path.join(self.directory, date_file)
 				print 'loading data from ', date_path
-				date_data = pd.read_csv(date_path)
+				date_data = pd.read_csv(date_path)[:100000]
 				print 'length of data:', len(date_data)
 				tower_day_dfs.append(date_data[date_data[constants.TOWER_COLUMN] == tower_id])
 				if (current_date % days_count) == 0:
