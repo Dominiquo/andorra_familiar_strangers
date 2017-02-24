@@ -36,7 +36,7 @@ def create_voicemail_dict(raw_data, writing = False):
         for first, second in itertools.combinations(values, 2):
             #check if first caller is the same as the second receiver or vice versa
             if first[1] == second[1]:
-                print first, 'and', second
+                # print first, 'and', second
                 if first[2] == 'MTC' and second[2] == 'MOC':
                     user_hash_dict[first[1]] = first[0]
                 elif first[2] == 'MOC' and second[2] == 'MTC':

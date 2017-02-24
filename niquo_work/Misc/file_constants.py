@@ -5,12 +5,19 @@ TOWERS_TYPE = '../../../niquo_data/20151120-towersContainerTrip.csv'
 FILTERED_PARTITIONED = '../../niquo_data/filtered_data/partitioned_towers/'
 
 
-TOWER_COLUMN = 'ID_CELLA_INI'
+SOURCE = 'DS_CDNUMORIGEN'
 TIMESTAMP = 'DT_CDDATAINICI'
+TOWER_COLUMN = 'ID_CELLA_INI'
+COMM_TYPE = 'ID_CDTIPUSCOM'
+CARRIER = 'ID_CDOPERADORORIGEN'
+DEST = 'DS_CDNUMDESTI'
+
+
 TOWER_NUMBER = 'tower_id'
 DATE_STRING = 'date'
 DAYTIME = 'timestamp'
-ENC_ROOT = 'encounter_root'
+
+USEFUL_ROWS = [SOURCE, TIMESTAMP, TOWER_COLUMN, COMM_TYPE, CARRIER, DEST]
 
 
 
