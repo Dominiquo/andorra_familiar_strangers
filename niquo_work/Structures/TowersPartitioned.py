@@ -36,6 +36,7 @@ class TowersPartitioned(object):
 				single_tower_data = single_tower_data.reset_index(drop=True)
 				self.pair_users_single_file(date_dir, single_tower_data, enc_window, tower_id)
 
+
 	def create_date_dir(self, destination_path, date_csv):
 		date = date_csv.split('.')[0]
 		date_path = os.path.join(destination_path, date)
@@ -47,12 +48,15 @@ class TowersPartitioned(object):
 		window_secs = 60*60*enc_window
 		all_data = []
 		encs_graph = gl.GraphLite()
+		total_values = len(single_tower_data)
 		for index, row in single_tower_data.iterrows():
+			print 'single tower progress', index, '/', total_values
 			if index == len(single_tower_data):
 				break
 			domain_values = single_tower_data[index + 1:]
 			current_timestamp = row[constants.DAYTIME]
 			encountered_group = domain_values[(domain_values[constants.DAYTIME] <= add_strings(current_timestamp, window_secs))]
+			print 'adding', len(encountered_group), 'edges'
 			self.add_edges_network(encs_graph, row, encountered_group)
 		return self.store_encounters(encs_graph, destination_path, tower_id)
 
