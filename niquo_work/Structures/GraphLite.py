@@ -1,13 +1,13 @@
 import cPickle
 
 class GraphLite(object):
-	def __init__(base_dict={}):
+	def __init__(self, base_dict={}):
 		self.base_dict = base_dict
 	
-	def add_edge(first, second, attr_dict):
+	def add_edge(self, first, second, attr_dict):
 		if first == second:
 			return False
-			
+
 		source = max(first, second)
 		dest = min(first, second)
 		if source not in self.base_dict:
@@ -21,7 +21,7 @@ class GraphLite(object):
 		return True
 
 
-	def combine_attr_dict(source, dest, new_dict, first_dict=False):
+	def combine_attr_dict(self, source, dest, new_dict, first_dict=False):
 		if first_dict:
 			self.base_dict[source][dest] = {k:[v] for k,v in new_dict.iteritems()}
 		else:

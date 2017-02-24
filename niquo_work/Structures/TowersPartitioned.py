@@ -6,7 +6,7 @@ import networkx as nx
 from datetime import datetime
 import pandas as pd
 import Misc.file_constants as constants
-import GraphLite
+import GraphLite as gl
 import time
 
 
@@ -46,7 +46,7 @@ class TowersPartitioned(object):
 	def pair_users_single_file(self, destination_path, single_tower_data, enc_window, tower_id):
 		window_secs = 60*60*enc_window
 		all_data = []
-		encs_graph = GraphLite()
+		encs_graph = gl.GraphLite()
 		for index, row in single_tower_data.iterrows():
 			if index == len(single_tower_data):
 				break
