@@ -39,9 +39,9 @@ class TowersPartitioned(object):
 			# TODO: REMOVE THIS BLOCK
 			for date_file in self.all_dates[:days_count]:
 				date_path = os.path.join(self.directory, date_file)
-				print 'loading data from ', date_path, '...'
-				# TODO: REMOVE THIS BLOCK
-				date_data = pd.read_csv(date_path)[:10000]
+				print 'loading data from ', date_path
+				date_data = pd.read_csv(date_path)
+				print 'length of data:', len(date_data)
 				tower_day_dfs.append(date_data[date_data[constants.TOWER_COLUMN] == tower_id])
 				if (current_date % days_count) == 0:
 					dest = create_date_dir(destination_path, date_file + '_date_range_' + str(current_date))
@@ -56,10 +56,10 @@ class TowersPartitioned(object):
 # PARALLEL FUNCTIONS THAT CAN'T BE A PART OF THE CLASS
 
 def process_date_date(single_tower_data, destination_path, tower_id, enc_window):
+	print 'started process for tower id:', tower_id
 	single_tower_data = single_tower_data.sort_values([constants.DAYTIME])
 	single_tower_data = single_tower_data.reset_index(drop=True)
 	pair_users_single_file(destination_path, single_tower_data, enc_window, tower_id)
-	print 'started process for tower id:', tower_id
 
 
 def create_date_dir(destination_path, date_csv):
