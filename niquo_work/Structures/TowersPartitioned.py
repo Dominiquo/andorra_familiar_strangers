@@ -36,10 +36,12 @@ class TowersPartitioned(object):
 		for tower_id in towers:
 			current_date = 1
 			tower_day_dfs = []
+			# TODO: REMOVE THIS BLOCK
 			for date_file in self.all_dates[:days_count]:
 				date_path = os.path.join(self.directory, date_file)
 				print 'loading data from ', date_path, '...'
-				date_data = pd.read_csv(date_path)
+				# TODO: REMOVE THIS BLOCK
+				date_data = pd.read_csv(date_path)[:10000]
 				tower_day_dfs.append(date_data[date_data[constants.TOWER_COLUMN] == tower_id])
 				if (current_date % days_count) == 0:
 					dest = create_date_dir(destination_path, date_file + '_date_range_' + str(current_date))
