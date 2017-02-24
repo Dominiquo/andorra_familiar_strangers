@@ -6,7 +6,9 @@ import networkx as nx
 from datetime import datetime
 import pandas as pd
 import Misc.file_constants as constants
+import GraphLite
 import time
+
 
 DATE_INDEX = 10
 
@@ -24,16 +26,11 @@ class TowersPartitioned(object):
 			date_path = os.path.join(self.directory, date_file)
 			date_data = pd.read_csv(date_path)
 			date_dir = self.create_date_dir(destination_path, date_file)
-			
-			# TODO: remove this shit
 			total = len(date_data[constants.TOWER_NUMBER].unique())
 			count = 0
-			# TODO: switch back to assigned tower number
 			for tower_id in date_data[constants.TOWER_NUMBER].unique():
-				# TODO: Switch back here as well
 				count += 1
 				print 'current tower id:', tower_id, count, '/', total
-
 				single_tower_data = date_data[date_data[constants.TOWER_NUMBER] == tower_id]
 				single_tower_data = single_tower_data.sort_values([constants.DAYTIME])
 				single_tower_data = single_tower_data.reset_index(drop=True)
@@ -49,7 +46,7 @@ class TowersPartitioned(object):
 	def pair_users_single_file(self, destination_path, single_tower_data, enc_window, tower_id):
 		window_secs = 60*60*enc_window
 		all_data = []
-		encs_graph = nx.Graph()
+		encs_graph = GraphLite()
 		for index, row in single_tower_data.iterrows():
 			if index == len(single_tower_data):
 				break
@@ -60,7 +57,7 @@ class TowersPartitioned(object):
 		return self.store_encounters(encs_graph, destination_path, tower_id)
 
 
-	def add_edges_network(self, enc_graph, source_row, encountered_df):
+	def add_edges_network(self, encs_graph, source_row, encountered_df):
 		source_user = source_row[constants.SOURCE]
 		enc_tower = source_row[constants.TOWER_COLUMN]
 		comm_type = source_row[constants.COMM_TYPE]
@@ -73,18 +70,16 @@ class TowersPartitioned(object):
 			second_time = source_row[constants.TIMESTAMP]
 			avg_time = average_call_times(first_time, second_time)
 			attr_dict = {'time':avg_time, 'tower': enc_tower, 'source_comm_type': comm_type, 'dest_comm_type': comm_type_dest}
-			enc_graph.add_edge(source_user, dest_user, attr_dict=attr_dict)
+			encs_graph.add_edge(source_user, dest_user, attr_dict=attr_dict)
 
 
-	def store_encounters(self, enc_graph, destination_path, tower_id):
+	def store_encounters(self, encs_graph, destination_path, tower_id):
 		tower_file_prefix = 'cdr_tower_'
 		p_suffix = '.p'
 		tower_filename = tower_file_prefix + str(tower_id) + p_suffix
 		tower_path = os.path.join(destination_path, tower_filename)
 		print 'storing data in:', tower_path
-		with open(tower_path, 'wb') as outfile:
-			cPickle.dump(enc_graph, outfile)
-		return True
+		encs_graph.store_object(destination_path)
 
 
 # **********************************************

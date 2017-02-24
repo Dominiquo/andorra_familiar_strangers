@@ -9,9 +9,6 @@ from datetime import datetime
 import time
 import time
 
-TOWER_COLUMN = 'ID_CELLA_INI'
-TIMESTAMP = 'DT_CDDATAINICI'
-
 
 class RawCDRCSV(object):
 	"""Represents class for raw CDR data given in CSV form and operations related to it"""
@@ -28,9 +25,9 @@ class RawCDRCSV(object):
 		lines_count = 0
 
 		for data_chunk in pd.read_csv(self.filename, usecols=constants.USEFUL_ROWS, delimiter=';', chunksize=chunksize):
-			data_chunk[TOWER_NUMBER] = data_chunk[TOWER_COLUMN].apply(lambda tid: tower_map[tid] if tid in tower_map else False)
-			data_chunk[DATE_STRING] = data_chunk[TIMESTAMP].apply(lambda tstamp: trans_date_string(tstamp))
-			data_chunk[DAYTIME] = data_chunk[TIMESTAMP].apply(lambda tstamp: int(trans_datetime(tstamp)))
+			data_chunk[TOWER_NUMBER] = data_chunk[constants.TOWER_COLUMN].apply(lambda tid: tower_map[tid] if tid in tower_map else False)
+			data_chunk[DATE_STRING] = data_chunk[constants.TIMESTAMP].apply(lambda tstamp: trans_date_string(tstamp))
+			data_chunk[DAYTIME] = data_chunk[constants.TIMESTAMP].apply(lambda tstamp: int(trans_datetime(tstamp)))
 			data_chunk = data_chunk[data_chunk[TOWER_NUMBER] != False]			
 			data_chunk = data_chunk[data_chunk.apply(lambda row: filter_func(row), axis=1)]
 			lines_count += len(data_chunk)
