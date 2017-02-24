@@ -48,7 +48,7 @@ def parallel_mult_days(tower_id, all_dates, directory, days_count, enc_window, d
 		date_data = pd.read_csv(date_path)
 		tower_day_dfs.append(date_data[date_data[constants.TOWER_COLUMN] == tower_id])
 		if ((current_date % days_count) == 0) or (current_date == len(all_dates)):
-			dest = create_date_dir(destination_path, date_file + '_date_range_' + str(current_date))
+			dest = create_date_dir(destination_path, 'date_range_' + str(current_date) + '_' + date_file)
 			print 'combining data from dates...'
 			sys.stdout.flush()
 			combined_data = pd.concat(tower_day_dfs)
