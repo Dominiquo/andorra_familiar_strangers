@@ -40,9 +40,9 @@ class TowersPartitioned(object):
 			for date_file in self.all_dates[:days_count]:
 				date_path = os.path.join(self.directory, date_file)
 				print 'loading data from ', date_path
-				date_data = pd.read_csv(date_path)[:100000]
+				date_data = pd.read_csv(date_path)
 				print 'length of data:', len(date_data)
-				tower_day_dfs.append(date_data[date_data[constants.TOWER_COLUMN] == tower_id])
+				tower_day_dfs.append(date_data[date_data[constants.TOWER_COLUMN] == tower_id][:1000])
 				if (current_date % days_count) == 0:
 					dest = create_date_dir(destination_path, date_file + '_date_range_' + str(current_date))
 					print 'combining data from dates...'
@@ -135,7 +135,8 @@ def average_call_times(time_stamp_1,time_stamp_2):
 	avgs = (int(time1[sec_s:sec_f]) + int(time2[sec_s:sec_f]))/2
 	zero_pad = lambda v: '0' + str(v) if v < 10 else str(v)
 	new_time = head + ' ' + zero_pad(avgh) + ':' + zero_pad(avgm) + ':' + str(avgs)
-	return only_day_second(new_time)
+	return new_time
+	# return only_day_second(new_time)
 
 
 def main():
