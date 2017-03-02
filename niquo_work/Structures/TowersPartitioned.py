@@ -30,11 +30,20 @@ class TowersPartitioned(object):
 			date_data = pd.read_csv(date_path)
 			date_dir = create_date_dir(destination_path, date_file)
 			total = len(date_data[constants.TOWER_COLUMN].unique())
-			Parallel(n_jobs=4)(delayed(process_date_date)(date_data[date_data[constants.TOWER_COLUMN] == tower_id], date_dir, tower_id, enc_window) for tower_id in date_data[constants.TOWER_COLUMN].unique())
+			# Parallel(n_jobs=4)(delayed(process_date_date)(date_data[date_data[constants.TOWER_COLUMN] == tower_id], date_dir, tower_id, enc_window) for tower_id in date_data[constants.TOWER_COLUMN].unique())
+			for tower_id in date_data[constants.TOWER_COLUMN].unique())
+				single_tower_data = date_data[date_data[constants.TOWER_COLUMN] == tower_id]
+				process_date_date(single_tower_data, date_dir, tower_id, enc_window)
+
 
 
 	def pair_towers_multiple_days(self, destination_path, towers=constants.IDS_SET, days_count=7, enc_window=1):
 		Parallel(n_jobs=4)(delayed(parallel_mult_days)(tower_id, self.all_dates, self.directory, days_count, enc_window, destination_path) for tower_id in towers)
+
+	def pair_tower_multiple_days_serial(self, destination_path, towers=constants.IDS_SET, days_count=7, enc_window=1):
+		for tower_id in towers:
+			single_tower_data = date_data[date_data[constants.TOWER_COLUMN] == tower_id]
+			parallel_mult_days(tower_id, self.all_dates, self.directory, days_count, enc_window, destination_path)
 			
 
 
@@ -60,7 +69,7 @@ def parallel_mult_days(tower_id, all_dates, directory, days_count, enc_window, d
 
 # PARALLEL FUNCTIONS THAT CAN'T BE A PART OF THE CLASS
 def process_date_date(single_tower_data, destination_path, tower_id, enc_window):
-	print 'started process for tower id:', tower_id
+	print 'started process for tower id:', tower_id, 'to be stored', destination_path
 	single_tower_data = single_tower_data.sort_values([constants.DAYTIME])
 	single_tower_data = single_tower_data.reset_index(drop=True)
 	pair_users_single_file(destination_path, single_tower_data, enc_window, tower_id)
@@ -80,7 +89,7 @@ def pair_users_single_file(destination_path, single_tower_data, enc_window, towe
 	total_values = len(single_tower_data)
 	for index, row in single_tower_data.iterrows():
 		if index % 500 == 0:
-			print 'single tower progress', index, '/', total_values
+			print 'single tower progress for ', tower_id,':' , index, '/', total_values
 			sys.stdout.flush()
 		if index == len(single_tower_data):
 			break
