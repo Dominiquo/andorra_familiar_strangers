@@ -42,7 +42,6 @@ class TowersPartitioned(object):
 
 	def pair_tower_multiple_days_serial(self, destination_path, towers=constants.IDS_SET, days_count=7, enc_window=1):
 		for tower_id in towers:
-			single_tower_data = date_data[date_data[constants.TOWER_COLUMN] == tower_id]
 			parallel_mult_days(tower_id, self.all_dates, self.directory, days_count, enc_window, destination_path)
 			
 
