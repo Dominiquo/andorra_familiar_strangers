@@ -1,5 +1,5 @@
 JULY_DATA_ALL = '../../../data_repository/datasets/telecom/cdr/201607-AndorraTelecom-CDR.csv'
-JULY_DATA_FILTERED = '../../niquo_data/source_data/filtered201607-AndorraTelecom-CDR.csv'
+JULY_DATA_FILTERED = '../niquo_data/source_data/filtered201607-AndorraTelecom-CDR.csv'
 TOWERS_ID = '../../workspace/yleng/towers1.csv'
 TOWERS_TYPE = '../../../niquo_data/20151120-towersContainerTrip.csv'
 FILTERED_PARTITIONED = '../../niquo_data/filtered_data/partitioned_towers/'
