@@ -14,7 +14,7 @@ class RawCDRCSV(object):
 	def __init__(self, filename):
 		self.filename = filename
 
-	def filter_and_partition(self, destination_dir, filter_func=lambda row: True, chunksize=10**5, delimiter=';', limit=float('inf')):
+	def filter_and_partition(self, destination_dir, filter_func=lambda row: True, chunksize=10**5, delimiter=',', limit=float('inf')):
 		tower_map = Maps.tower_map_id()
 		TOWER_NUMBER = 'tower_id'
 		DATE_STRING = 'date'

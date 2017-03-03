@@ -12,7 +12,7 @@ def Main(root_path = '../niquo_data/spring_data/', all_data_path=constants.JULY_
 	print 'creating object for data from:', all_data_path
 	rawData = raw.RawCDRCSV(all_data_path)
 	print 'beginning filtering on data from:', all_data_path
-	rawData.filter_and_partition(partitioned_data_path, filter_func=raw.remove_foreigners, delimiter=';')
+	rawData.filter_and_partition(partitioned_data_path, filter_func=raw.remove_foreigners)
 
 
 	# tpart = TP.TowersPartitioned(partitioned_data_path)
