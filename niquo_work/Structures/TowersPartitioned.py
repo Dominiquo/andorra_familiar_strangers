@@ -70,7 +70,6 @@ def parallel_mult_days(tower_id, all_dates, directory, days_count, enc_window, d
 def process_date_date(single_tower_data, destination_path, tower_id, enc_window):
 	print 'started process for tower id:', tower_id, 'to be stored', destination_path
 	single_tower_data = single_tower_data.sort_values([constants.DAYTIME])
-	single_tower_data = single_tower_data.reset_index(drop=True)
 	pair_users_single_file(destination_path, single_tower_data, enc_window, tower_id)
 
 
@@ -86,6 +85,7 @@ def pair_users_single_file(destination_path, single_tower_data, enc_window, towe
 	all_data = []
 	encs_graph = nx.Graph()
 	total_values = len(single_tower_data)
+	single_tower_data = single_tower_data.reset_index(drop=True)
 	for index, row in single_tower_data.iterrows():
 		if index % 500 == 0:
 			print 'single tower progress for ', tower_id,':' , index, '/', total_values
@@ -95,7 +95,6 @@ def pair_users_single_file(destination_path, single_tower_data, enc_window, towe
 		domain_values = single_tower_data[index + 1:]
 		current_timestamp = row[constants.DAYTIME]
 		encountered_group = domain_values[(domain_values[constants.DAYTIME] <= add_strings(current_timestamp, window_secs))]
-		# print 'adding', len(encountered_group), 'edges'
 		add_edges_network(encs_graph, row, encountered_group)
 	return store_encounters(encs_graph, destination_path, tower_id)
 
