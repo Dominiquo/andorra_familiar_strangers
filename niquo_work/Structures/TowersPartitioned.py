@@ -29,16 +29,16 @@ class TowersPartitioned(object):
 			date_path = os.path.join(self.directory, date_file)
 			date_data = pd.read_csv(date_path)
 			date_dir = create_date_dir(destination_path, date_file)
-			total = len(date_data[constants.TOWER_COLUMN].unique())
-			Parallel(n_jobs=4)(delayed(process_date_date)(date_data[date_data[constants.TOWER_COLUMN] == tower_id], date_dir, tower_id, enc_window) for tower_id in date_data[constants.TOWER_COLUMN].unique())
-			# for tower_id in date_data[constants.TOWER_COLUMN].unique()):
-			# 	single_tower_data = date_data[date_data[constants.TOWER_COLUMN] == tower_id]
-			# 	process_date_date(single_tower_data, date_dir, tower_id, enc_window)
+			total = len(date_data[constants.TOWER_NUMBER].unique())
+			Parallel(n_jobs=4)(delayed(process_date_data)(date_data[date_data[constants.TOWER_NUMBER] == tower_id], date_dir, tower_id, enc_window) for tower_id in date_data[constants.TOWER_NUMBER].unique())
+			# for tower_id in date_data[constants.TOWER_NUMBER].unique()):
+			# 	single_tower_data = date_data[date_data[constants.TOWER_NUMBER] == tower_id]
+			# 	process_date_data(single_tower_data, date_dir, tower_id, enc_window)
 
 
 
 	def pair_towers_multiple_days(self, destination_path, towers=constants.IDS_SET, days_count=7, enc_window=1):
-		Parallel(n_jobs=4)(delayed(parallel_mult_days)(tower_id, self.all_dates, self.directory, days_count, enc_window, destination_path) for tower_id in towers)
+		Parallel(n_jobs=2)(delayed(parallel_mult_days)(tower_id, self.all_dates, self.directory, days_count, enc_window, destination_path) for tower_id in towers)
 
 	def pair_tower_multiple_days_serial(self, destination_path, towers=constants.IDS_SET, days_count=7, enc_window=1):
 		for tower_id in towers:
@@ -54,20 +54,21 @@ def parallel_mult_days(tower_id, all_dates, directory, days_count, enc_window, d
 		print 'currently working on tower:', tower_id
 		print 'loading data from ', date_path
 		date_data = pd.read_csv(date_path)
-		tower_day_dfs.append(date_data[date_data[constants.TOWER_COLUMN] == tower_id])
+		tower_day_dfs.append(date_data[date_data[constants.TOWER_NUMBER] == tower_id])
 		if ((current_date % days_count) == 0) or (current_date == len(all_dates)):
 			dest = create_date_dir(destination_path, 'date_range_' + str(current_date) + '_' + date_file)
 			print 'combining data from dates...'
 			sys.stdout.flush()
 			combined_data = pd.concat(tower_day_dfs)
-			process_date_date(combined_data, dest, tower_id, enc_window)
-			tower_day_dfs = []
+			if tower_id in combined_data[constants.TOWER_NUMBER]:
+				process_date_data(combined_data, dest, tower_id, enc_window)
+				tower_day_dfs = []
 		current_date += 1
 
 
 
 # PARALLEL FUNCTIONS THAT CAN'T BE A PART OF THE CLASS
-def process_date_date(single_tower_data, destination_path, tower_id, enc_window):
+def process_date_data(single_tower_data, destination_path, tower_id, enc_window):
 	print 'started process for tower id:', tower_id, 'to be stored', destination_path
 	single_tower_data = single_tower_data.sort_values([constants.DAYTIME])
 	pair_users_single_file(destination_path, single_tower_data, enc_window, tower_id)
@@ -94,14 +95,14 @@ def pair_users_single_file(destination_path, single_tower_data, enc_window, towe
 			break
 		domain_values = single_tower_data[index + 1:]
 		current_timestamp = row[constants.DAYTIME]
-		encountered_group = domain_values[(domain_values[constants.DAYTIME] <= add_strings(current_timestamp, window_secs))]
+		encountered_group = domain_values[(domain_values[constants.DAYTIME] <= (current_timestamp + window_secs))]
 		add_edges_network(encs_graph, row, encountered_group)
 	return store_encounters(encs_graph, destination_path, tower_id)
 
 
 def add_edges_network(encs_graph, source_row, encountered_df):
 	source_user = source_row[constants.SOURCE]
-	enc_tower = source_row[constants.TOWER_COLUMN]
+	enc_tower = source_row[constants.TOWER_NUMBER]
 	first_time = source_row[constants.TIMESTAMP]
 	for index, dest_row in encountered_df.iterrows():
 		dest_user = dest_row[constants.SOURCE]
@@ -109,7 +110,7 @@ def add_edges_network(encs_graph, source_row, encountered_df):
 			continue
 		second_time = source_row[constants.TIMESTAMP]
 		avg_time = average_call_times(first_time, second_time)
-		attr_dict = {'time':avg_time}
+		attr_dict = {'t':avg_time}
 		encs_graph.add_edge(source_user, dest_user, attr_dict=attr_dict)
 
 
@@ -125,9 +126,6 @@ def store_encounters(encs_graph, destination_path, tower_id):
 # **********************************************
 # HELPER FUNCTIONS
 # **********************************************
-
-def add_strings(timestr1, timestr2):
-	return str(int(timestr1) + int(timestr2))
 
 def only_day_second(tstamp):
 	return tstamp[8:10] + ' ' + str(60*int(tstamp[11:13])*int(tstamp[14:16]))
