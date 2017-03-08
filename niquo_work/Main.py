@@ -26,7 +26,7 @@ def partition_data(data_path, destination_path, filter_func=raw.remove_foreigner
 	rawData = raw.RawCDRCSV(data_path)
 	print 'beginning filtering on data from:', data_path
 	print 'data will be stored at:', destination_path
-	rawData.filter_and_partition(partitioned_data_path, filter_func=filter_func)
+	rawData.filter_and_partition(destination_path, filter_func=filter_func)
 
 
 
