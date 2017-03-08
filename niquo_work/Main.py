@@ -22,11 +22,11 @@ def Main(root_path = '../niquo_data/spring_data/', all_data_path=constants.JULY_
 	return True
 
 
-def partition_data(data_path, destination_path, filter_func=raw.remove_foreigners):
+def partition_data(data_path, destination_path, delimiter=';', filter_func=raw.remove_foreigners):
 	rawData = raw.RawCDRCSV(data_path)
 	print 'beginning filtering on data from:', data_path
 	print 'data will be stored at:', destination_path
-	rawData.filter_and_partition(destination_path, filter_func=filter_func)
+	rawData.filter_and_partition(destination_path, delimiter=delimiter, filter_func=filter_func)
 
 
 
