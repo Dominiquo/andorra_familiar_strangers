@@ -49,13 +49,6 @@ def remove_foreigners(row):
 	CARRIER = 'ID_CDOPERADORORIGEN'
 	return row[CARRIER] == id_val
 
-def after_21st(row):
-	t = row[constants.TIMESTAMP]
-	tstamp = trans_datetime(t)
-	return tstamp >= 1469073600
-
-def remove_foreigners_after_date(row):
-	return remove_foreigners(row) and after_21st(row)
 
 def trans_date_string(timestamp):
 	year_end = 4
