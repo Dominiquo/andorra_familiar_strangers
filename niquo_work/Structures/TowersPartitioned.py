@@ -1,16 +1,14 @@
-import csv
-import os
-import sys
+import csv, os, sys
 import cPickle
-import itertools
 import networkx as nx
 from datetime import datetime
 import pandas as pd
 import Misc.file_constants as constants
 import GraphLite as gl
 import networkx as nx
-import time
+from timer import Timer
 from joblib import Parallel, delayed
+
 
 
 DATE_INDEX = 10

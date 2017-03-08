@@ -29,9 +29,11 @@ class RawCDRCSV(object):
 			data_chunk[DAYTIME] = data_chunk[constants.TIMESTAMP].apply(lambda t: int(trans_datetime(t)))
 			data_chunk = data_chunk[data_chunk[TOWER_NUMBER] != False]			
 			data_chunk = data_chunk[data_chunk.apply(lambda row: filter_func(row), axis=1)]
-			lines_count += len(data_chunk)
+			lines_count += len(data_chunk) 
 			if lines_count > limit:
 				break
+			elif len(data_chunk) == 0:
+				continue
 			for date_str, date_group in data_chunk.groupby(DATE_STRING):
 				filename = date_file_prefix + date_str + csv_suffix
 				filepath = os.path.join(destination_dir, filename)
@@ -46,6 +48,14 @@ def remove_foreigners(row):
 	id_val = 21303
 	CARRIER = 'ID_CDOPERADORORIGEN'
 	return row[CARRIER] == id_val
+
+def after_21st(row):
+	t = row[constants.TIMESTAMP]
+	tstamp = trans_datetime(t)
+	return tstamp >= 1469073600
+
+def remove_foreigners_after_date(row):
+	return remove_foreigners(row) and after_21st(row)
 
 def trans_date_string(timestamp):
 	year_end = 4
