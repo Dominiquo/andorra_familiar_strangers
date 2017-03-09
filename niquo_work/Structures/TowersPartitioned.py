@@ -6,7 +6,8 @@ import pandas as pd
 import Misc.file_constants as constants
 import GraphLite as gl
 import networkx as nx
-from timer import Timer
+import time
+import numpy as np
 from joblib import Parallel, delayed
 
 
@@ -29,39 +30,9 @@ class TowersPartitioned(object):
 			date_dir = create_date_dir(destination_path, date_file)
 			total = len(date_data[constants.TOWER_NUMBER].unique())
 			Parallel(n_jobs=4)(delayed(process_date_data)(date_data[date_data[constants.TOWER_NUMBER] == tower_id], date_dir, tower_id, enc_window) for tower_id in date_data[constants.TOWER_NUMBER].unique())
-			# for tower_id in date_data[constants.TOWER_NUMBER].unique()):
+			# for tower_id in date_data[constants.TOWER_NUMBER].unique():
 			# 	single_tower_data = date_data[date_data[constants.TOWER_NUMBER] == tower_id]
 			# 	process_date_data(single_tower_data, date_dir, tower_id, enc_window)
-
-
-
-	def pair_towers_multiple_days(self, destination_path, towers=constants.IDS_SET, days_count=7, enc_window=1):
-		Parallel(n_jobs=2)(delayed(parallel_mult_days)(tower_id, self.all_dates, self.directory, days_count, enc_window, destination_path) for tower_id in towers)
-
-	def pair_tower_multiple_days_serial(self, destination_path, towers=constants.IDS_SET, days_count=7, enc_window=1):
-		for tower_id in towers:
-			parallel_mult_days(tower_id, self.all_dates, self.directory, days_count, enc_window, destination_path)
-			
-
-
-def parallel_mult_days(tower_id, all_dates, directory, days_count, enc_window, destination_path):
-	current_date = 1
-	tower_day_dfs = []
-	for date_file in all_dates:
-		date_path = os.path.join(directory, date_file)
-		print 'currently working on tower:', tower_id
-		print 'loading data from ', date_path
-		date_data = pd.read_csv(date_path)
-		tower_day_dfs.append(date_data[date_data[constants.TOWER_NUMBER] == tower_id])
-		if ((current_date % days_count) == 0) or (current_date == len(all_dates)):
-			dest = create_date_dir(destination_path, 'date_range_' + str(current_date) + '_' + date_file)
-			print 'combining data from dates...'
-			sys.stdout.flush()
-			combined_data = pd.concat(tower_day_dfs)
-			if tower_id in combined_data[constants.TOWER_NUMBER]:
-				process_date_data(combined_data, dest, tower_id, enc_window)
-				tower_day_dfs = []
-		current_date += 1
 
 
 
@@ -81,24 +52,30 @@ def create_date_dir(destination_path, date_csv):
 
 def pair_users_single_file(destination_path, single_tower_data, enc_window, tower_id):
 	window_secs = 60*60*enc_window
-	all_data = []
-	encs_graph = nx.Graph()
 	total_values = len(single_tower_data)
+	encs_obj = gl.GraphLite()
+	current_index = 0
 	single_tower_data = single_tower_data.reset_index(drop=True)
+	start = time.time()
+	prev = start
 	for index, row in single_tower_data.iterrows():
-		if index % 500 == 0:
+		if index % 1000 == 0:
+			now = time.time()
 			print 'single tower progress for ', tower_id,':' , index, '/', total_values
+			print 'completed last 1000 in:', now-prev,'seconds'
+			prev = now
 			sys.stdout.flush()
 		if index == len(single_tower_data):
 			break
 		domain_values = single_tower_data[index + 1:]
 		current_timestamp = row[constants.DAYTIME]
 		encountered_group = domain_values[(domain_values[constants.DAYTIME] <= (current_timestamp + window_secs))]
-		add_edges_network(encs_graph, row, encountered_group)
-	return store_encounters(encs_graph, destination_path, tower_id)
+		add_edges_network(encs_obj, row, encountered_group)
+	print 'finished ', total_values, 'in: ', time.time()-start
+	return store_encounters(encs_obj, destination_path, tower_id)
 
 
-def add_edges_network(encs_graph, source_row, encountered_df):
+def add_edges_network(encs_obj, source_row, encountered_df):
 	source_user = source_row[constants.SOURCE]
 	enc_tower = source_row[constants.TOWER_NUMBER]
 	first_time = source_row[constants.TIMESTAMP]
@@ -108,17 +85,17 @@ def add_edges_network(encs_graph, source_row, encountered_df):
 			continue
 		second_time = source_row[constants.TIMESTAMP]
 		avg_time = average_call_times(first_time, second_time)
-		attr_dict = {'t':avg_time}
-		encs_graph.add_edge(source_user, dest_user, attr_dict=attr_dict)
+		encs_obj.add_edge(source_user, dest_user, {'t':avg_time})
 
 
-def store_encounters(encs_graph, destination_path, tower_id):
+
+def store_encounters(encs_obj, destination_path, tower_id):
 	tower_file_prefix = 'cdr_tower_'
 	p_suffix = '.p'
 	tower_filename = tower_file_prefix + str(tower_id) + p_suffix
 	tower_path = os.path.join(destination_path, tower_filename)
 	print 'storing data in:', tower_path
-	cPickle.dump(encs_graph, open(tower_path, 'wb'))
+	cPickle.dump(encs_obj, open(tower_path, 'wb'))
 
 
 # **********************************************
