@@ -17,6 +17,7 @@ def get_time_obj(timestamp):
 		print e
 		print timestamp
 		sys.exit(0)
+	return time_obj
 
 
 def trans_date_string(timestamp):
