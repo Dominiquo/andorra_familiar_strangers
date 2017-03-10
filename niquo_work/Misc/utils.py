@@ -13,10 +13,9 @@ def get_time_obj(timestamp):
 	try:
 		time_obj = datetime.strptime(timestamp,format_string)
 	except Exception as e:
-		print 'this thing is broken because of...'
+		print 'improper timestamp with value:', timestamp
 		print e
-		print timestamp
-		sys.exit(0)
+		return False
 	return time_obj
 
 

@@ -9,6 +9,7 @@ from datetime import datetime
 
 def condense_df(df):
 	print 'getting hour column for df...'
+	df = df.dropna()
 	df[constants.HOUR] = df[constants.TIMESTAMP].apply(utils.get_hour)
 	print 'grouping df...'
 	user_hour_group = df.groupby([constants.TOWER_NUMBER, constants.SOURCE, constants.HOUR], as_index=False)
