@@ -35,3 +35,7 @@ def trans_datetime(timestamp):
 
 def is_comm_type_data(row):
 	return row[COMM_TYPE_INDEX] != constants.COMM_DATA
+
+
+
+# max == min marker

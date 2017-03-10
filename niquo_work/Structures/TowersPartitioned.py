@@ -8,6 +8,7 @@ import GraphLite as gl
 import networkx as nx
 import time
 import numpy as np
+import itertools
 from joblib import Parallel, delayed
 
 
@@ -31,15 +32,15 @@ class TowersPartitioned(object):
 			total = len(date_data[constants.TOWER_NUMBER].unique())
 			Parallel(n_jobs=4)(delayed(process_date_data)(date_data[date_data[constants.TOWER_NUMBER] == tower_id], date_dir, tower_id, enc_window) for tower_id in date_data[constants.TOWER_NUMBER].unique())
 			# for tower_id in date_data[constants.TOWER_NUMBER].unique():
-			# 	single_tower_data = date_data[date_data[constants.TOWER_NUMBER] == tower_id]
-			# 	process_date_data(single_tower_data, date_dir, tower_id, enc_window)
+			# 	process_date_data(date_data[date_data[constants.TOWER_NUMBER] == tower_id], date_dir, tower_id, enc_window)
 
 
 
 # PARALLEL FUNCTIONS THAT CAN'T BE A PART OF THE CLASS
 def process_date_data(single_tower_data, destination_path, tower_id, enc_window):
 	print 'started process for tower id:', tower_id, 'to be stored', destination_path
-	single_tower_data = single_tower_data.sort_values([constants.DAYTIME])
+	single_tower_data = single_tower_data.sort_values([constants.MIN_TIME])
+	single_tower_data[constants.MATCHING] = single_tower_data[constants.MAX_TIME] == single_tower_data[constants.MIN_TIME]
 	pair_users_single_file(destination_path, single_tower_data, enc_window, tower_id)
 
 
@@ -54,25 +55,30 @@ def pair_users_single_file(destination_path, single_tower_data, enc_window, towe
 	window_secs = 60*60*enc_window
 	total_values = len(single_tower_data)
 	encs_obj = gl.GraphLite()
-	current_index = 0
 	single_tower_data = single_tower_data.reset_index(drop=True)
 	start = time.time()
 	prev = start
-	for index, row in single_tower_data.iterrows():
-		if index % 1000 == 0:
-			now = time.time()
-			print 'single tower progress for ', tower_id,':' , index, '/', total_values
-			print 'completed last 1000 in:', now-prev,'seconds'
-			prev = now
-			sys.stdout.flush()
-		if index == len(single_tower_data):
-			break
-		domain_values = single_tower_data[index + 1:]
-		current_timestamp = row[constants.DAYTIME]
-		encountered_group = domain_values[(domain_values[constants.DAYTIME] <= (current_timestamp + window_secs))]
-		add_edges_network(encs_obj, row, encountered_group)
+
+	for hour in sorted(single_tower_data[constants.HOUR].unique()):
+		encountered_df = single_tower_data[(single_tower_data[constants.HOUR]==hour)&single_tower_data[constants.MATCHING]]
+		add_current_hour_network(encs_obj, encountered_df)
+		now = time.time()
+		print 'current hour:', hour
+		print 'completed last hour in:', now-prev,'seconds'
+		prev = now
+		sys.stdout.flush()
 	print 'finished ', total_values, 'in: ', time.time()-start
 	return store_encounters(encs_obj, destination_path, tower_id)
+
+def add_current_hour_network(encs_obj, encountered_df):
+	subset = encountered_df[[constants.SOURCE, constants.MIN_TIME]]
+	for first, second in itertools.combinations(subset.values, 2):
+		source_user = first[0]
+		other_user = second[0]
+		first_time = first[1]
+		second_time = second[1]
+		avg_time = np.average([first_time, second_time])
+		encs_obj.add_edge(source_user, other_user, {'t':avg_time})
 
 
 def add_edges_network(encs_obj, source_row, encountered_df):
@@ -95,7 +101,7 @@ def store_encounters(encs_obj, destination_path, tower_id):
 	tower_filename = tower_file_prefix + str(tower_id) + p_suffix
 	tower_path = os.path.join(destination_path, tower_filename)
 	print 'storing data in:', tower_path
-	cPickle.dump(encs_obj, open(tower_path, 'wb'))
+	encs_obj.store_object(tower_path)
 
 
 # **********************************************

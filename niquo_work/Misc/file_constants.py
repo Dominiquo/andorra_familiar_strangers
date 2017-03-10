@@ -17,6 +17,7 @@ DEST = 'DS_CDNUMDESTI'
 
 MAX_TIME = 'timestamp amax'
 MIN_TIME = 'timestamp amin'
+MATCHING = 'same'
 
 
 TOWER_NUMBER = 'tower_id'

@@ -16,7 +16,7 @@ def condense_df(df):
 	print 'aggregating group into dataframe...'
 	df = user_hour_group.agg({constants.DAYTIME: [np.max, np.min]})
 	df.columns = [' '.join(col).strip() for col in df.columns.values]
-	return df.sort_values(constants.HOUR)
+	return df
 
 
 def main(partitioned_directory, desination_dir):
