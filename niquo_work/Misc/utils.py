@@ -37,5 +37,9 @@ def is_comm_type_data(row):
 	return row[COMM_TYPE_INDEX] != constants.COMM_DATA
 
 
+def remove_foreigners(row):
+ 	id_val = 21303
+  	CARRIER = 'ID_CDOPERADORORIGEN'
+  	return row[CARRIER] == id_val
 
 # max == min marker
