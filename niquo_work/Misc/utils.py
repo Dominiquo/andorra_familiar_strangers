@@ -19,6 +19,24 @@ def get_time_obj(timestamp):
 	return time_obj
 
 
+def average_call_times(time_stamp_1,time_stamp_2):
+	hour_s = 0
+	hour_f = 2
+	min_s = 3
+	min_f = 5
+	sec_s = 6
+	sec_f = 8
+	head = time_stamp_1[:DATE_INDEX]
+	time1 = time_stamp_1[DATE_INDEX+1:]
+	time2 = time_stamp_2[DATE_INDEX+1:]
+	avgh = (int(time1[hour_s:hour_f]) + int(time2[hour_s:hour_f]))/2
+	avgm = (int(time1[min_s:min_f]) + int(time2[min_s:min_f]))/2
+	avgs = (int(time1[sec_s:sec_f]) + int(time2[sec_s:sec_f]))/2
+	zero_pad = lambda v: '0' + str(v) if v < 10 else str(v)
+	new_time = head + ' ' + zero_pad(avgh) + ':' + zero_pad(avgm) + ':' + str(avgs)
+	return only_day_second(new_time)
+
+
 def trans_date_string(timestamp):
 	year_end = 4
 	month_s = 5
