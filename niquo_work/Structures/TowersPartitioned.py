@@ -67,7 +67,7 @@ def pair_users_single_file(destination_path, single_tower_data, enc_window, towe
 		# TIMING #
 		now = time.time()
 		print 'current hour:', hour
-		print 'progress:', i,'/', len(all_hours)
+		print 'progress:', i+1 ,'/', len(all_hours)
 		print 'completed last hour in:', now-prev,'seconds'
 		prev = now
 		# TIMING #
