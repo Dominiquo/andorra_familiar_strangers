@@ -3,6 +3,8 @@ JULY_DATA_FILTERED = '../niquo_data/source_data/filtered201607-AndorraTelecom-CD
 TOWERS_ID = '../../workspace/yleng/towers1.csv'
 TOWERS_TYPE = '../../../niquo_data/20151120-towersContainerTrip.csv'
 FILTERED_PARTITIONED = '../../niquo_data/filtered_data/partitioned_towers/'
+COMM_DATA  = 'S-CDR'
+
 
 
 SOURCE = 'DS_CDNUMORIGEN'
@@ -16,6 +18,7 @@ DEST = 'DS_CDNUMDESTI'
 TOWER_NUMBER = 'tower_id'
 DATE_STRING = 'date'
 DAYTIME = 'timestamp'
+HOUR = 'hour'
 
 IDS_SET = set([ 471,    1, 1075,  110,  420,   30, 3200, 1630, 9500,  160, 1735,
        1590,  120, 3581, 1030, 1010,   10,  100, 1140, 1560, 2081, 9461,

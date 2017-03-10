@@ -3,6 +3,7 @@ import os
 import pandas as pd
 import Misc.getMaps as Maps
 import Misc.file_constants as constants
+import Misc.utils as utils
 import cPickle
 import itertools
 from datetime import datetime
@@ -25,8 +26,8 @@ class RawCDRCSV(object):
 
 		for data_chunk in pd.read_csv(self.filename, usecols=constants.USEFUL_ROWS, delimiter=delimiter, chunksize=chunksize):
 			data_chunk[TOWER_NUMBER] = data_chunk[constants.TOWER_COLUMN].apply(lambda tid: tower_map[tid] if tid in tower_map else False)
-			data_chunk[DATE_STRING] = data_chunk[constants.TIMESTAMP].apply(trans_date_string)
-			data_chunk[DAYTIME] = data_chunk[constants.TIMESTAMP].apply(lambda t: int(trans_datetime(t)))
+			data_chunk[DATE_STRING] = data_chunk[constants.TIMESTAMP].apply(utils.trans_date_string)
+			data_chunk[DAYTIME] = data_chunk[constants.TIMESTAMP].apply(lambda t: int(utils.trans_datetime(t)))
 			data_chunk = data_chunk[data_chunk[TOWER_NUMBER] != False]			
 			data_chunk = data_chunk[data_chunk.apply(lambda row: filter_func(row), axis=1)]
 			lines_count += len(data_chunk) 
@@ -43,28 +44,6 @@ class RawCDRCSV(object):
 					date_group.to_csv(filepath, index=False)
 		return lines_count
 
-
-def remove_foreigners(row):
-	id_val = 21303
-	CARRIER = 'ID_CDOPERADORORIGEN'
-	return row[CARRIER] == id_val
-
-
-def trans_date_string(timestamp):
-	year_end = 4
-	month_s = 5
-	month_f = 7
-	date_s = 8
-	date_f = 10
-	return timestamp[:year_end] + '_' + timestamp[month_s:month_f] + '_' + timestamp[date_s:date_f]
-
-def trans_datetime(timestamp):
-	format_string = "%Y.%m.%d %H:%M:%S"
-	time_object = datetime.strptime(timestamp,format_string)
-	return time.mktime(time_object.timetuple())
-
-def is_comm_type_data(row):
-	return row[COMM_TYPE_INDEX] != 'S-CDR'
 
 def main():
 	return None

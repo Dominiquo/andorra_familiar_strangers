@@ -3,6 +3,8 @@ import cPickle
 import Structures.RawCRDData as raw
 import Structures.TowersPartitioned as TP
 import Misc.file_constants as constants
+import Misc.utils as utils
+
 
 def Main(root_path = '../niquo_data/spring_data/', all_data_path=constants.JULY_DATA_FILTERED):
 
@@ -12,11 +14,11 @@ def Main(root_path = '../niquo_data/spring_data/', all_data_path=constants.JULY_
 	tpart = TP.TowersPartitioned(partitioned_data_path)
 	tpart.pair_users_from_towers(tower_enc_path)
 
-	
+
 	return True
 
 
-def partition_data(data_path, destination_path, delimiter=';', filter_func=raw.remove_foreigners):
+def partition_data(data_path, destination_path, delimiter=';', filter_func=utils.remove_foreigners):
 	rawData = raw.RawCDRCSV(data_path)
 	print 'beginning filtering on data from:', data_path
 	print 'data will be stored at:', destination_path
