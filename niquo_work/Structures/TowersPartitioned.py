@@ -30,9 +30,9 @@ class TowersPartitioned(object):
 			date_data = pd.read_csv(date_path)
 			date_dir = create_date_dir(destination_path, date_file)
 			total = len(date_data[constants.TOWER_NUMBER].unique())
-			Parallel(n_jobs=4)(delayed(process_date_data)(date_data[date_data[constants.TOWER_NUMBER] == tower_id], date_dir, tower_id, enc_window) for tower_id in date_data[constants.TOWER_NUMBER].unique())
-			# for tower_id in date_data[constants.TOWER_NUMBER].unique():
-			# 	process_date_data(date_data[date_data[constants.TOWER_NUMBER] == tower_id], date_dir, tower_id, enc_window)
+			# Parallel(n_jobs=4)(delayed(process_date_data)(date_data[date_data[constants.TOWER_NUMBER] == tower_id], date_dir, tower_id, enc_window) for tower_id in date_data[constants.TOWER_NUMBER].unique())
+			for tower_id in date_data[constants.TOWER_NUMBER].unique():
+				process_date_data(date_data[date_data[constants.TOWER_NUMBER] == tower_id], date_dir, tower_id, enc_window)
 
 
 
