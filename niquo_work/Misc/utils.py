@@ -9,7 +9,12 @@ def get_hour(timestamp):
 
 def get_time_obj(timestamp):
 	format_string = "%Y.%m.%d %H:%M:%S"
-	return datetime.strptime(timestamp,format_string)
+	try:
+		time_obj = datetime.strptime(timestamp,format_string)
+	except Exception as e:
+		print e
+		print timestamp
+		break
 
 
 def trans_date_string(timestamp):
