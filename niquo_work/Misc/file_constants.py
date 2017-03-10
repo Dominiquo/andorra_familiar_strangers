@@ -15,6 +15,10 @@ CARRIER = 'ID_CDOPERADORORIGEN'
 DEST = 'DS_CDNUMDESTI'
 
 
+MAX_TIME = 'timestamp amax'
+MIN_TIME = 'timestamp amin'
+
+
 TOWER_NUMBER = 'tower_id'
 DATE_STRING = 'date'
 DAYTIME = 'timestamp'
