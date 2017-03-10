@@ -60,13 +60,18 @@ def pair_users_single_file(destination_path, single_tower_data, enc_window, towe
 	prev = start
 
 	for hour in sorted(single_tower_data[constants.HOUR].unique()):
-		encountered_df = single_tower_data[(single_tower_data[constants.HOUR]==hour)&single_tower_data[constants.MATCHING]]
+		encountered_df = single_tower_data[(single_tower_data[constants.HOUR]==hour)]
 		add_current_hour_network(encs_obj, encountered_df)
+
+		# TIMING #
 		now = time.time()
 		print 'current hour:', hour
 		print 'completed last hour in:', now-prev,'seconds'
 		prev = now
 		sys.stdout.flush()
+		# TIMING #
+
+
 	print 'finished ', total_values, 'in: ', time.time()-start
 	return store_encounters(encs_obj, destination_path, tower_id)
 
