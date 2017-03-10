@@ -6,7 +6,6 @@ import Misc.utils as utils
 from datetime import datetime
 
 
-
 def condense_df(df):
 	print 'getting hour column for df...'
 	df = df.dropna()
