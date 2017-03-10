@@ -1,5 +1,6 @@
 from datetime import datetime
 import time
+import sys
 import file_constants as constants
 
 
@@ -14,7 +15,7 @@ def get_time_obj(timestamp):
 	except Exception as e:
 		print e
 		print timestamp
-		break
+		sys.exit(0)
 
 
 def trans_date_string(timestamp):
