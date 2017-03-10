@@ -20,7 +20,7 @@ def condense_df(df):
 
 
 def main(partitioned_directory, desination_dir):
-	date_files = sorted(os.listdir(partitioned_directory))[19:]
+	date_files = sorted(os.listdir(partitioned_directory))[18:]
 	for dfile in date_files:
 		dpath = os.path.join(partitioned_directory, dfile)
 		print 'loading dataframe from memory:', dfile
