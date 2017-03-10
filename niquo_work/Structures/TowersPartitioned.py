@@ -21,7 +21,7 @@ class TowersPartitioned(object):
 	def __init__(self, towers_dir, destination_path):
 		self.directory = towers_dir
 		self.destination_path = destination_path
-		self.all_dates = sorted(os.listdir(self.directory))
+		self.all_dates = sorted(np.array(os.listdir(self.directory)))
 
 	def iterate_dataframes(self):
 		for date_file in self.all_dates:
@@ -34,7 +34,6 @@ class TowersPartitioned(object):
 	def pair_users_from_towers(self, enc_window=1):
 		print 'beginning pairing users...'
 		for date_data, date_dir in self.iterate_dataframes():
-			# Parallel(n_jobs=4)(delayed(process_date_data)(date_data[date_data[constants.TOWER_NUMBER] == tower_id], date_dir, tower_id, enc_window) for tower_id in date_data[constants.TOWER_NUMBER].unique())
 			for tower_id in date_data[constants.TOWER_NUMBER].unique():
 				process_date_data(date_data[date_data[constants.TOWER_NUMBER] == tower_id], date_dir, tower_id, enc_window)
 
@@ -51,17 +50,16 @@ def pair_users_single_file(destination_path, single_tower_data, enc_window, towe
 	window_secs = 60*60*enc_window
 	total_values = len(single_tower_data)
 	encs_obj = gl.GraphLite()
-	single_tower_data = single_tower_data.reset_index(drop=True)
 	start = time.time()
 	prev = start
-	all_hours = sorted(single_tower_data[constants.HOUR].unique())
+	all_hours = single_tower_data[constants.HOUR].unique()
 	for i, hour in enumerate(all_hours):
 		current_hour_data = single_tower_data[(single_tower_data[constants.HOUR]==hour)].sort_values(constants.MAX_TIME)
 		add_current_hour_network(encs_obj, current_hour_data)
 
 		if i != len(all_hours) - 1:
 			next_h = all_hours[i + 1]
-			next_hour_data = single_tower_data[(single_tower_data[constants.HOUR]==next_h)].sort_values(constants.MIN_TIME)
+			next_hour_data = single_tower_data[(single_tower_data[constants.HOUR]==next_h)]
 			add_adjacent_hour_encounters(encs_obj, window_secs, current_hour_data, next_hour_data)
 
 		# TIMING #
@@ -77,28 +75,30 @@ def pair_users_single_file(destination_path, single_tower_data, enc_window, towe
 
 
 def add_adjacent_hour_encounters(encs_obj,  window_secs, current_hour_data, next_hour_data):
-	for i,row in current_hour_data.iterrows():
-		user = row[constants.SOURCE]
-		lower_time = row[constants.MAX_TIME]
+	user_index = 0
+	time_index = 1
+
+	for row in current_hour_data[[constants.SOURCE, constants.MAX_TIME]].values:
+		user = row[user_index]
+		lower_time = row[time_index]
 		upper_bound = lower_time + window_secs
 		next_hour_intersect = next_hour_data[next_hour_data[constants.MIN_TIME] <= upper_bound]
-
-		if len(next_hour_data) == 0:
-			continue
-		for i, other_row in next_hour_intersect.iterrows():
-			other_user = other_row[constants.SOURCE]
-			other_time = other_row[constants.MIN_TIME]
+		for other_row in next_hour_intersect[[constants.SOURCE, constants.MIN_TIME]].values:
+			other_user = other_row[user_index]
+			other_time = other_row[time_index]
 			avg_time = np.average([lower_time, other_time])
 			encs_obj.add_edge(user, other_user, {'t': avg_time})
 
 
 def add_current_hour_network(encs_obj, encountered_df):
+	user_index = 0
+	time_index = 1
 	subset = encountered_df[[constants.SOURCE, constants.MIN_TIME]]
 	for first, second in itertools.combinations(subset.values, 2):
-		source_user = first[0]
-		other_user = second[0]
-		first_time = first[1]
-		second_time = second[1]
+		source_user = first[user_index]
+		other_user = second[user_index]
+		first_time = first[time_index]
+		second_time = second[time_index]
 		avg_time = np.average([first_time, second_time])
 		encs_obj.add_edge(source_user, other_user, {'t':avg_time})
 
