@@ -1,6 +1,6 @@
 from datetime import datetime
 import time
-import sys
+import sys, os
 import file_constants as constants
 
 
@@ -60,4 +60,10 @@ def remove_foreigners(row):
   	CARRIER = 'ID_CDOPERADORORIGEN'
   	return row[CARRIER] == id_val
 
-# max == min marker
+
+def create_dir(root_path, folder_name):
+	dir_path = os.path.join(root_path, folder_name)
+	if not os.path.isdir(dir_path):
+		os.makedirs(dir_path)
+		print 'list of values in here:',os.listdir(dir_path)
+	return dir_path

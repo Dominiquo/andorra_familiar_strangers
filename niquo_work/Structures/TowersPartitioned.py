@@ -4,13 +4,13 @@ import networkx as nx
 from datetime import datetime
 import pandas as pd
 import Misc.file_constants as constants
+import Misc.utils as utils
 import GraphLite as gl
 import networkx as nx
 import time
 import numpy as np
 import itertools
 from joblib import Parallel, delayed
-
 
 
 DATE_INDEX = 10
@@ -23,17 +23,15 @@ class TowersPartitioned(object):
 		self.destination_path = destination_path
 		self.all_dates = sorted(np.array(os.listdir(self.directory)))
 
-	def iterate_dataframes(self):
-		for date_file in self.all_dates:
-			print 'loading data from:', date_file
-			date_path = os.path.join(self.directory, date_file)
-			date_data = pd.read_csv(date_path)
-			date_dir = create_date_dir(self.destination_path, date_file)
-			yield (date_data, date_dir)
-
-	def pair_users_from_towers(self, enc_window=1):
+	def pair_users_from_towers(self, lower=0, upper=0, enc_window=1):
+		if upper == 0: upper = len(self.all_dates)
 		print 'beginning pairing users...'
-		for date_data, date_dir in self.iterate_dataframes():
+		for date_file in self.all_dates[lower:upper]:
+			print date_file, 'in :', self.directory
+			date_path = os.path.join(self.directory, date_file)
+			date_dir = create_date_dir(self.destination_path, date_file)
+			print 'loading data from:', date_file
+			date_data = pd.read_csv(date_path)
 			for tower_id in date_data[constants.TOWER_NUMBER].unique():
 				process_date_data(date_data[date_data[constants.TOWER_NUMBER] == tower_id], date_dir, tower_id, enc_window)
 
@@ -129,8 +127,8 @@ def create_date_dir(destination_path, date_csv):
 	return date_path
 
 
-def main():
+def main(root_path, condensed_data_path, lower, upper):
+	destination_path = utils.create_dir(root_path, 'tower_encounters')
+	tpart = TowersPartitioned(condensed_data_path, destination_path)
+	tpart.pair_users_from_towers(lower, upper)
 	return None
-
-if __name__ == '__main__':
-    main()
