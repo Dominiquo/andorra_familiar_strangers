@@ -31,51 +31,52 @@ class TowersPartitioned(object):
 			date_path = os.path.join(self.directory, date_file)
 			date_dir = create_date_dir(self.destination_path, date_file)
 			print 'loading data from:', date_file
-			date_data = pd.read_csv(date_path)
-			for tower_id in date_data[constants.TOWER_NUMBER].unique():
-				process_date_data(date_data[date_data[constants.TOWER_NUMBER] == tower_id], date_dir, tower_id, enc_window)
+			date_data = pd.read_csv(date_path).sort_values([constants.MIN_TIME])
+			for tower_id, tower_df in date_data.groupby(constants.TOWER_NUMBER):
+				print 'beginning pairing for tower:', tower_id
+				pair_users_single_file(date_dir, tower_df, tower_id, enc_window)
+			del date_data
 
 
 # PARALLEL FUNCTIONS THAT CAN'T BE A PART OF THE CLASS
-def process_date_data(single_tower_data, destination_path, tower_id, enc_window, adjacent=False):
-	print 'started process for tower id:', tower_id, 'to be stored', destination_path
-	single_tower_data = single_tower_data.sort_values([constants.MIN_TIME])
-	single_tower_data[constants.MATCHING] = single_tower_data[constants.MAX_TIME] == single_tower_data[constants.MIN_TIME]
-	pair_users_single_file(destination_path, single_tower_data, enc_window, tower_id)
-
-
 def pair_users_single_file(destination_path, single_tower_data, enc_window, tower_id):
 	window_secs = 60*60*enc_window
 	total_values = len(single_tower_data)
-	encs_obj = gl.GraphLite()
+	encs_obj = nx.Graph()
 	start = time.time()
 	prev = start
 	all_hours = single_tower_data[constants.HOUR].unique()
-	for i, hour in enumerate(all_hours):
-		current_hour_data = single_tower_data[(single_tower_data[constants.HOUR]==hour)].sort_values(constants.MAX_TIME)
+	usable_hours = set(all_hours)
+	i = 1
+	for hour, current_hour_data in single_tower_data.groupby(constants.HOUR):
 		add_current_hour_network(encs_obj, current_hour_data)
-
-		if i != len(all_hours) - 1:
-			next_h = all_hours[i + 1]
+		next_h = hour + 1
+		if next_h in usable_hours:
 			next_hour_data = single_tower_data[(single_tower_data[constants.HOUR]==next_h)]
 			add_adjacent_hour_encounters(encs_obj, window_secs, current_hour_data, next_hour_data)
+		
 
 		# TIMING #
 		now = time.time()
 		print 'current hour:', hour
-		print 'progress:', i+1 ,'/', len(all_hours)
+		print 'progress:', i ,'/', len(all_hours)
 		print 'completed last hour in:', now-prev,'seconds'
 		prev = now
 		# TIMING #
 
+		i += 1
+
 	print 'finished tower of ', total_values, 'rows in: ', time.time()-start
-	return store_encounters(encs_obj, destination_path, tower_id)
+	store_encounters(encs_obj, destination_path, tower_id)
+	del encs_obj
+	print 'deleted object for tower_id:', tower_id
+	return True
 
 
 def add_adjacent_hour_encounters(encs_obj,  window_secs, current_hour_data, next_hour_data):
 	user_index = 0
 	time_index = 1
-
+	
 	for row in current_hour_data[[constants.SOURCE, constants.MAX_TIME]].values:
 		user = row[user_index]
 		lower_time = row[time_index]
@@ -85,7 +86,7 @@ def add_adjacent_hour_encounters(encs_obj,  window_secs, current_hour_data, next
 			other_user = other_row[user_index]
 			other_time = other_row[time_index]
 			avg_time = np.average([lower_time, other_time])
-			encs_obj.add_edge(user, other_user, {'t': avg_time})
+			encs_obj.add_edge(user, other_user, attr_dict={'t': avg_time})
 
 
 def add_current_hour_network(encs_obj, encountered_df):
@@ -98,7 +99,7 @@ def add_current_hour_network(encs_obj, encountered_df):
 		first_time = first[time_index]
 		second_time = second[time_index]
 		avg_time = np.average([first_time, second_time])
-		encs_obj.add_edge(source_user, other_user, {'t':avg_time})
+		encs_obj.add_edge(source_user, other_user, attr_dict={'t':avg_time})
 
 
 
@@ -108,7 +109,8 @@ def store_encounters(encs_obj, destination_path, tower_id):
 	tower_filename = tower_file_prefix + str(tower_id) + p_suffix
 	tower_path = os.path.join(destination_path, tower_filename)
 	print 'storing data in:', tower_path
-	encs_obj.store_object(tower_path)
+	# encs_obj.store_object(tower_path)
+	cPickle.dump(encs_obj, open(tower_path, 'wb'))
 
 
 # **********************************************
