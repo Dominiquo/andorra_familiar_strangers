@@ -39,7 +39,7 @@ class TowersPartitioned(object):
 
 
 # PARALLEL FUNCTIONS THAT CAN'T BE A PART OF THE CLASS
-def pair_users_single_file(destination_path, single_tower_data, enc_window, tower_id):
+def pair_users_single_file(destination_path, single_tower_data, tower_id, enc_window):
 	window_secs = 60*60*enc_window
 	total_values = len(single_tower_data)
 	encs_obj = nx.Graph()
@@ -68,15 +68,13 @@ def pair_users_single_file(destination_path, single_tower_data, enc_window, towe
 
 	print 'finished tower of ', total_values, 'rows in: ', time.time()-start
 	store_encounters(encs_obj, destination_path, tower_id)
-	del encs_obj
-	print 'deleted object for tower_id:', tower_id
 	return True
 
 
 def add_adjacent_hour_encounters(encs_obj,  window_secs, current_hour_data, next_hour_data):
 	user_index = 0
 	time_index = 1
-	
+
 	for row in current_hour_data[[constants.SOURCE, constants.MAX_TIME]].values:
 		user = row[user_index]
 		lower_time = row[time_index]
@@ -110,7 +108,10 @@ def store_encounters(encs_obj, destination_path, tower_id):
 	tower_path = os.path.join(destination_path, tower_filename)
 	print 'storing data in:', tower_path
 	# encs_obj.store_object(tower_path)
-	cPickle.dump(encs_obj, open(tower_path, 'wb'))
+	with open(tower_path, 'wb') as outfile:
+		cPickle.dump(encs_obj, outfile)
+		del encs_obj
+		print 'deleted object for tower_id:', tower_id
 
 
 # **********************************************
