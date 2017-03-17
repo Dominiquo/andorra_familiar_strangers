@@ -10,26 +10,25 @@ import time
 
 class InteractionMap(object):
 	"""docstring for InteractionMaps"""
-	def __init__(self, directory_path):
+	def __init__(self, root_path):
 		self.directory = directory_path
-		self.encounters_graph = nx.Graph()
 
-	def create_interaction_network():
-		for tower_file in os.listdir(self.directory):
-			tower_path = os.path.join(self.directory, tower_file)
-			tower_data = pd.read_csv(tower_path)
-			for encs_data in tower_data.groupby(constants.ENC_ROOT):
-				self.process_df(encs_data)
-		return True
+	def get_day_directories(self, tower_encs_root):
+		for date_file in os.listdir(tower_encs_root):
+			date_path = os.path.join(tower_encs_root, date_file)
+			yield date_path
 
-	def process_df(self, encounter_group):
-		return True
+	def get_tower_directory(self, date_path):
+		for tower_file in os.listdir(date_path):
+			yield os.path.join(date_path, tower_file)
 
 	def store_data(self, destination_path):
 		with open(destination_path, 'wb') as outfile:
 			cPickle.dump(outfile)
 		return True
 
+	def combine_maps(self, map):
+		return True
 
 def main():
 	return True

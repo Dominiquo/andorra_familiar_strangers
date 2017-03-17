@@ -4,8 +4,11 @@ import sys, os
 import file_constants as constants
 
 
-def get_hour(timestamp):
-    return get_time_obj(timestamp).hour
+def get_time_chunk(timestamp, time_chunk = 30):
+	time_obj = get_time_obj(timestamp)
+	hour = time_obj.hour
+	minute = time_obj.minute
+	return hour + ((minute/time_chunk)*time_chunk)/float(60)
 
 
 def get_time_obj(timestamp):

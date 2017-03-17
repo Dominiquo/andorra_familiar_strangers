@@ -10,10 +10,9 @@ import networkx as nx
 import time
 import numpy as np
 import itertools
+import operator
 from joblib import Parallel, delayed
 
-
-DATE_INDEX = 10
 
 
 class TowersPartitioned(object):
@@ -23,7 +22,7 @@ class TowersPartitioned(object):
 		self.destination_path = destination_path
 		self.all_dates = sorted(np.array(os.listdir(self.directory)))
 
-	def pair_users_from_towers(self, lower=0, upper=0, enc_window=1):
+	def pair_users_from_towers(self, lower=0, upper=0, enc_window=.5, threshold=50000, thresh_compare=operator.lt):
 		if upper == 0: upper = len(self.all_dates)
 		print 'beginning pairing users...'
 		for date_file in self.all_dates[lower:upper]:
@@ -32,12 +31,17 @@ class TowersPartitioned(object):
 			date_dir = create_date_dir(self.destination_path, date_file)
 			print 'loading data from:', date_file
 			date_data = pd.read_csv(date_path).sort_values([constants.MIN_TIME])
-			for tower_id, tower_df in date_data.groupby(constants.TOWER_NUMBER):
-				print 'beginning pairing for tower:', tower_id
-				pair_users_single_file(date_dir, tower_df, tower_id, enc_window)
+			data_grouped = date_data.groupby(constants.TOWER_NUMBER)
+			towers_sorted = data_grouped.size().sort_values()
+			for tower_id, size in towers_sorted.iteritems():
+				if thresh_compare(size,threshold):
+					print 'current tower_id:', tower_id
+					tower_df = data_grouped.get_group(tower_id)
+					print 'beginning pairing for tower:', tower_id
+					pair_users_single_file(date_dir, tower_df, tower_id, enc_window)
 			del date_data
 
-	def pair_users_specific_tower(self, tower_id, lower=0, upper=0, enc_window=1):
+	def pair_users_specific_tower(self, tower_id, lower=0, upper=0, enc_window=.5):
 		if upper == 0: upper = len(self.all_dates)
 		print 'beginning pairing users...'
 		for date_file in self.all_dates[lower:upper]:
@@ -58,24 +62,42 @@ def pair_users_single_file(destination_path, single_tower_data, tower_id, enc_wi
 	window_secs = 60*60*enc_window
 	total_values = len(single_tower_data)
 	encs_obj = nx.Graph()
+	all_time_chunks = single_tower_data[constants.TIME_BLOCK].unique()
+	usable_blocks = set(all_time_chunks)
+	i = 1
+
 	start = time.time()
 	prev = start
-	all_hours = single_tower_data[constants.HOUR].unique()
-	usable_hours = set(all_hours)
-	i = 1
-	for hour, current_hour_data in single_tower_data.groupby(constants.HOUR):
-		add_current_hour_network(encs_obj, current_hour_data)
-		next_h = hour + 1
-		if next_h in usable_hours:
-			next_hour_data = single_tower_data[(single_tower_data[constants.HOUR]==next_h)]
-			add_adjacent_hour_encounters(encs_obj, window_secs, current_hour_data, next_hour_data)
-		
+	gb_prev = start
+	
+	add_adj_prev = start
+
+	for time_block, current_block_data in single_tower_data.groupby(constants.TIME_BLOCK):
+		gb_end = time.time()
+
+		add_curr_prev = time.time()
+		add_current_time_chunk_network(encs_obj, current_block_data)
+		add_curr_time = time.time() - add_curr_prev
+
+		add_adj_start = time.time()
+		next_block = time_block + enc_window
+		if next_block in usable_blocks:
+			next_block_data = single_tower_data[(single_tower_data[constants.TIME_BLOCK]==next_block)]
+			add_adjacent_block_encounters(encs_obj, window_secs, current_block_data, next_block_data)
+		add_adj_time = time.time() - add_adj_start
 
 		# TIMING #
+
 		now = time.time()
-		print 'current hour:', hour
-		print 'progress:', i ,'/', len(all_hours)
-		print 'completed last hour in:', now-prev,'seconds'
+		gb_time = gb_end - gb_prev
+		gb_prev = time.time()
+		print '*************************'
+		print 'current time block:', time_block
+		print 'grouped in:', gb_time
+		print 'current block added in:', add_curr_time
+		print 'adjecent blocks added in:', add_adj_time
+		print 'progress:', i ,'/', len(all_time_chunks)
+		print 'completed last block in:', now-prev,'seconds'
 		prev = now
 		# TIMING #
 
@@ -86,23 +108,23 @@ def pair_users_single_file(destination_path, single_tower_data, tower_id, enc_wi
 	return True
 
 
-def add_adjacent_hour_encounters(encs_obj,  window_secs, current_hour_data, next_hour_data):
+def add_adjacent_block_encounters(encs_obj,  window_secs, current_block_data, next_block_data):
 	user_index = 0
 	time_index = 1
 
-	for row in current_hour_data[[constants.SOURCE, constants.MAX_TIME]].values:
+	for row in current_block_data[[constants.SOURCE, constants.MAX_TIME]].values:
 		user = row[user_index]
 		lower_time = row[time_index]
 		upper_bound = lower_time + window_secs
-		next_hour_intersect = next_hour_data[next_hour_data[constants.MIN_TIME] <= upper_bound]
-		for other_row in next_hour_intersect[[constants.SOURCE, constants.MIN_TIME]].values:
+		next_block_intersect = next_block_data[next_block_data[constants.MIN_TIME] <= upper_bound]
+		for other_row in next_block_intersect[[constants.SOURCE, constants.MIN_TIME]].values:
 			other_user = other_row[user_index]
 			other_time = other_row[time_index]
 			avg_time = np.average([lower_time, other_time])
 			encs_obj.add_edge(user, other_user, attr_dict={'t': avg_time})
 
 
-def add_current_hour_network(encs_obj, encountered_df):
+def add_current_time_chunk_network(encs_obj, encountered_df):
 	user_index = 0
 	time_index = 1
 	subset = encountered_df[[constants.SOURCE, constants.MIN_TIME]].values
@@ -147,14 +169,6 @@ def create_date_dir(destination_path, date_csv):
 
 
 def main(root_path, condensed_data_path, lower, upper):
-	all_towers = [1111, 1095,  471, 9451, 1075, 1680,  160, 9500, 3510, 2150,
-         1171, 2570,  445, 1590,  130,  100, 1030, 1560,  110,
-       1580, 1630,  342, 2190, 3521, 1225, 3231, 1110, 1040,  140,   70,
-        370, 1091, 1050, 9461, 3200,  341, 2081,  210,  190, 3590, 3581,
-       2520,  420, 1060, 3672, 1010, 4502, 3530,  480, 2201,    5, 1080,
-       3690, 1140,  250,  120, 2041,  220,  340, 1735, 3110, 2070, 3040,
-        312, 3100,  231, 3190, 2020, 3020, 3140, 3050, 3090,  230, 1121,
-       1770, 1700, 1760,  311,  333, 1780, 2120, 2170,  222, 2060, 2090]
 	destination_path = utils.create_dir(root_path, 'tower_encounters')
 	tpart = TowersPartitioned(condensed_data_path, destination_path)
 	for tower_id in all_towers:

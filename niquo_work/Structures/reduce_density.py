@@ -6,12 +6,12 @@ import Misc.utils as utils
 from datetime import datetime
 
 
-def condense_df(df):
+def condense_df(df, time_chunk=30):
 	print 'getting hour column for df...'
 	df = df.dropna()
-	df[constants.HOUR] = df[constants.TIMESTAMP].apply(utils.get_hour)
+	df[constants.TIME_BLOCK] = df[constants.TIMESTAMP].apply(lambda t: utils.get_time_chunk(t, time_chunk))
 	print 'grouping df...'
-	user_hour_group = df.groupby([constants.TOWER_NUMBER, constants.SOURCE, constants.HOUR], as_index=False)
+	user_hour_group = df.groupby([constants.TOWER_NUMBER, constants.SOURCE, constants.TIME_BLOCK], as_index=False)
 	print 'aggregating group into dataframe...'
 	df = user_hour_group.agg({constants.DAYTIME: [np.max, np.min]})
 	df.columns = [' '.join(col).strip() for col in df.columns.values]
