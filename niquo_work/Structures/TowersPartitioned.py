@@ -37,6 +37,21 @@ class TowersPartitioned(object):
 				pair_users_single_file(date_dir, tower_df, tower_id, enc_window)
 			del date_data
 
+	def pair_users_specific_tower(self, tower_id, lower=0, upper=0, enc_window=1):
+		if upper == 0: upper = len(self.all_dates)
+		print 'beginning pairing users...'
+		for date_file in self.all_dates[lower:upper]:
+			print date_file, 'in :', self.directory
+			date_path = os.path.join(self.directory, date_file)
+			date_dir = create_date_dir(self.destination_path, date_file)
+			print 'loading data from:', date_file
+			date_data = pd.read_csv(date_path).sort_values([constants.MIN_TIME])
+			print 'beginning pairing for tower:', tower_id
+			tower_df = date_data[date_data[constants.TOWER_NUMBER] == tower_id]
+			pair_users_single_file(date_dir, tower_df, tower_id, enc_window)
+			del date_data
+
+
 
 # PARALLEL FUNCTIONS THAT CAN'T BE A PART OF THE CLASS
 def pair_users_single_file(destination_path, single_tower_data, tower_id, enc_window):
@@ -90,8 +105,8 @@ def add_adjacent_hour_encounters(encs_obj,  window_secs, current_hour_data, next
 def add_current_hour_network(encs_obj, encountered_df):
 	user_index = 0
 	time_index = 1
-	subset = encountered_df[[constants.SOURCE, constants.MIN_TIME]]
-	for first, second in itertools.combinations(subset.values, 2):
+	subset = encountered_df[[constants.SOURCE, constants.MIN_TIME]].values
+	for first, second in itertools.combinations(subset, 2):
 		source_user = first[user_index]
 		other_user = second[user_index]
 		first_time = first[time_index]
