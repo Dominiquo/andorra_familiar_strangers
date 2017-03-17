@@ -22,7 +22,7 @@ class TowersPartitioned(object):
 		self.destination_path = destination_path
 		self.all_dates = sorted(np.array(os.listdir(self.directory)))
 
-	def pair_users_from_towers(self, lower=0, upper=0, enc_window=.5, threshold=50000, thresh_compare=operator.lt):
+	def pair_users_from_towers(self, lower=0, upper=0, enc_window=.5, threshold=16000, thresh_compare=operator.lt):
 		if upper == 0: upper = len(self.all_dates)
 		print 'beginning pairing users...'
 		for date_file in self.all_dates[lower:upper]:
@@ -36,6 +36,7 @@ class TowersPartitioned(object):
 			for tower_id, size in towers_sorted.iteritems():
 				if thresh_compare(size,threshold):
 					print 'current tower_id:', tower_id
+					print 'current tower_size:', size
 					tower_df = data_grouped.get_group(tower_id)
 					print 'beginning pairing for tower:', tower_id
 					pair_users_single_file(date_dir, tower_df, tower_id, enc_window)

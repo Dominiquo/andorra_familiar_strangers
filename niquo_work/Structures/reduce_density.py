@@ -18,7 +18,7 @@ def condense_df(df, time_chunk=30):
 	return df
 
 
-def main(partitioned_directory, desination_dir, chunk_size=30):
+def main(partitioned_directory, destination_dir, chunk_size=30):
 	date_files = sorted(os.listdir(partitioned_directory))
 	for dfile in date_files:
 		dpath = os.path.join(partitioned_directory, dfile)
