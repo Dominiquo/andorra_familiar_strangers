@@ -18,13 +18,13 @@ def condense_df(df, time_chunk=30):
 	return df
 
 
-def main(partitioned_directory, desination_dir):
-	date_files = sorted(os.listdir(partitioned_directory))[18:]
+def main(partitioned_directory, desination_dir, chunk_size=30):
+	date_files = sorted(os.listdir(partitioned_directory))
 	for dfile in date_files:
 		dpath = os.path.join(partitioned_directory, dfile)
 		print 'loading dataframe from memory:', dfile
 		df = pd.read_csv(dpath)
-		df = condense_df(df)
+		df = condense_df(df, time_chunk=chunk_size)
 		dest_path = os.path.join(desination_dir, dfile)
 		print 'storing dataframe:', dfile
 		df.to_csv(dest_path, index=False)
