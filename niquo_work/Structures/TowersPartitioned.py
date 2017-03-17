@@ -127,6 +127,7 @@ def store_encounters(encs_obj, destination_path, tower_id):
 		cPickle.dump(encs_obj, outfile)
 		del encs_obj
 		print 'deleted object for tower_id:', tower_id
+	return True
 
 
 # **********************************************
@@ -156,7 +157,7 @@ def main(root_path, condensed_data_path, lower, upper):
        1770, 1700, 1760,  311,  333, 1780, 2120, 2170,  222, 2060, 2090]
 	destination_path = utils.create_dir(root_path, 'tower_encounters')
 	tpart = TowersPartitioned(condensed_data_path, destination_path)
-	for tower in all_towers:
+	for tower_id in all_towers:
 		tpart.pair_users_specific_tower(tower_id, lower, upper)
-		
+
 	return None
