@@ -146,7 +146,17 @@ def create_date_dir(destination_path, date_csv):
 
 
 def main(root_path, condensed_data_path, lower, upper):
+	all_towers = [1111, 1095,  471, 9451, 1075, 1680,  160, 9500, 3510, 2150,
+         1171, 2570,  445, 1590,  130,  100, 1030, 1560,  110,
+       1580, 1630,  342, 2190, 3521, 1225, 3231, 1110, 1040,  140,   70,
+        370, 1091, 1050, 9461, 3200,  341, 2081,  210,  190, 3590, 3581,
+       2520,  420, 1060, 3672, 1010, 4502, 3530,  480, 2201,    5, 1080,
+       3690, 1140,  250,  120, 2041,  220,  340, 1735, 3110, 2070, 3040,
+        312, 3100,  231, 3190, 2020, 3020, 3140, 3050, 3090,  230, 1121,
+       1770, 1700, 1760,  311,  333, 1780, 2120, 2170,  222, 2060, 2090]
 	destination_path = utils.create_dir(root_path, 'tower_encounters')
 	tpart = TowersPartitioned(condensed_data_path, destination_path)
-	tpart.pair_users_from_towers(lower, upper)
+	for tower in all_towers:
+		tpart.pair_users_specific_tower(tower_id, lower, upper)
+		
 	return None
