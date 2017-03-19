@@ -25,7 +25,7 @@ def main(partitioned_directory, destination_dir, chunk_size=30):
 		print 'loading dataframe from memory:', dfile
 		df = pd.read_csv(dpath)
 		df = condense_df(df, time_chunk=chunk_size)
-		dest_path = os.path.join(desination_dir, dfile)
+		dest_path = os.path.join(destination_dir, dfile)
 		print 'storing dataframe:', dfile
 		df.to_csv(dest_path, index=False)
 
