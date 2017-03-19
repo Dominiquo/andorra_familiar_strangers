@@ -62,7 +62,7 @@ class TowersPartitioned(object):
 def pair_users_single_file(destination_path, single_tower_data, tower_id, enc_window):
 	window_secs = 60*60*enc_window
 	total_values = len(single_tower_data)
-	encs_obj = nx.Graph()
+	encs_obj = nx.MultiGraph()
 	all_time_chunks = single_tower_data[constants.TIME_BLOCK].unique()
 	usable_blocks = set(all_time_chunks)
 	i = 1
