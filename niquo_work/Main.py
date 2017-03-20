@@ -39,7 +39,7 @@ def find_encounters(root_path, condensed_data_path):
 
 
 if __name__ == '__main__':
-	funcs_dict = {'main': Main, 'encs': TP.main}
+	funcs_dict = {'main': Main, 'encs': TP.main, 'encsLarge': TP.produce_larger_graphs}
 	func = funcs_dict[sys.argv[1]]
 	args = sys.argv[2:]
 
@@ -48,7 +48,7 @@ if __name__ == '__main__':
 	elif len(args) == 2:
 		root_path = args[0]
 		data_path = args[1]
-		Main(root_path, data_path)
+		func(root_path, data_path)
 	elif len(args) == 4:
 		root_path = args[0]
 		data_path = args[1]
@@ -56,7 +56,7 @@ if __name__ == '__main__':
 		upper = int(args[3])
 		print 'root path', root_path
 		print 'data path ', data_path
-		TP.main(root_path, data_path, lower, upper)
+		func(root_path, data_path, lower, upper)
 	else:
 		print 'something is wrong with args'
 

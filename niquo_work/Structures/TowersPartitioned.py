@@ -169,6 +169,12 @@ def create_date_dir(destination_path, date_csv):
 	return date_path
 
 
+def produce_larger_graphs(root_path, condensed_data_path, lower, upper):
+	destination_path = utils.create_dir(root_path, 'tower_encounters')
+	tpart = TowersPartitioned(condensed_data_path, destination_path)
+	tpart.pair_users_from_towers(lower, upper, thresh_compare=operator.ge)
+	return None
+
 def main(root_path, condensed_data_path, lower, upper):
 	destination_path = utils.create_dir(root_path, 'tower_encounters')
 	tpart = TowersPartitioned(condensed_data_path, destination_path)
