@@ -93,11 +93,11 @@ def pair_users_single_file(destination_path, single_tower_data, tower_id, enc_wi
 		now = time.time()
 		gb_time = gb_end - gb_prev
 		gb_prev = time.time()
-		print '*************************'
-		print 'current time block:', time_block
-		print 'grouped in:', gb_time
-		print 'current block added in:', add_curr_time
-		print 'adjecent blocks added in:', add_adj_time
+		# print '*************************'
+		# print 'current time block:', time_block
+		# print 'grouped in:', gb_time
+		# print 'current block added in:', add_curr_time
+		# print 'adjecent blocks added in:', add_adj_time
 		print 'progress:', i ,'/', len(all_time_chunks)
 		print 'completed last block in:', now-prev,'seconds'
 		prev = now
