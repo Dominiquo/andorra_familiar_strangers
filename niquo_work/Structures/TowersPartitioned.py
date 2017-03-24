@@ -22,7 +22,7 @@ class TowersPartitioned(object):
 		self.destination_path = destination_path
 		self.all_dates = sorted(np.array(os.listdir(self.directory)))
 
-	def pair_users_from_towers(self, lower=0, upper=0, enc_window=.5, threshold=16000, thresh_compare=operator.lt):
+	def pair_users_from_towers(self, lower=0, upper=0, enc_window=30, threshold=16000, thresh_compare=operator.lt):
 		if upper == 0: upper = len(self.all_dates)
 		print 'beginning pairing users...'
 		for date_file in self.all_dates[lower:upper]:
@@ -42,7 +42,7 @@ class TowersPartitioned(object):
 					pair_users_single_file(date_dir, tower_df, tower_id, enc_window)
 			del date_data
 
-	def pair_users_specific_tower(self, tower_id, lower=0, upper=0, enc_window=.5):
+	def pair_users_specific_tower(self, tower_id, lower=0, upper=0, enc_window=30):
 		if upper == 0: upper = len(self.all_dates)
 		print 'beginning pairing users...'
 		for date_file in self.all_dates[lower:upper]:
@@ -60,7 +60,8 @@ class TowersPartitioned(object):
 
 # PARALLEL FUNCTIONS THAT CAN'T BE A PART OF THE CLASS
 def pair_users_single_file(destination_path, single_tower_data, tower_id, enc_window):
-	window_secs = 60*60*enc_window
+	window_secs = enc_window*60
+	enc_delta = round((enc_window/float(60)), 5)
 	total_values = len(single_tower_data)
 	encs_obj = nx.MultiGraph()
 	all_time_chunks = single_tower_data[constants.TIME_BLOCK].unique()
