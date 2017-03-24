@@ -16,20 +16,42 @@ class InteractionMap(object):
 	"""docstring for InteractionMaps"""
 	def __init__(self, root_path):
 		self.directory = root_path
-		self.master_graph = nx.Graph()
+		self.master_graph = nx.MultiGraph()
 		self.master_filename = 'MASTER_GRAPH.p'
 
-	def combine_by_day(self, day_path):
+
+
+	def combine_all_graphs(self, tower_data_path, delete_old=False):
+		for date_path in self.get_day_directories(tower_data_path):
+			self.combine_by_day(date_path, delete_old)
+
+		self.master_graph = nx.MultiGraph()
+		for date_path in self.get_day_directories(tower_data_path):
+			tower_file = os.path.join(date_path, self.master_filename)
+			print 'loading file:', tower_file
+			with open(tower_file, 'rb') as infile:
+				tower_graph = cPickle.load(infile)
+			self.combine_maps(tower_graph)
+		master_path = os.path.join(tower_data_path, self.master_filename)
+		self.store_data(master_path)
+
+		if delete_old:
+			self.delete_date_master_graphs(tower_data_path)
+
+
+	def combine_by_day(self, day_path, delete_old=False):
 		for tower_file in self.get_tower_directory(day_path):
 			print 'loading file:', tower_file
 			with open(tower_file, 'rb') as infile:
 				tower_number = parse_tower_name(tower_file)
 				tower_graph = cPickle.load(infile)
-				add_tower_number(tower_graph)
+				add_loc_to_graph(tower_number, tower_graph)
 			self.combine_maps(tower_graph)
 		master_path = os.path.join(day_path, self.master_filename)
 		self.store_data(master_path)
-		self.delete_old_maps(day_path)
+
+		if delete_old:
+			self.delete_old_date_maps(day_path)
 
 
 	def get_day_directories(self, tower_encs_root):
@@ -49,7 +71,14 @@ class InteractionMap(object):
 			cPickle.dump(self.master_graph, outfile)
 		return True
 
-	def delete_old_maps(self, day_path):
+	def delete_date_master_graphs(self, tower_encs_root):
+		for day_path in self.get_day_directories(tower_encs_root):
+			master_path = os.path.join(day_path, self.master_filename)
+			if tower_file == master_path:
+				os.remove(tower_file)
+		return True
+
+	def delete_old_date_maps(self, day_path):
 		master_path = os.path.join(day_path, self.master_filename)
 		for tower_file in self.get_tower_directory(day_path):
 			if tower_file != master_path:
@@ -57,7 +86,20 @@ class InteractionMap(object):
 		return True
 
 	def combine_maps(self, other_graph):
-		self.master_graph = nx.compose(self.master_graph, other_graph)
+		new_graph = nx.MultiGraph()
+		new_graph.add_edges_from(self.master_graph.edges(data=True) + other_graph.edges(data=True))
+		self.master_graph = new_graph
+
+
+
+def add_loc_to_graph(tower_id, graph):
+	location_key = 'l'
+	for a, b in graph.edges():
+		for i, edge_attr in graph[a][b].iteritems():
+			edge_attr[location_key] = tower_id
+	return None
+
+
 
 def parse_tower_name(tower_file_string):
 	no_extension = os.path.splitext(tower_file_string)[0]
