@@ -8,7 +8,7 @@ def get_time_chunk(timestamp, time_chunk = 30):
 	time_obj = get_time_obj(timestamp)
 	hour = time_obj.hour
 	minute = time_obj.minute
-	return round((hour + ((minute/time_chunk)*time_chunk)/float(60), 5)
+	return round(hour + ((minute/time_chunk)*time_chunk)/float(60), 5)
 
 
 def get_time_obj(timestamp):
