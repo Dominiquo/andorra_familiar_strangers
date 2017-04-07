@@ -14,7 +14,7 @@ COMM_TYPE = 'ID_CDTIPUSCOM'
 CARRIER = 'ID_CDOPERADORORIGEN'
 DEST = 'DS_CDNUMDESTI'
 
-
+DAY = 'DATE'
 MAX_TIME = 'timestamp amax'
 MIN_TIME = 'timestamp amin'
 MATCHING = 'same'

@@ -17,18 +17,50 @@ def condense_df(df, time_chunk=30):
 	df.columns = [' '.join(col).strip() for col in df.columns.values]
 	return df
 
+def create_hash_function(df):
+	u_vals = df[constants.SOURCE].unique()
+	hash_func_dict = {}
+	for i,v in enumerate(uvals):
+		hash_func_dict[v] = i
+	return hash_func_dict
 
-def main(partitioned_directory, destination_dir, chunk_size=30):
+def create_df_dates(partitioned_directory, destination_dir, chunk_size=30):
 	date_files = sorted(os.listdir(partitioned_directory))
+	all_dfs = []
+	tmp_column = 'TMP'
 	for dfile in date_files:
 		dpath = os.path.join(partitioned_directory, dfile)
 		print 'loading dataframe from memory:', dfile
 		df = pd.read_csv(dpath)
 		df = condense_df(df, time_chunk=chunk_size)
-		dest_path = os.path.join(destination_dir, dfile)
-		print 'storing dataframe:', dfile
-		df.to_csv(dest_path, index=False)
+		df[constants.DAY] = get_date_from_filename(dfile)
+		all_dfs.append(df)
+	combo_df = pd.concat(all_dfs)
+	print 'creating hash function from values...'
+	hash_func = create_hash_function(combo_df)
+	combo_df.rename(column={constants.SOURCE: tmp_column})
+	combo_df[constants.SOURCE] = df[tmp_column].apply(lambda v: hash_func[v])
+	del combo_df[tmp_column]
+	return combo_df
 
+
+def main(partitioned_directory, destination_dir, chunk_size=30):
+	combo_filepath = get_main_filename(partitioned_directory, destination_dir, chunk_size)
+	print 'storing dataframe:', combo_filepath
+	df.to_csv(combo_filepath, index=False)
+	return True
+
+def get_main_filename(partitioned_directory, destination_dir, chunk_size):
+	date_files = sorted(os.listdir(partitioned_directory))
+	all_days = [get_date_from_filename(d) for d in date_files]
+	low_date = min(all_days)
+	high_date = max(all_days)
+	file_name_prefix = 'cdr_data_' + str(low_date) + '_' + str(high_date) + '_time_' + str(chunk_size) + '.csv'
+
+def get_date_from_filename(filename):
+	i_start = 17
+	i_end = 19
+	return int(filename[i_start:i_end])
 
 if __name__ == '__main__':
     main()
