@@ -24,7 +24,7 @@ def create_hash_function(df):
 		hash_func_dict[v] = i
 	return hash_func_dict
 
-def create_df_dates(partitioned_directory, destination_dir, chunk_size=30):
+def create_df_dates(partitioned_directory, chunk_size=30):
 	date_files = sorted(os.listdir(partitioned_directory))
 	all_dfs = []
 	tmp_column = 'TMP'
@@ -45,6 +45,7 @@ def create_df_dates(partitioned_directory, destination_dir, chunk_size=30):
 
 
 def main(partitioned_directory, destination_dir, chunk_size=30):
+	df = create_df_dates(partitioned_directory, chunk_size)
 	combo_filepath = get_main_filename(partitioned_directory, destination_dir, chunk_size)
 	print 'storing dataframe:', combo_filepath
 	df.to_csv(combo_filepath, index=False)
