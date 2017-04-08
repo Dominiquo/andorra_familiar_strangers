@@ -38,19 +38,18 @@ def create_df_dates(partitioned_directory, chunk_size=30):
 	combo_df = pd.concat(all_dfs)
 	print 'creating hash function from values...'
 	hash_func = create_hash_function(combo_df)
-	return hash_func, combo_df
 	combo_df = combo_df.rename(columns={constants.SOURCE: tmp_column})
-	combo_df[constants.SOURCE] = df[tmp_column].apply(lambda v: hash_func[v])
+	combo_df[constants.SOURCE] = combo_df[tmp_column].apply(lambda v: hash_func[v])
 	del combo_df[tmp_column]
 	return combo_df
 
 
 def main(partitioned_directory, destination_dir, chunk_size=30):
-	return create_df_dates(partitioned_directory, chunk_size)
-	# return get_main_filename(partitioned_directory, destination_dir, chunk_size)
-	# print 'storing dataframe:', combo_filepath
-	# df.to_csv(combo_filepath, index=False)
-	# return True
+	df = create_df_dates(partitioned_directory, chunk_size)
+	combo_filepath = get_main_filename(partitioned_directory, destination_dir, chunk_size)
+	print 'storing dataframe:', combo_filepath
+	df.to_csv(combo_filepath, index=False)
+	return True
 
 def get_main_filename(partitioned_directory, destination_dir, chunk_size):
 	date_files = sorted(os.listdir(partitioned_directory))
