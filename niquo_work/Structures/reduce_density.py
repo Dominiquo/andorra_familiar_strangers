@@ -38,7 +38,7 @@ def create_df_dates(partitioned_directory, chunk_size=30):
 	combo_df = pd.concat(all_dfs)
 	print 'creating hash function from values...'
 	hash_func = create_hash_function(combo_df)
-	combo_df.rename(column={constants.SOURCE: tmp_column})
+	combo_df = combo_df.rename(column={constants.SOURCE: tmp_column})
 	combo_df[constants.SOURCE] = df[tmp_column].apply(lambda v: hash_func[v])
 	del combo_df[tmp_column]
 	return combo_df
@@ -56,7 +56,9 @@ def get_main_filename(partitioned_directory, destination_dir, chunk_size):
 	all_days = [get_date_from_filename(d) for d in date_files]
 	low_date = min(all_days)
 	high_date = max(all_days)
-	file_name_prefix = 'cdr_data_' + str(low_date) + '_' + str(high_date) + '_time_' + str(chunk_size) + '.csv'
+	file_name = 'cdr_data_' + str(low_date) + '_' + str(high_date) + '_time_' + str(chunk_size) + '.csv'
+	full_path = os.path.join(destination_dir, file_name)
+	return full_path
 
 def get_date_from_filename(filename):
 	i_start = 17
