@@ -31,7 +31,7 @@ def create_df_dates(partitioned_directory, chunk_size=30):
 	for dfile in date_files:
 		dpath = os.path.join(partitioned_directory, dfile)
 		print 'loading dataframe from memory:', dfile
-		df = pd.read_csv(dpath)
+		df = pd.read_csv(dpath, nrows=100)
 		df = condense_df(df, time_chunk=chunk_size)
 		df[constants.DAY] = get_date_from_filename(dfile)
 		all_dfs.append(df)
