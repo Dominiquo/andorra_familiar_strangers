@@ -38,7 +38,7 @@ def create_df_dates(partitioned_directory, chunk_size=30):
 	combo_df = pd.concat(all_dfs)
 	print 'creating hash function from values...'
 	hash_func = create_hash_function(combo_df)
-	combo_df = combo_df.rename(column={constants.SOURCE: tmp_column})
+	combo_df = combo_df.rename(columns={constants.SOURCE: tmp_column})
 	combo_df[constants.SOURCE] = df[tmp_column].apply(lambda v: hash_func[v])
 	del combo_df[tmp_column]
 	return combo_df
