@@ -20,7 +20,7 @@ def condense_df(df, time_chunk=30):
 def create_hash_function(df):
 	u_vals = df[constants.SOURCE].unique()
 	hash_func_dict = {}
-	for i,v in enumerate(uvals):
+	for i,v in enumerate(u_vals):
 		hash_func_dict[v] = i
 	return hash_func_dict
 
