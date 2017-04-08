@@ -17,44 +17,42 @@ from joblib import Parallel, delayed
 
 class TowersPartitioned(object):
 	"""Represents Operations on a directory of csv for each tower"""
-	def __init__(self, towers_dir, destination_path):
-		self.directory = towers_dir
+	def __init__(self, condensed_df_path, destination_path):
+		self.condensed_path = condensed_df_path
 		self.destination_path = destination_path
-		self.all_dates = sorted(np.array(os.listdir(self.directory)))
 
 	def pair_users_from_towers(self, lower=0, upper=0, enc_window=10, threshold=float('inf'), thresh_compare=operator.lt):
-		if upper == 0: upper = len(self.all_dates)
 		print 'beginning pairing users...'
-		for date_file in self.all_dates[lower:upper]:
-			print date_file, 'in :', self.directory
-			date_path = os.path.join(self.directory, date_file)
-			date_dir = create_date_dir(self.destination_path, date_file)
-			print 'loading data from:', date_file
-			date_data = pd.read_csv(date_path).sort_values([constants.MIN_TIME])
-			data_grouped = date_data.groupby(constants.TOWER_NUMBER)
-			towers_sorted = data_grouped.size().sort_values()
+		condensed_data = pd.read_csv(self.condensed_path).sort_values([constants.MIN_TIME])
+		all_dates = condensed_data[constants.DAY].unique()
+		if upper == 0: upper = len(all_dates)
+		for day in all_dates[lower:upper]:
+			day_data = condensed_data[condensed_data[constants.DAY]==day]
+			date_dir = create_date_dir(self.destination_path, day)
+			tower_grouped = day_data.groupby(constants.TOWER_NUMBER)
+			towers_sorted = tower_grouped.size().sort_values()
 			for tower_id, size in towers_sorted.iteritems():
 				if thresh_compare(size,threshold):
 					print 'current tower_id:', tower_id
 					print 'current tower_size:', size
-					tower_df = data_grouped.get_group(tower_id)
+					tower_df = tower_grouped.get_group(tower_id)
 					print 'beginning pairing for tower:', tower_id
 					pair_users_single_file(date_dir, tower_df, tower_id, enc_window)
-			del date_data
+		return True
 
-	def pair_users_specific_tower(self, tower_id, lower=0, upper=0, enc_window=10):
-		if upper == 0: upper = len(self.all_dates)
-		print 'beginning pairing users...'
-		for date_file in self.all_dates[lower:upper]:
-			print date_file, 'in :', self.directory
-			date_path = os.path.join(self.directory, date_file)
-			date_dir = create_date_dir(self.destination_path, date_file)
-			print 'loading data from:', date_file
-			date_data = pd.read_csv(date_path).sort_values([constants.MIN_TIME])
-			print 'beginning pairing for tower:', tower_id
-			tower_df = date_data[date_data[constants.TOWER_NUMBER] == tower_id]
-			pair_users_single_file(date_dir, tower_df, tower_id, enc_window)
-			del date_data
+	# def pair_users_specific_tower(self, tower_id, lower=0, upper=0, enc_window=10):
+	# 	if upper == 0: upper = len(self.all_dates)
+	# 	print 'beginning pairing users...'
+	# 	for date_file in self.all_dates[lower:upper]:
+	# 		print date_file, 'in :', self.directory
+	# 		date_path = os.path.join(self.directory, date_file)
+	# 		date_dir = create_date_dir(self.destination_path, date_file)
+	# 		print 'loading data from:', date_file
+	# 		date_data = pd.read_csv(date_path).sort_values([constants.MIN_TIME])
+	# 		print 'beginning pairing for tower:', tower_id
+	# 		tower_df = date_data[date_data[constants.TOWER_NUMBER] == tower_id]
+	# 		pair_users_single_file(date_dir, tower_df, tower_id, enc_window)
+	# 		del date_data
 
 
 
@@ -162,9 +160,9 @@ def only_day_second(tstamp):
 	return tstamp[8:10] + ' ' + str(60*int(tstamp[11:13])*int(tstamp[14:16]))
 
 
-def create_date_dir(destination_path, date_csv):
-	date = date_csv.split('.')[0]
-	date_path = os.path.join(destination_path, date)
+def create_date_dir(destination_path, date):
+	date_dir = 'cdr_day_' + str(date)
+	date_path = os.path.join(destination_path, date_dir)
 	if not os.path.isdir(date_path):
 		os.makedirs(date_path)
 	return date_path
