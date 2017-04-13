@@ -1,4 +1,5 @@
 import cPickle
+import json
 
 class GraphLite(object):
 	def __init__(self, base_dict={}):
@@ -32,4 +33,9 @@ class GraphLite(object):
 
 	def store_object(self, dest_path):
 		with open(dest_path, 'wb') as outfile:
-			cPickle.dump(self.base_dict, outfile)
+			print 'storing JSON in:', dest_path
+			json.dump(self.base_dict, outfile)
+
+def load_object(path):
+	with open(path, 'rb') as infile:
+		return GraphLite(base_dict=json.load(infile))

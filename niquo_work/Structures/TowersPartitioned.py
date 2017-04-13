@@ -57,7 +57,8 @@ def pair_users_single_file(destination_path, single_tower_data, tower_id, enc_wi
 	window_secs = enc_window*60
 	enc_delta = round((enc_window/float(60)), 5)
 	total_values = len(single_tower_data)
-	encs_obj = nx.MultiGraph()
+	# encs_obj = nx.MultiGraph()
+	encs_obj = gl.GraphLite()
 	all_time_chunks = single_tower_data[constants.TIME_BLOCK].unique()
 	usable_blocks = set(all_time_chunks)
 	i = 1
@@ -136,15 +137,14 @@ def add_current_time_chunk_network(encs_obj, encountered_df):
 
 def store_encounters(encs_obj, destination_path, tower_id):
 	tower_file_prefix = 'cdr_tower_'
-	p_suffix = '.p'
+	p_suffix = '.json'
 	tower_filename = tower_file_prefix + str(tower_id) + p_suffix
 	tower_path = os.path.join(destination_path, tower_filename)
-	print 'storing data in:', tower_path
-	# encs_obj.store_object(tower_path)
-	with open(tower_path, 'wb') as outfile:
-		cPickle.dump(encs_obj, outfile)
-		del encs_obj
-		print 'deleted object for tower_id:', tower_id
+	encs_obj.store_object(tower_path)
+	# with open(tower_path, 'wb') as outfile:
+	# 	cPickle.dump(encs_obj, outfile)
+	del encs_obj
+	print 'deleted object for tower_id:', tower_id
 	return True
 
 
