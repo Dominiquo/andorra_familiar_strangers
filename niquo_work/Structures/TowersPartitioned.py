@@ -33,27 +33,23 @@ class TowersPartitioned(object):
 			towers_sorted = tower_grouped.size().sort_values()
 			for tower_id, size in towers_sorted.iteritems():
 				if thresh_compare(size,threshold):
-					print 'current tower_id:', tower_id
+					print 'current tower_id:', tower_id, 'of ', len(towers_sorted), 'total towers'
 					print 'current tower_size:', size
 					tower_df = tower_grouped.get_group(tower_id)
 					print 'beginning pairing for tower:', tower_id
 					pair_users_single_file(date_dir, tower_df, tower_id, enc_window)
 		return True
 
-	# def pair_users_specific_tower(self, tower_id, lower=0, upper=0, enc_window=10):
-	# 	if upper == 0: upper = len(self.all_dates)
-	# 	print 'beginning pairing users...'
-	# 	for date_file in self.all_dates[lower:upper]:
-	# 		print date_file, 'in :', self.directory
-	# 		date_path = os.path.join(self.directory, date_file)
-	# 		date_dir = create_date_dir(self.destination_path, date_file)
-	# 		print 'loading data from:', date_file
-	# 		date_data = pd.read_csv(date_path).sort_values([constants.MIN_TIME])
-	# 		print 'beginning pairing for tower:', tower_id
-	# 		tower_df = date_data[date_data[constants.TOWER_NUMBER] == tower_id]
-	# 		pair_users_single_file(date_dir, tower_df, tower_id, enc_window)
-	# 		del date_data
-
+	def pair_users_specific_tower(self, tower_id, day, enc_window=10):
+		print 'beginning pairing users...'
+		date_dir = create_date_dir(self.destination_path, day)
+		condensed_data = pd.read_csv(self.condensed_path).sort_values([constants.MIN_TIME])
+		day_data = condensed_data[condensed_data[constants.DAY]==day]
+		tower_grouped = day_data.groupby(constants.TOWER_NUMBER)
+		tower_df = tower_grouped.get_group(tower_id)
+		print 'beginning pairing for tower:', tower_id
+		pair_users_single_file(date_dir, tower_df, tower_id, enc_window)
+		return True
 
 
 # PARALLEL FUNCTIONS THAT CAN'T BE A PART OF THE CLASS
