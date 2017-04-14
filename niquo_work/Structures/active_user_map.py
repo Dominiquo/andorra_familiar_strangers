@@ -11,9 +11,10 @@ from datetime import datetime
 import time
 
 
-def get_active_users(data_path, lower_range=0, upper_range=float('inf')):
+def get_active_users(data_path, lower_range=0, upper_range=float('inf'), date_lower=1, date_upper=31):
 	print 'loading coompressed data...'
 	df = pd.read_csv(data_path)
+	df = df[df[constants.DAY].between(date_lower, date_upper)]
 	print 'grouping by SOURCE'
 	grouped = df.groupby(constants.SOURCE).size().sort_values()
 	print 'getting valid values'
@@ -21,13 +22,24 @@ def get_active_users(data_path, lower_range=0, upper_range=float('inf')):
 	return set(valid_values.index)
 
 
-def reduce_size(graph_path, data_path, lower_range, upper_range, destination_path):
+def reduce_size(graph_path, active_users):
 	with open(graph_path, 'rb') as infile:
 		print 'loading graph object'
 		G = cPickle.load(infile)
-	active_users = get_active_users(data_path, lower_range, upper_range)
-	print 'removing nodes...'
+	print 'Found', len(active_users), 'active users. '
+	print 'removing unactive nodes...'
 	for node in G.nodes():
 		if node not in active_users:
 			G.remove_node(node)
 	return G
+
+
+def make_smaller_graphs(data_path, graphs_dir, dest_dir, lower_range, upper_range, date_lower, date_upper):
+	active_users = get_active_users(data_path, lower_range, upper_range, date_lower, date_upper)
+	for graph_file in os.listdir(graphs_dir):
+		dest_path = os.path.join(dest_dir, graph_file)
+		graph_path = os.path.join(graphs_dir, graph_file)
+		smaller_g = reduce_size(graph_path, active_users)
+		with open(graph_path, 'wb') as outfile:
+			cPickle.dump(smaller_g, outfile)
+	return True
