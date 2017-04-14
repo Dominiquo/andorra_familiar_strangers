@@ -30,11 +30,35 @@ class GraphLite(object):
 			for k,v in new_dict.iteritems():
 				current_dict[k].append(v)
 
+	def add_source_dict(self, other_source, other_source_dict):
+		if other_source in self.base_dict:
+			current_source_dict = self.base_dict[other_source]
+			self.base_dict = combine_graph_low(current_source_dict, other_source_dict)
+		else:
+			self.base_dict[other_source] = other_source_dict
+
 
 	def store_object(self, dest_path):
 		with open(dest_path, 'wb') as outfile:
 			print 'storing JSON in:', dest_path
 			json.dump(self.base_dict, outfile)
+
+def combine_graphs(graph, other_graph):
+	for source, sourc_dict in other_graph.base_dict.iteritems():
+		graph.add_source_dict(source, sourc_dict)
+	return graph
+
+
+def combine_graph_low(current_dict, other_dict):
+		intersecting_keys = current_dict.viewkeys() & other_dict.viewkeys()
+		for key, value in other_dict.iteritems():
+			if key in intersecting_keys:
+				for k,v in new_dict.iteritems():
+					current_dict[k].append(v)
+			else:
+				current_dict[key] = value
+		return True
+
 
 def load_object(path):
 	with open(path, 'rb') as infile:

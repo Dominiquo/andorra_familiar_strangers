@@ -141,8 +141,6 @@ def store_encounters(encs_obj, destination_path, tower_id):
 	tower_filename = tower_file_prefix + str(tower_id) + p_suffix
 	tower_path = os.path.join(destination_path, tower_filename)
 	encs_obj.store_object(tower_path)
-	# with open(tower_path, 'wb') as outfile:
-	# 	cPickle.dump(encs_obj, outfile)
 	del encs_obj
 	print 'deleted object for tower_id:', tower_id
 	return True

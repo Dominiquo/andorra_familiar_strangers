@@ -82,8 +82,8 @@ def cut_witness_file(file_name):
 
 if __name__ == '__main__':
     
-    #raw_data = '/home/data_repository/datasets/telecom/cdr/201607-AndorraTelecom-CDR.csv'
+    raw_data = '/home/data_repository/datasets/telecom/cdr/201607-AndorraTelecom-CDR.csv'
 #    raw_data = '/home/data_repository/datasets/telecom/cdr/201606-AndorraTelecom-CDR.csv'
-    raw_data = '/home/data_repository/datasets/telecom/cdr/201605-AndorraTelecom-CDR.csv'
+    # raw_data = '/home/data_repository/datasets/telecom/cdr/201605-AndorraTelecom-CDR.csv'
     create_voicemail_dict(raw_data, writing = False)
  #   cut_witness_file('filtered' + raw_data.split('/')[-1])
