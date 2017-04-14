@@ -56,10 +56,9 @@ def quick_script_generate():
 			if d_dir > start_dir:
 				graphs_dir = os.path.join(dates_dir, d_dir)
 				range_dest_dir = os.path.join(dest_dir, d_dir + '_' + str(lower) + '_' + str(upper))
-				# make_smaller_graphs(data_path, graphs_dir, range_dest_dir, lower, upper, 1, 31)
-				print graphs_dir
-				print range_dest_dir
+				make_smaller_graphs(data_path, graphs_dir, range_dest_dir, lower, upper, 1, 31)
 	return True
+
 
 
 
