@@ -53,10 +53,13 @@ def quick_script_generate():
 	dest_dir = '../niquo_data/small_range/tower_encounters_REDUCED'
 	range_set = [(5,10),(11,20),(21,50)]
 	for lower, upper in range_set:
+		print 'current range', lower, upper
 		for d_dir in os.listdir(dates_dir):
 			if (d_dir > start_dir) and ( d_dir != 'cdr_date_2016_07_24'):
 				graphs_dir = os.path.join(dates_dir, d_dir)
+				print 'graphs dir:', graphs_dir
 				range_dest_dir = utils.create_dir(dest_dir,  d_dir + '_' + str(lower) + '_' + str(upper))
+				print 'dest dir', range_dest_dir
 				make_smaller_graphs(data_path, graphs_dir, range_dest_dir, lower, upper, 1, 31)
 	return True
 
