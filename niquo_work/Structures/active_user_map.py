@@ -48,7 +48,7 @@ def make_smaller_graphs(data_path, graphs_dir, dest_dir, lower_range, upper_rang
 def quick_script_generate():
 	start_dir = 'cdr_date_2016_07_24'
 	other = 'cdr_day_28'
-	dates_dir = '../niquo_data/small_range/tower_encounters_OLD'
+	dates_dir = '../niquo_data/small_range/tower_encounters'
 	data_path = '../niquo_data/small_range/condensed_data/cdr_data_1_31_time_10.csv'
 	dest_dir = '../niquo_data/small_range/tower_encounters_REDUCED'
 	range_set = [(5,10),(11,20),(21,50)]
