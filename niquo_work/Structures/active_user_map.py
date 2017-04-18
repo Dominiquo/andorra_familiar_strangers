@@ -40,14 +40,14 @@ def make_smaller_graphs(data_path, graphs_dir, dest_dir, lower_range, upper_rang
 		dest_path = os.path.join(dest_dir, graph_file)
 		graph_path = os.path.join(graphs_dir, graph_file)
 		smaller_g = reduce_size(graph_path, active_users)
-		with open(dest_dir, 'wb') as outfile:
+		with open(dest_path, 'wb') as outfile:
 			cPickle.dump(smaller_g, outfile)
 	return True
 
 
 def quick_script_generate():
 	start_dir = 'cdr_date_2016_07_24'
-	other = 'cdr_date_2016_07_28'
+	other = 'cdr_day_28'
 	dates_dir = '../niquo_data/small_range/tower_encounters_OLD'
 	data_path = '../niquo_data/small_range/condensed_data/cdr_data_1_31_time_10.csv'
 	dest_dir = '../niquo_data/small_range/tower_encounters_REDUCED'
