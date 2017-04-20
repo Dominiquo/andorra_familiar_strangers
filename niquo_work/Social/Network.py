@@ -5,7 +5,7 @@ import os
 import csv
 
 def create_graph(partitioned_dir, store_path, store=True, sim=False):
-	all_days = os.path.listdir(partitioned_dir)
+	all_days = os.listdir(partitioned_dir)
 	print 'creating initial graph object'
 	friend_graph = nx.Graph()
 	for day_file in all_days:
