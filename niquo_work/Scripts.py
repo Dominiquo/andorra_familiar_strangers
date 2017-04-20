@@ -8,3 +8,6 @@ def create_net():
 	part_path = '../niquo_data/spring_data/partitioned_data/'
 	dest_path = '../niquo_data/small_range/friend_net_July_part_data.p'
 	net.create_graph(part_path, dest_path)
+	return True
+
+create_net()
