@@ -1,19 +1,21 @@
 import networkx as nx
-import RawCRDData as raw
-import file_constants as constants
-import filter_voicemail as fv
+import Misc.file_constants as constants
 import cPickle
 import csv
 
 def create_graph(partitioned_dir, store_path, store=True, sim=False):
 	all_days = os.path.listdir(partitioned_dir)
+	print 'creating initial graph object'
 	friend_graph = nx.Graph()
 	for day_file in all_days:
 		day_path = os.path.join(partitioned_dir, day_file)
+		print 'reading datafram for current file:', day_path
 		df = pd.read_csv(day_path)
+		print 'adding edges to graph'
 		for source, dest in df[[constants.SOURCE, constants.DEST]].values:
 			friend_graph.add_edge(source, dest)
 	if store:
+		print 'storing graph at:', store_path
 		with open(store_path, 'wb') as outfile:
 			cPickle.dump(friend_graph,outfile)
 
