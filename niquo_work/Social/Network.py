@@ -5,21 +5,18 @@ import filter_voicemail as fv
 import cPickle
 import csv
 
-def create_graph(csv_file,store_path, sim=False):
-	csvData = raw.RawCDRCSV(csv_file)
+def create_graph(partitioned_dir, store_path, store=True, sim=False):
+	all_days = os.path.listdir(partitioned_dir)
 	friend_graph = nx.Graph()
-	if not sim:
-		caller_index = 0
-		receiver_index = 16
-	else:
-		caller_index = 0
-		receiver_index = -1
+	for day_file in all_days:
+		day_path = os.path.join(partitioned_dir, day_file)
+		df = pd.read_csv(day_path)
+		for source, dest in df[[constants.SOURCE, constants.DEST]].values:
+			friend_graph.add_edge(source, dest)
+	if store:
+		with open(store_path, 'wb') as outfile:
+			cPickle.dump(friend_graph,outfile)
 
-	for row in csvData.rows_generator():
-		caller = row[caller_index]
-		receiver = row[receiver_index]
-		friend_graph.add_edge(caller,receiver)
-	cPickle.dump(friend_graph, open(store_path,'wb'))
 	return True
 
 def clean_graph(network_object_path, cleaned_path, threshold=1000):
