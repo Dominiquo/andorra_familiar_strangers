@@ -1,6 +1,7 @@
 import networkx as nx
 import Misc.file_constants as constants
 import cPickle
+import os
 import csv
 
 def create_graph(partitioned_dir, store_path, store=True, sim=False):
