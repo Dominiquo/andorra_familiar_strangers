@@ -31,8 +31,8 @@ def condense_data(root_path, partitioned_data_path, chunk_size=10, just_path=Fal
 	if just_path:
 		print 'skipping operation to just return path.'
 		return destination_path
-	RD.main(partitioned_data_path, destination_path, chunk_size=chunk_size)
-	return destination_path
+	condensed_file_path = RD.main(partitioned_data_path, destination_path, chunk_size=chunk_size)
+	return condensed_file_path
 
 
 def find_encounters(root_path, condensed_data_path, enc_window=10, just_path=False):
