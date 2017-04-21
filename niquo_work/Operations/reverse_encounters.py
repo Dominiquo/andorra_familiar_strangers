@@ -9,7 +9,7 @@ USE_MONTHS = ['201507-AndorraTelecom-CDR.csv',
  '201511-AndorraTelecom-CDR.csv',
  '201512-AndorraTelecom-CDR.csv']
 
- DATA_DIR = '/home/niquo/niquo_data'
+DATA_DIR = '/home/niquo/niquo_data'
 
 
 def get_new_friend_set(new_friend_csv):
