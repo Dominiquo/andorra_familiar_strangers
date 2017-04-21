@@ -24,7 +24,7 @@ def create_hash_function(df):
 		hash_func_dict[v] = i
 	return hash_func_dict
 
-def create_df_dates(partitioned_directory, chunk_size=30):
+def create_df_dates(partitioned_directory, dump_dir, chunk_size=30):
 	date_files = sorted(os.listdir(partitioned_directory))
 	all_dfs = []
 	tmp_column = 'TMP'
@@ -38,6 +38,10 @@ def create_df_dates(partitioned_directory, chunk_size=30):
 	combo_df = pd.concat(all_dfs)
 	print 'creating hash function from values...'
 	hash_func = create_hash_function(combo_df)
+
+	with open(dump_dir, 'wb') as outfile:
+		cPickle.dump(hash_func, outfile)
+
 	combo_df = combo_df.rename(columns={constants.SOURCE: tmp_column})
 	combo_df[constants.SOURCE] = combo_df[tmp_column].apply(lambda v: hash_func[v])
 	del combo_df[tmp_column]
