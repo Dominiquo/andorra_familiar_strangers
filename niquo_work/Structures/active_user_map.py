@@ -2,6 +2,7 @@ import csv
 import os
 import pandas as pd
 import Misc.getMaps as Maps
+import networkx as nx
 import Misc.file_constants as constants
 import Misc.utils as utils
 import reduce_density as RD
@@ -28,6 +29,25 @@ def get_active_users(data_path, lower_range=0, upper_range=float('inf'), date_lo
 
 	#################
 	return set(valid_values.index)
+
+
+def change_labels_dir(dir_name, dest_folder):
+	with open('/home/niquo/niquo_data/small_range/user_hash_map.p', 'rb') as infile:
+		user_key_map = cPickle.load(infile)
+	reverse_map = {v:k for k,v in user_key_map.iteritems()}
+	for map_file in os.listdir(dir_name):
+		map_path = os.path.join(dir_name, map_file)
+		dest_dir = os.path.join(dir_name, os.path.join(dest_folder, map_file))
+		transform_maps(map_path, reverse_map, dest_path)
+	return True
+
+def transform_map(map_path, reverse_map, dest_path):
+	with open(map_path, 'rb') as infile:
+		G = cPickle.load(infile)
+	new_G = nx.relabel_nodes(G, reverse_map)
+	with open(dest_path, 'wb') as outfile:
+		cPickle.dump(new_G, outfile)
+	return True
 
 
 def reduce_size(graph_path, active_users):
