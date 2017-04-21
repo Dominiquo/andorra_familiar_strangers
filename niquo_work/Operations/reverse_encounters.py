@@ -2,6 +2,7 @@ import pandas as pd
 import Misc.file_constants as constants
 import Misc.utils as utils
 import Main
+import os
 
 
 USE_MONTHS = ['201507-AndorraTelecom-CDR.csv',
