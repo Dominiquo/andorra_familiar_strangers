@@ -4,6 +4,7 @@ import numpy as np
 import Misc.file_constants as constants
 import Misc.utils as utils
 from datetime import datetime
+import cPickle
 
 
 def condense_df(df, time_chunk=30):
@@ -38,13 +39,18 @@ def create_df_dates(partitioned_directory, dump_dir, chunk_size=30):
 	combo_df = pd.concat(all_dfs)
 	print 'creating hash function from values...'
 	hash_func = create_hash_function(combo_df)
+	try:
+		with open(dump_dir, 'wb') as outfile:
+			cPickle.dump(hash_func, outfile)
 
-	with open(dump_dir, 'wb') as outfile:
-		cPickle.dump(hash_func, outfile)
+		combo_df = combo_df.rename(columns={constants.SOURCE: tmp_column})
+		combo_df[constants.SOURCE] = combo_df[tmp_column].apply(lambda v: hash_func[v])
+		del combo_df[tmp_column]
+		
+	except Exception as e:
+		print e
+		return hash_func
 
-	combo_df = combo_df.rename(columns={constants.SOURCE: tmp_column})
-	combo_df[constants.SOURCE] = combo_df[tmp_column].apply(lambda v: hash_func[v])
-	del combo_df[tmp_column]
 	return combo_df
 
 
