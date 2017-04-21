@@ -60,7 +60,7 @@ def quick_script_generate():
 				print 'graphs dir:', graphs_dir
 				final_dest_dir = utils.create_dir(range_dir,  d_dir)
 				
-				make_smaller_graphs(data_path, graphs_dir, range_dest_dir, lower, upper, 24, 31)
+				make_smaller_graphs(data_path, graphs_dir, final_dest_dir, lower, upper, 24, 31)
 	return True
 
 
