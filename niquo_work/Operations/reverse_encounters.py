@@ -14,6 +14,6 @@ def get_new_friend_set(new_friend_csv):
 	first_col = friend_df.columns[0]
 	split_to_set = lambda tied_val: set(tied_val.split('_'))
 	user_set = set([])
-	for val in first_col.values:
+	for val in friend_df[first_col].values:
 		user_set = user_set.union(split_to_set(val))
 	return user_set
