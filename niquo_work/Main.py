@@ -14,7 +14,7 @@ def Main(root_path = '../niquo_data/spring_data/', all_data_path=constants.JULY_
 	return True
 
 
-def partition_data(root_path, data_path, delimiter=';', filter_func=utils.remove_foreigners):
+def partition_data(root_path, data_path, delimiter=',', filter_func=utils.remove_foreigners):
 	destination_path = utils.create_dir(root_path, 'partitioned_data')
 	rawData = raw.RawCDRCSV(data_path)
 	print 'beginning filtering on data from:', data_path
