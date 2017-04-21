@@ -29,8 +29,8 @@ def partition_data(root_path, data_path, delimiter=',', filter_func=utils.remove
 def condense_data(root_path, partitioned_data_path, chunk_size=10, just_path=False):
 	destination_path = utils.create_dir(root_path, 'condensed_data')
 	if just_path:
-		print 'skipping operation to just return path.'
-		return os.path.join(destination_path, os.listdir(destination_path)[0])
+		print 'skipping operation to just return directory path.'
+		return destination_path
 	condensed_file_path = RD.main(partitioned_data_path, destination_path, chunk_size=chunk_size)
 	return condensed_file_path
 

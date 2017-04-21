@@ -5,12 +5,12 @@ import Main
 import os
 
 
-USE_MONTHS = ['201507-AndorraTelecom-CDR.csv']
- # '201508-AndorraTelecom-CDR.csv',
- # '201509-AndorraTelecom-CDR.csv',
- # '201510-AndorraTelecom-CDR.csv',
- # '201511-AndorraTelecom-CDR.csv',
- # '201512-AndorraTelecom-CDR.csv']
+USE_MONTHS = ['201507-AndorraTelecom-CDR.csv',
+ '201508-AndorraTelecom-CDR.csv',
+ '201509-AndorraTelecom-CDR.csv',
+ '201510-AndorraTelecom-CDR.csv',
+ '201511-AndorraTelecom-CDR.csv',
+ '201512-AndorraTelecom-CDR.csv']
 
 
 def get_new_friend_set(new_friend_csv):
@@ -40,9 +40,9 @@ def create_maps_prev_six_months():
 		csv_month = os.path.join(constants.FILTERED_MONTHS, month)
 		print 'current data path:', csv_month
 		print 'partitioning data...'
-		partitioned_data_path = Main.partition_data(root_path, csv_month, filter_func=month_filter, just_path=True)
+		partitioned_data_path = Main.partition_data(root_path, csv_month, filter_func=month_filter)
 		print 'condensing data...'
-		condense_data_path = Main.condense_data(root_path, partitioned_data_path, chunk_size=10,  just_path=True)
+		condense_data_path = Main.condense_data(root_path, partitioned_data_path, chunk_size=10)
 		print 'finding encoutners...'
 		encs_path = Main.find_encounters(root_path, condense_data_path, enc_window=chunk_size)
 
