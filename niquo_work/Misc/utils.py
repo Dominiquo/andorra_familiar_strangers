@@ -68,5 +68,4 @@ def create_dir(root_path, folder_name):
 	dir_path = os.path.join(root_path, folder_name)
 	if not os.path.isdir(dir_path):
 		os.makedirs(dir_path)
-		print 'list of values in here:',os.listdir(dir_path)
 	return dir_path

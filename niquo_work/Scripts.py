@@ -3,10 +3,10 @@ import Social.Network as net
 import Operations.reverse_encounters as re
 
 
-# re.create_maps_prev_six_months()
+re.create_maps_prev_six_months()
 
 
-aum.quick_script_generate()
+# aum.quick_script_generate()
 
 
 # def create_net():

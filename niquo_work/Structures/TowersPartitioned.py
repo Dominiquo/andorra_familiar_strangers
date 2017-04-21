@@ -23,6 +23,7 @@ class TowersPartitioned(object):
 
 	def pair_users_from_towers(self, lower=0, upper=0, enc_window=10, threshold=float('inf'), thresh_compare=operator.lt):
 		print 'beginning pairing users...'
+		print 'condensed_data from:', self.condensed_path
 		condensed_data = pd.read_csv(self.condensed_path).sort_values([constants.MIN_TIME])
 		all_dates = condensed_data[constants.DAY].unique()
 		if upper == 0: upper = len(all_dates)
