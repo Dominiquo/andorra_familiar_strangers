@@ -31,22 +31,20 @@ def get_active_users(data_path, lower_range=0, upper_range=float('inf'), date_lo
 	return set(valid_values.index)
 
 
-def change_labels_dir(dir_name, dest_folder):
+def change_labels_dir(dir_name):
 	with open('/home/niquo/niquo_data/small_range/user_hash_map.p', 'rb') as infile:
 		user_key_map = cPickle.load(infile)
 	reverse_map = {v:k for k,v in user_key_map.iteritems()}
 	for map_file in os.listdir(dir_name):
 		map_path = os.path.join(dir_name, map_file)
-		dest_dir = utils.create_dir(dir_name, dest_folder)
-		dest_path = os.path.join(dest_dir, map_file)
-		transform_map(map_path, reverse_map, dest_path)
+		transform_map(map_path, reverse_map)
 	return True
 
-def transform_map(map_path, reverse_map, dest_path):
+def transform_map(map_path, reverse_map):
 	with open(map_path, 'rb') as infile:
 		G = cPickle.load(infile)
 	new_G = nx.relabel_nodes(G, reverse_map)
-	with open(dest_path, 'wb') as outfile:
+	with open(map_path, 'wb') as outfile:
 		cPickle.dump(new_G, outfile)
 	return True
 
