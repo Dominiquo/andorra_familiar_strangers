@@ -20,8 +20,8 @@ def get_active_users(data_path, lower_range=0, upper_range=float('inf'), date_lo
 	print 'getting valid values'
 	valid_values = grouped[grouped.between(lower_range, upper_range, inclusive=True)]
 	#################
-
-	user_key_map = cPickle.load('/home/niquo/niquo_data/small_range/user_hash_map.p')
+	with open('/home/niquo/niquo_data/small_range/user_hash_map.p', 'rb') as infile:
+		user_key_map = cPickle.load(infile)
 	reverse_map = {v:k for k,v in user_key_map.iteritems()}
 	val_keys = valid_values.index
 	return set([reverse_map[v] for v in val_keys])
