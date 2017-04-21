@@ -52,6 +52,7 @@ class InteractionMap(object):
 
 		if delete_old:
 			self.delete_old_date_maps(day_path)
+		return master_path
 
 
 	def get_day_directories(self, tower_encs_root):
@@ -114,9 +115,10 @@ def parse_tower_name(tower_file_string):
 
 
 
-def main():
-	return True
-	# imap = InteractionMaps()
+def main(encounters_path):
+	imap = InteractionMaps(encounters_path)
+	return imap.combine_all_graphs(imap.directory)
+	
 
 if __name__ == '__main__':
     main()

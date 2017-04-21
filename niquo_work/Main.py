@@ -3,6 +3,7 @@ import cPickle
 import Structures.RawCRDData as raw
 import Structures.TowersPartitioned as TP
 import Structures.reduce_density as RD
+import Structures.InteractionMap as imap
 import Misc.file_constants as constants
 import Misc.utils as utils
 
@@ -43,6 +44,9 @@ def find_encounters(root_path, condensed_data_path, enc_window=10, just_path=Fal
 	tpart = TP.TowersPartitioned(condensed_data_path, destination_path)
 	tpart.pair_users_from_towers(enc_window=enc_window)
 	return destination_path
+
+def combine_enc_maps(tower_encounters_path):
+	return imap.Main(tower_encounters)
 
 
 
