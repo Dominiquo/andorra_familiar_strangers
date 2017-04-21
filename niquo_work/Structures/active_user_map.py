@@ -38,7 +38,7 @@ def change_labels_dir(dir_name, dest_folder):
 	for map_file in os.listdir(dir_name):
 		map_path = os.path.join(dir_name, map_file)
 		dest_dir = os.path.join(dir_name, os.path.join(dest_folder, map_file))
-		transform_maps(map_path, reverse_map, dest_path)
+		transform_map(map_path, reverse_map, dest_path)
 	return True
 
 def transform_map(map_path, reverse_map, dest_path):
