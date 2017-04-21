@@ -19,6 +19,14 @@ def get_active_users(data_path, lower_range=0, upper_range=float('inf'), date_lo
 	grouped = df.groupby(constants.SOURCE).size().sort_values()
 	print 'getting valid values'
 	valid_values = grouped[grouped.between(lower_range, upper_range, inclusive=True)]
+	#################
+
+	user_key_map = cPickle.load('/home/niquo/niquo_data/small_range/user_hash_map.p')
+	reverse_map = {v:k for k,v in user_key_map.iteritems()}
+	val_keys = valid_values.index
+	return set([reverse_map[v] for v in val_keys])
+
+	#################
 	return set(valid_values.index)
 
 
@@ -46,7 +54,7 @@ def make_smaller_graphs(data_path, graphs_dir, dest_dir, lower_range, upper_rang
 
 
 def quick_script_generate():
-	start_dir = 'cdr_date_2016_07_24'
+	dates_use = ['cdr_date_2016_07_25', 'cdr_date_2016_07_26', 'cdr_date_2016_07_27', 'cdr_date_2016_07_29', 'cdr_date_2016_07_30', 'cdr_date_2016_07_31']
 	dates_dir = '../niquo_data/small_range/tower_encounters'
 	data_path = '../niquo_data/small_range/condensed_data/cdr_data_1_31_time_10.csv'
 	dest_dir = '../niquo_data/small_range/tower_encounters_REDUCED_V2'
@@ -54,15 +62,12 @@ def quick_script_generate():
 	for lower, upper in range_set:
 		print 'current range', lower, upper
 		range_dir = utils.create_dir(dest_dir, 'counts_' + str(lower) + '_' + str(upper))
-		for d_dir in os.listdir(dates_dir):
-			if (d_dir > start_dir):
-				graphs_dir = os.path.join(dates_dir, d_dir)
-				print 'graphs dir:', graphs_dir
-				final_dest_dir = utils.create_dir(range_dir,  d_dir)
-				
-				make_smaller_graphs(data_path, graphs_dir, final_dest_dir, lower, upper, 24, 31)
+		for d_dir in dates_use:
+			graphs_dir = os.path.join(dates_dir, d_dir)
+			print 'graphs dir:', graphs_dir
+			final_dest_dir = utils.create_dir(range_dir,  d_dir)
+			
+			make_smaller_graphs(data_path, graphs_dir, final_dest_dir, lower, upper, 24, 31)
 	return True
-
-
 
 
