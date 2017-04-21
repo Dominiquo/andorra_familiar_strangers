@@ -46,7 +46,7 @@ def find_encounters(root_path, condensed_data_path, enc_window=10, just_path=Fal
 	return destination_path
 
 def combine_enc_maps(tower_encounters_path):
-	return imap.main(tower_encounters)
+	return imap.main(tower_encounters_path)
 
 
 
