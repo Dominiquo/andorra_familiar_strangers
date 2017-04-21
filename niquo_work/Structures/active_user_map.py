@@ -59,7 +59,7 @@ def quick_script_generate():
 				graphs_dir = os.path.join(dates_dir, d_dir)
 				print 'graphs dir:', graphs_dir
 				final_dest_dir = utils.create_dir(range_dir,  d_dir)
-				print 'dest dir', range_dest_dir
+				
 				make_smaller_graphs(data_path, graphs_dir, range_dest_dir, lower, upper, 24, 31)
 	return True
 
