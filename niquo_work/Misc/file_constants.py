@@ -1,9 +1,11 @@
-JULY_DATA_ALL = '../../../data_repository/datasets/telecom/cdr/201607-AndorraTelecom-CDR.csv'
-JULY_DATA_FILTERED = '../niquo_data/source_data/filtered201607-AndorraTelecom-CDR.csv'
-TOWERS_ID = '../../workspace/yleng/towers1.csv'
-TOWERS_TYPE = '../../../niquo_data/20151120-towersContainerTrip.csv'
-FILTERED_PARTITIONED = '../../niquo_data/filtered_data/partitioned_towers/'
+JULY_DATA_ALL = '/home/data_repository//datasets/telecom/cdr/201607-AndorraTelecom-CDR.csv'
+JULY_DATA_FILTERED = '/home/niquo/niquo_data/source_data/filtered201607-AndorraTelecom-CDR.csv'
+TOWERS_ID = '/home/workspace/yleng/towers1.csv'
+TOWERS_TYPE = '/home/niquo/niquo_data/20151120-towersContainerTrip.csv'
+FILTERED_PARTITIONED = '/home/niquo/niquo_data/filtered_data/partitioned_towers/'
 COMM_DATA  = 'S-CDR'
+FIRST_CALL = '/home/workspace/yleng/first_call_2016_largerThan10.csv'
+FILTERED_MONTHS = '/home/workspace/yleng/filtered'
 
 
 
