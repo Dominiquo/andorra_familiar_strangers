@@ -4,8 +4,6 @@ import Operations.reverse_encounters as re
 import Main
 
 
-Main.combine_enc_maps('/home/niquo/niquo_data/201507-AndorraTelecom-CDR/tower_encounters/')
-
 # re.create_maps_prev_six_months()
 # aum.quick_script_generate()
 
@@ -16,3 +14,17 @@ Main.combine_enc_maps('/home/niquo/niquo_data/201507-AndorraTelecom-CDR/tower_en
 # 	return True
 
 # create_net()
+
+
+def combine_mult_encs_paths():
+	encs_paths = ['/home/niquo/niquo_data/small_range/tower_encounters_REDUCED_V2/counts_11_20/',
+	'/home/niquo/niquo_data/small_range/tower_encounters_REDUCED_V2/counts_21_50/',
+	'/home/niquo/niquo_data/201507-AndorraTelecom-CDR/tower_encounters/',
+	'/home/niquo/niquo_data/201508-AndorraTelecom-CDR/tower_encounters/']
+	for tpath in encs_paths:
+		print '*****************'
+		print 'about to start combining graphs for:', tpath
+		Main.combine_enc_maps(tpath)
+	return True
+
+combine_enc_maps()
