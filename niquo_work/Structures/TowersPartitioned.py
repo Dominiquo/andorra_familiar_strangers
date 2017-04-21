@@ -34,7 +34,7 @@ class TowersPartitioned(object):
 			towers_sorted = tower_grouped.size().sort_values()
 			for tower_id, size in towers_sorted.iteritems():
 				if thresh_compare(size,threshold):
-					print 'current tower_id:', tower_id, 'of ', len(towers_sorted), 'total towers'
+					print 'current tower_id:', tower_id, 'with ', len(towers_sorted), 'total towers'
 					print 'current tower_size:', size
 					tower_df = tower_grouped.get_group(tower_id)
 					print 'beginning pairing for tower:', tower_id

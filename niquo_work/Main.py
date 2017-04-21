@@ -14,7 +14,7 @@ def Main(root_path = '../niquo_data/spring_data/', all_data_path=constants.JULY_
 	return True
 
 
-def partition_data(root_path, data_path, delimiter=',', filter_func=utils.remove_foreigners):
+def partition_data(root_path, data_path, delimiter=',', filter_func=utils.remove_foreigners, just_path=False):
 	destination_path = utils.create_dir(root_path, 'partitioned_data')
 	rawData = raw.RawCDRCSV(data_path)
 	print 'beginning filtering on data from:', data_path
@@ -23,14 +23,16 @@ def partition_data(root_path, data_path, delimiter=',', filter_func=utils.remove
 	return destination_path
 
 
-def condense_data(root_path, partitioned_data_path, chunk_size=10):
+def condense_data(root_path, partitioned_data_path, chunk_size=10, just_path=False):
 	destination_path = utils.create_dir(root_path, 'condensed_data')
+	if just_path: return destination_path
 	RD.main(partitioned_data_path, destination_path, chunk_size=chunk_size)
 	return destination_path
 
 
-def find_encounters(root_path, condensed_data_path, enc_window=10):
+def find_encounters(root_path, condensed_data_path, enc_window=10, just_path=False):
 	destination_path = utils.create_dir(root_path, 'tower_encounters')
+	if just_path: return destination_path
 	tpart = TP.TowersPartitioned(condensed_data_path, destination_path)
 	tpart.pair_users_from_towers(enc_window=enc_window)
 	return destination_path
