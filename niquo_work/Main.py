@@ -23,16 +23,16 @@ def partition_data(root_path, data_path, delimiter=';', filter_func=utils.remove
 	return destination_path
 
 
-def condense_data(root_path, partitioned_data_path):
+def condense_data(root_path, partitioned_data_path, chunk_size=10):
 	destination_path = utils.create_dir(root_path, 'condensed_data')
-	RD.main(partitioned_data_path, destination_path)
+	RD.main(partitioned_data_path, destination_path, chunk_size=chunk_size)
 	return destination_path
 
 
-def find_encounters(root_path, condensed_data_path):
+def find_encounters(root_path, condensed_data_path, enc_window=10):
 	destination_path = utils.create_dir(root_path, 'tower_encounters')
 	tpart = TP.TowersPartitioned(condensed_data_path, destination_path)
-	tpart.pair_users_from_towers()
+	tpart.pair_users_from_towers(enc_window=enc_window)
 	return destination_path
 
 

@@ -1,7 +1,12 @@
 import Structures.active_user_map as aum
 import Social.Network as net
+import Operations.reverse_encounters as re
 
-aum.quick_script_generate()
+
+re.create_maps_prev_six_months()
+
+
+# aum.quick_script_generate()
 
 
 # def create_net():
