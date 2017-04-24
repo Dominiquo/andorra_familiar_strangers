@@ -40,6 +40,7 @@ class InteractionMap(object):
 
 
 	def combine_by_day(self, day_path, delete_old=False):
+		self.master_graph = nx.MultiGraph()
 		for tower_file in self.get_tower_directory(day_path):
 			print 'loading file:', tower_file
 			with open(tower_file, 'rb') as infile:

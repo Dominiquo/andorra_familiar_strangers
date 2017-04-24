@@ -1,8 +1,14 @@
+import cPickle
 from datetime import datetime
 import time
 import sys, os
 import file_constants as constants
 
+
+def load_pickle(filepath):
+	with open(filepath, 'rb') as infile:
+		data_object = cPickle.load(infile)
+	return data_object
 
 def get_time_chunk(timestamp, time_chunk = 30):
 	time_obj = get_time_obj(timestamp)
