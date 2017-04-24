@@ -116,7 +116,7 @@ def parse_tower_name(tower_file_string):
 
 
 def main(encounters_path):
-	imap = InteractionMaps(encounters_path)
+	imap = InteractionMap(encounters_path)
 	return imap.combine_all_graphs(imap.directory)
 	
 
