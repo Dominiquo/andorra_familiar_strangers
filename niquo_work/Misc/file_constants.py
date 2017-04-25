@@ -30,6 +30,12 @@ TIME_BLOCK = 'time_chunk'
 USEFUL_ROWS = [SOURCE, TIMESTAMP, TOWER_COLUMN, DEST]
 
 
+USER_1 = 'USER_1'
+USER_2 = 'USER_2'
+ENCS_COUNT = 'ENCS_COUNT'
+SOC_DIST = 'SOC_DIST'
+
+
 
 '''	1 = shoppping
 	2 = nature interests
