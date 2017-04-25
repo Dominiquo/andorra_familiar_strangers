@@ -25,6 +25,10 @@ class InteractionMap(object):
 		for date_path in self.get_day_directories(tower_data_path):
 			self.combine_by_day(date_path, delete_old)
 
+		self.combine_date_master_files(tower_data_path, delete_old)
+		return True
+
+	def combine_date_master_files(self, tower_data_path, delete_old=False):
 		self.master_graph = nx.MultiGraph()
 		for date_path in self.get_day_directories(tower_data_path):
 			tower_file = os.path.join(date_path, self.master_filename)
@@ -37,6 +41,8 @@ class InteractionMap(object):
 
 		if delete_old:
 			self.delete_date_master_graphs(tower_data_path)
+			
+		return True
 
 
 	def combine_by_day(self, day_path, delete_old=False):
