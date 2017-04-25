@@ -36,5 +36,5 @@ def get_social_encounters(social_path, encounters_path, dest_path, save_file=Tru
 	print 'edges without a social connection:', disconnected_edges
 	dataframe = pd.DataFrame(df_dict)
 	if save_file:
-		pd.to_csv(dataframe, index=False)
+		dataframe.to_csv(dest_path, index=False)
 	return dataframe
