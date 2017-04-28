@@ -5,13 +5,16 @@ import Main
 import os
 
 
-USE_MONTHS = ['201507-AndorraTelecom-CDR.csv',
- '201508-AndorraTelecom-CDR.csv',
- '201509-AndorraTelecom-CDR.csv',
- '201510-AndorraTelecom-CDR.csv',
- '201511-AndorraTelecom-CDR.csv',
- '201512-AndorraTelecom-CDR.csv']
-
+USE_MONTHS = ['201601-AndorraTelecom-CDR.csv',
+ '201602-AndorraTelecom-CDR.csv',
+ '201603-AndorraTelecom-CDR.csv',
+ '201604-AndorraTelecom-CDR.csv',
+ '201605-AndorraTelecom-CDR.csv',
+ '201606-AndorraTelecom-CDR.csv',
+ '201607-AndorraTelecom-CDR.csv',
+ '201608-AndorraTelecom-CDR.csv',
+ '201609-AndorraTelecom-CDR.csv',
+ '201610-AndorraTelecom-CDR.csv']
 
 def get_new_friend_set(new_friend_csv):
 	print 'reading new friend csv..'
@@ -26,7 +29,7 @@ def get_new_friend_set(new_friend_csv):
 	return set(user_list)
 
 
-def create_maps_prev_six_months():
+def create_maps_for_months():
 	DATA_DIR = '/home/niquo/niquo_data'
 	print 'retreiving friend set from', constants.FIRST_CALL
 	friend_set = get_new_friend_set(constants.FIRST_CALL)
