@@ -48,7 +48,7 @@ def get_encounters_for_pairs(root_paths):
 	for root_p in root_paths:
 		encs_path = os.path.join(root_p, TOWER_ENCS_DIR)
 		for day_dir in os.listdir(encs_path):
-			day_path = os.path.join(tower_path, day_dir)
+			day_path = os.path.join(encs_path, day_dir)
 			for tower_file in os.listdir(day_path):
 				tower_path = os.path.join(day_path, tower_file)
 				tower_graph = utils.load_pickle(tower_path)
