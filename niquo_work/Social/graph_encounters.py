@@ -6,11 +6,14 @@ import pandas as pd
 import os
 
 
+NO_PATH = -1
+TOWER_ENCS_DIR = 'tower_encounters'
+
+
 def get_social_encounters(social_path, encounters_path, dest_path, save_file=True):
-	NO_PATH = -1
-	print 'loading social graph...'
+	print 'loading social graph:', social_path
 	social_graph = utils.load_pickle(social_path)
-	print 'loading encounters graph...'
+	print 'loading encounters graph:', encounters_path
 	encs_graph = utils.load_pickle(encounters_path)
 	encs_edges_set = set(encs_graph.edges())
 	df_dict = {constants.USER_1: [], constants.USER_2: [], constants.ENCS_COUNT: [], constants.SOC_DIST: []}
@@ -38,3 +41,26 @@ def get_social_encounters(social_path, encounters_path, dest_path, save_file=Tru
 	if save_file:
 		dataframe.to_csv(dest_path, index=False)
 	return dataframe
+
+
+def get_encounters_for_pairs(social_path, root_paths):
+	print 'loading social graph:', social_path
+	social_graph = utils.load_pickle(social_path)
+	encs_dict = {}
+	for root_p in root_paths:
+		encs_path = os.path.join(root_p, TOWER_ENCS_DIR)
+		for day_dir in os.listdir(encs_path):
+			day_path = os.path.join(tower_path, day_dir)
+			for tower_file in os.listdir(day_path):
+				tower_path = os.path.join(day_path, tower_file)
+				tower_graph = utils.load_pickle(tower_path)
+				print 'opened:',tower_path
+				# TODO: get encounter count of all users in this graph
+	return True
+
+
+	
+
+
+
+
