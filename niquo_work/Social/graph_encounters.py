@@ -81,12 +81,12 @@ def add_encs_count(encs_dict, user_1, user_2, count, root):
 
 
 def get_prev_six_months_encs():
-	root_paths = ['/home/niquo/niquo_data/201507-AndorraTelecom-CDR',
-	'/home/niquo/niquo_data/201508-AndorraTelecom-CDR',
-	'/home/niquo/niquo_data/201509-AndorraTelecom-CDR',
-	'/home/niquo/niquo_data/201510-AndorraTelecom-CDR',
-	'/home/niquo/niquo_data/201511-AndorraTelecom-CDR',
-	'/home/niquo/niquo_data/201512-AndorraTelecom-CDR']
+	root_paths = ['/home/niquo/niquo_data/201507-AndorraTelecom-CDR'] #,
+	# '/home/niquo/niquo_data/201508-AndorraTelecom-CDR',
+	# '/home/niquo/niquo_data/201509-AndorraTelecom-CDR',
+	# '/home/niquo/niquo_data/201510-AndorraTelecom-CDR',
+	# '/home/niquo/niquo_data/201511-AndorraTelecom-CDR',
+	# '/home/niquo/niquo_data/201512-AndorraTelecom-CDR']
 
 	dest_path = '/home/niquo/niquo_data/spring_results_data/prev_six_months_encs_count.p'
 	get_encounters_for_pairs(root_paths, dest_path)
