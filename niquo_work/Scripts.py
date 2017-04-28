@@ -6,7 +6,11 @@ import Operations.reverse_encounters as re
 import Main
 
 
-re.create_maps_for_months()
+
+ge.get_prev_six_months_encs()
+
+
+# re.create_maps_for_months()
 
 
 # aum.quick_script_generate()
