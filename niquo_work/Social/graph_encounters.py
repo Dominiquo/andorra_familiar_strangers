@@ -71,7 +71,7 @@ def add_encs_count(encs_dict, user_1, user_2, count, root):
 	source = max(user_1, user_2)
 	dest = min(user_1, user_2)
 	key = (source, dest)
-	if (key in encs_dict and (root in encs_dict[key]):
+	if (key in encs_dict) and (root in encs_dict[key]):
 		encs_dict[key][root] += count
 	elif (key in encs_dict) and (root not in encs_dict[key]):
 		months_dict = encs_dict[key]
