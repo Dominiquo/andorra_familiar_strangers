@@ -43,9 +43,7 @@ def get_social_encounters(social_path, encounters_path, dest_path, save_file=Tru
 	return dataframe
 
 
-def get_encounters_for_pairs(social_path, root_paths):
-	print 'loading social graph:', social_path
-	social_graph = utils.load_pickle(social_path)
+def get_encounters_for_pairs(root_paths):
 	encs_dict = {}
 	for root_p in root_paths:
 		encs_path = os.path.join(root_p, TOWER_ENCS_DIR)
