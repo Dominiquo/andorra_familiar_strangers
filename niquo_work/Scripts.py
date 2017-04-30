@@ -7,8 +7,8 @@ import Main
 
 
 
-# ge.get_2016_months_encs()
-net.main()
+ge.get_2016_months_encs()
+# net.main()
 
 
 # re.create_maps_for_months()
