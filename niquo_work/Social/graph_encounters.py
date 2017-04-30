@@ -43,52 +43,53 @@ def get_social_encounters(social_path, encounters_path, dest_path, save_file=Tru
 	return dataframe
 
 
-def get_encounters_for_pairs(root_paths, dest_path):
+def get_encounters_for_pairs(root_path, dest_path):
 	encs_dict = {}
-	for root_p in root_paths:
-		root = root_p.split('/')[-1]
-		encs_path = os.path.join(root_p, TOWER_ENCS_DIR)
-		print '**************************'
-		print 'entering root path:', root
-		for day_dir in os.listdir(encs_path):
-			day_path = os.path.join(encs_path, day_dir)
-			print '________________'
-			print 'opening day path:', day_path
-			for tower_file in os.listdir(day_path):
-				print 'opening tower file:', tower_file
-				tower_path = os.path.join(day_path, tower_file)
-				tower_graph = utils.load_pickle(tower_path)
-				tower_edges = set(tower_graph.edges())
-				for user_1, user_2 in tower_edges:
-					count = len(tower_graph[user_1][user_2])
-					add_encs_count(encs_dict, user_1, user_2, count, root)
+	root = root_p.split('/')[-1]
+	encs_path = os.path.join(root_p, TOWER_ENCS_DIR)
+	print '**************************'
+	print 'entering root path:', root
+	for day_dir in os.listdir(encs_path):
+		day_path = os.path.join(encs_path, day_dir)
+		print '________________'
+		print 'opening day path:', day_path
+		for tower_file in os.listdir(day_path):
+			print 'opening tower file:', tower_file
+			tower_path = os.path.join(day_path, tower_file)
+			tower_graph = utils.load_pickle(tower_path)
+			tower_edges = set(tower_graph.edges())
+			for user_1, user_2 in tower_edges:
+				count = len(tower_graph[user_1][user_2])
+				add_encs_count(encs_dict, user_1, user_2, count)
+			del tower_graph
 	with open(dest_path, 'wb') as outfile:
 		cPickle.dump(encs_dict, outfile)
 	return encs_dict
 
 
-def add_encs_count(encs_dict, user_1, user_2, count, root):
+def add_encs_count(encs_dict, user_1, user_2, count):
 	source = max(user_1, user_2)
 	dest = min(user_1, user_2)
 	key = (source, dest)
-	if (key in encs_dict) and (root in encs_dict[key]):
-		encs_dict[key][root] += count
-	elif (key in encs_dict) and (root not in encs_dict[key]):
-		months_dict = encs_dict[key]
-		months_dict[root] = count
-	elif (key not in encs_dict):
-		encs_dict[key] = {root: count}
+	if (key in encs_dict):
+		encs_dict[key] += count
+	else:
+		encs_dict[key] = count
 
 
 def get_prev_six_months_encs():
 	root_paths = ['/home/niquo/niquo_data/201507-AndorraTelecom-CDR'] #,
-	# '/home/niquo/niquo_data/201508-AndorraTelecom-CDR',
-	# '/home/niquo/niquo_data/201509-AndorraTelecom-CDR',
-	# '/home/niquo/niquo_data/201510-AndorraTelecom-CDR',
-	# '/home/niquo/niquo_data/201511-AndorraTelecom-CDR',
-	# '/home/niquo/niquo_data/201512-AndorraTelecom-CDR']
+	'/home/niquo/niquo_data/201508-AndorraTelecom-CDR',
+	'/home/niquo/niquo_data/201509-AndorraTelecom-CDR',
+	'/home/niquo/niquo_data/201510-AndorraTelecom-CDR',
+	'/home/niquo/niquo_data/201511-AndorraTelecom-CDR',
+	'/home/niquo/niquo_data/201512-AndorraTelecom-CDR']
 
-	dest_path = '/home/niquo/niquo_data/spring_results_data/prev_six_months_encs_count.p'
-	get_encounters_for_pairs(root_paths, dest_path)
+	dest_root_dir = '/home/niquo/niquo_data/spring_results_data/'
+	for root in root_paths:
+		dest_file = 'encs_count_dict.p'
+		dest_dir = os.path.join(dest_path, root)
+		dest_path = os.path.join(dest_dir, dest_file)
+		get_encounters_for_pairs(root, dest_path)
 
 
