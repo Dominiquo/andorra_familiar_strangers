@@ -235,7 +235,7 @@ def main():
 		digraph_filename = 'social_digraph.p'
 		niquo_data_root = os.path.join(data_root, directory)
 		dest_path = os.path.join(niquo_data_root, digraph_filename)
-		data_path = os.path.join(constants.FILTERED_MONTHS, data_root + '.csv')
+		data_path = os.path.join(constants.FILTERED_MONTHS, directory + '.csv')
 		create_graph_directed(data_path, dest_path, store=True)
 
 
