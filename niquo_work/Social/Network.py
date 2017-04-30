@@ -214,7 +214,7 @@ def get_graph_distance(user1, user2, friend_graph):
 	return -2
 
 def main():
-		root_paths = ['201507-AndorraTelecom-CDR',
+	root_paths = ['201507-AndorraTelecom-CDR',
 	'201508-AndorraTelecom-CDR',
 	'201509-AndorraTelecom-CDR',
 	'201510-AndorraTelecom-CDR',
@@ -229,7 +229,7 @@ def main():
 	'201607-AndorraTelecom-CDR',
 	'201608-AndorraTelecom-CDR',
 	'201609-AndorraTelecom-CDR']
-
+	
 	data_root = '/home/niquo/niquo_data'
 	for directory in root_paths:
 		digraph_filename = 'social_digraph.p'
