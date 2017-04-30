@@ -229,13 +229,13 @@ def main():
 	'201607-AndorraTelecom-CDR',
 	'201608-AndorraTelecom-CDR',
 	'201609-AndorraTelecom-CDR']
-	
+
 	data_root = '/home/niquo/niquo_data'
 	for directory in root_paths:
 		digraph_filename = 'social_digraph.p'
 		niquo_data_root = os.path.join(data_root, directory)
 		dest_path = os.path.join(niquo_data_root, digraph_filename)
-		data_path = os.path.join(constants.FILTERED_MONTHS, data_root)
+		data_path = os.path.join(constants.FILTERED_MONTHS, data_root + '.csv')
 		create_graph_directed(data_path, dest_path, store=True)
 
 
