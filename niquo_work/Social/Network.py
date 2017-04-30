@@ -26,6 +26,27 @@ def create_graph(partitioned_dir, store_path, store=True, sim=False):
 
 	return True
 
+
+def create_graph_directed(cdr_filename, store_path, store=True):
+	print 'creating initial graph object'
+	friend_graph = nx.DiGraph()
+	print 'loading data from', cdr_filename
+	for data_chunk in pd.read_csv(cdr_filename, chunksize=10**5):
+		for source, dest, comm_type in data_chunk[[constants.SOURCE, constants.DEST, constants.COMM_TYPE]].values:
+			if 'O' in comm_type:
+				friend_graph.add_edge(source, dest)
+			elif 'T' in comm_type: 
+				friend_graph.add_edge(dest, source)
+	if store:
+		print 'storing graph at:', store_path
+		with open(store_path, 'wb') as outfile:
+			cPickle.dump(friend_graph,outfile)
+
+	return True
+
+
+
+
 def clean_graph(network_object_path, cleaned_path, threshold=1000):
 	friend_graph = cPickle.load(open(network_object_path,'rb'))
 	nodes = nx.nodes(friend_graph)
@@ -193,21 +214,29 @@ def get_graph_distance(user1, user2, friend_graph):
 	return -2
 
 def main():
-	# new_obj_clean = '../niquo_data/filtered_data/network_object_cleaned.p'
-	# encs_csv = '../niquo_data/CURRENT_DATA/encs_data/2016.07.15_2016.07.21_encounter_n_2.csv'
-	# dest = '../niquo_data/CURRENT_DATA/friend_dis_n2.csv'
-	# get_distribution_encounters(encs_csv,new_obj_clean,dest)
+		root_paths = ['201507-AndorraTelecom-CDR',
+	'201508-AndorraTelecom-CDR',
+	'201509-AndorraTelecom-CDR',
+	'201510-AndorraTelecom-CDR',
+	'201511-AndorraTelecom-CDR',
+	'201512-AndorraTelecom-CDR',
+	'201601-AndorraTelecom-CDR',
+	'201602-AndorraTelecom-CDR',
+	'201603-AndorraTelecom-CDR',
+	'201604-AndorraTelecom-CDR',
+	'201605-AndorraTelecom-CDR',
+	'201606-AndorraTelecom-CDR',
+	'201607-AndorraTelecom-CDR',
+	'201608-AndorraTelecom-CDR',
+	'201609-AndorraTelecom-CDR']
 
-	# old_graph = '../niquo_data/filtered_data/network_object_100.p'
-	new_graph = '../niquo_data/filtered_data/network_object_100_removed_voicemail_UPDATED.p'
-	filtered_data = '../niquo_data/filtered_data/06_2017_no_data.csv'
-	INTERMEDIATE_DOUBLES = '../niquo_data/filtered_data/INTERMEDIATE_DOUBLES.csv'
-	user_hash_dict = fv.create_voicemail_dict(fv.outgoing_only)
-	make_new_csv_without_B(filtered_data, user_hash_dict, INTERMEDIATE_DOUBLES)
-	make_new_friendship_graph(INTERMEDIATE_DOUBLES,new_graph, float('inf'))
-
-
-
+	data_root = '/home/niquo/niquo_data'
+	for directory in root_paths:
+		digraph_filename = 'social_digraph.p'
+		niquo_data_root = os.path.join(data_root, directory)
+		dest_path = os.path.join(niquo_data_root, digraph_filename)
+		data_path = os.path.join(constants.FILTERED_MONTHS, data_root)
+		create_graph_directed(data_path, dest_path, store=True)
 
 
 if __name__ == '__main__':
