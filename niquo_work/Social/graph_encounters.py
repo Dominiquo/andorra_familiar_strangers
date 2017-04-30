@@ -78,7 +78,7 @@ def add_encs_count(encs_dict, user_1, user_2, count):
 
 
 def get_prev_six_months_encs():
-	root_paths = ['/home/niquo/niquo_data/201507-AndorraTelecom-CDR'] #,
+	root_paths = ['/home/niquo/niquo_data/201507-AndorraTelecom-CDR',
 	'/home/niquo/niquo_data/201508-AndorraTelecom-CDR',
 	'/home/niquo/niquo_data/201509-AndorraTelecom-CDR',
 	'/home/niquo/niquo_data/201510-AndorraTelecom-CDR',
