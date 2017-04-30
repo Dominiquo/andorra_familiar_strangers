@@ -46,7 +46,7 @@ def get_social_encounters(social_path, encounters_path, dest_path, save_file=Tru
 def get_encounters_for_pairs(root_path, dest_path):
 	encs_dict = {}
 	root = root_path.split('/')[-1]
-	encs_path = os.path.join(root_p, TOWER_ENCS_DIR)
+	encs_path = os.path.join(root_path, TOWER_ENCS_DIR)
 	print '**************************'
 	print 'entering root path:', root
 	for day_dir in os.listdir(encs_path):
