@@ -7,7 +7,7 @@ import Main
 
 
 
-ge.get_prev_six_months_encs()
+ge.get_2016_months_encs()
 
 
 # re.create_maps_for_months()
