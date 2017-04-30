@@ -88,7 +88,7 @@ def get_prev_six_months_encs():
 	dest_root_dir = '/home/niquo/niquo_data/spring_results_data/'
 	for root in root_paths:
 		dest_file = 'encs_count_dict.p'
-		dest_dir = os.path.join(dest_path, root)
+		dest_dir = os.path.join(dest_root_dir, root)
 		dest_path = os.path.join(dest_dir, dest_file)
 		get_encounters_for_pairs(root, dest_path)
 
