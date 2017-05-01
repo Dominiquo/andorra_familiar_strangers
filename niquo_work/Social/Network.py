@@ -29,7 +29,7 @@ def create_graph(partitioned_dir, store_path, store=True, sim=False):
 
 def create_graph_directed(cdr_filename, store_path, store=True):
 	print 'creating initial graph object'
-	friend_graph = nx.MultiiGraph()
+	friend_graph = nx.MultiDiGraph()
 	print 'loading data from', cdr_filename	
 	for data_chunk in pd.read_csv(cdr_filename, chunksize=10**5):
 		for source, dest, comm_type in data_chunk[[constants.SOURCE, constants.DEST, constants.COMM_TYPE]].values:
