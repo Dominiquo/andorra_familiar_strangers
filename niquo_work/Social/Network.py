@@ -29,8 +29,8 @@ def create_graph(partitioned_dir, store_path, store=True, sim=False):
 
 def create_graph_directed(cdr_filename, store_path, store=True):
 	print 'creating initial graph object'
-	friend_graph = nx.DiGraph()
-	print 'loading data from', cdr_filename
+	friend_graph = nx.MultiiGraph()
+	print 'loading data from', cdr_filename	
 	for data_chunk in pd.read_csv(cdr_filename, chunksize=10**5):
 		for source, dest, comm_type in data_chunk[[constants.SOURCE, constants.DEST, constants.COMM_TYPE]].values:
 			if 'O' in comm_type:
@@ -234,8 +234,10 @@ def main():
 	for directory in root_paths:
 		digraph_filename = 'social_digraph.p'
 		niquo_data_root = os.path.join(data_root, directory)
-		dest_path = os.path.join(niquo_data_root, digraph_filename)
 		data_path = os.path.join(constants.FILTERED_MONTHS, directory + '.csv')
+		dest_path = os.path.join(niquo_data_root, digraph_filename)
+		print 'data path:', data_path
+		print 'output will be stored:', dest_path
 		create_graph_directed(data_path, dest_path, store=True)
 
 
