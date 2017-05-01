@@ -31,8 +31,13 @@ def create_graph_directed(cdr_filename, store_path, store=True):
 	print 'creating initial graph object'
 	friend_graph = nx.MultiDiGraph()
 	print 'loading data from', cdr_filename	
-	for data_chunk in pd.read_csv(cdr_filename, chunksize=10**5):
-		for source, dest, comm_type in data_chunk[[constants.SOURCE, constants.DEST, constants.COMM_TYPE]].values:
+	chunksize = 10**5
+	for data_chunk in pd.read_csv(cdr_filename, chunksize=chunksize):
+		print 'Starting new chunk of size:', chunksize
+		for source, dest, comm_type, carrier in data_chunk[[constants.SOURCE, constants.DEST, constants.COMM_TYPE, constants.CARRIER]].values:
+			id_val = 21303
+			if carrier != id_val:
+				continue
 			if 'O' in comm_type:
 				friend_graph.add_edge(source, dest)
 			elif 'T' in comm_type: 
