@@ -62,7 +62,7 @@ def clean_dir_graph(graph_path, dest_path, mode):
 			elif (mode == 2) and (edge_count < 10):
 				edges_bunch = [(user_1, user_2)] * edge_count
 				difriend_graph.remove_edges_from(edges_bunch)
-		elif mode == 0:
+		else:
 			edges_bunch = [(user_1, user_2)] * edge_count
 			difriend_graph.remove_edges_from(edges_bunch)
 	# new_graph = difriend_graph.to_undirected()
