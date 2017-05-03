@@ -265,7 +265,7 @@ def main():
 		digraph_path = os.path.join(niquo_data_root, digraph_filename)
 		for mode in range(3):
 			filtered_graph_name = 'filtered_graph_mode_' + str(mode) + '.p'
-			filtered_graph_path = os.path.join(niquo_data_root, filted_graph_name)
+			filtered_graph_path = os.path.join(niquo_data_root, filtered_graph_name)
 			print 'data path:', digraph_path
 			print 'output will be stored:', filtered_graph_path
 			clean_dir_graph(digraph_path, filtered_graph_path, mode)
