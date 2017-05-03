@@ -52,7 +52,7 @@ def clean_dir_graph(graph_path, dest_path, mode):
 		difriend_graph = cPickle.load(infile)
 	unique_edges = set(difriend_graph.edges())
 	for user_1, user_2 in unique_edges:
-		both_directions = difriend_graph.has_edge(user_2, user_1)\
+		both_directions = difriend_graph.has_edge(user_2, user_1)
 		edge_count = len(difriend_graph[user_1][user_2])
 		if both_directions:
 			edge_count += len(difriend_graph[user_2][user_1])
