@@ -31,13 +31,10 @@ def create_graph_directed(cdr_filename, store_path, store=True):
 	print 'creating initial graph object'
 	friend_graph = nx.MultiDiGraph()
 	print 'loading data from', cdr_filename	
-	chunksize = 10**5
+	chunksize = 10**6
 	for data_chunk in pd.read_csv(cdr_filename, chunksize=chunksize):
 		print 'Starting new chunk of size:', chunksize
-		for source, dest, comm_type, carrier in data_chunk[[constants.SOURCE, constants.DEST, constants.COMM_TYPE, constants.CARRIER]].values:
-			id_val = 21303
-			if carrier != id_val:
-				continue
+		for source, dest, comm_type in data_chunk[[constants.SOURCE, constants.DEST, constants.COMM_TYPE]].values:
 			if 'O' in comm_type:
 				friend_graph.add_edge(source, dest)
 			elif 'T' in comm_type: 
@@ -48,6 +45,32 @@ def create_graph_directed(cdr_filename, store_path, store=True):
 			cPickle.dump(friend_graph,outfile)
 
 	return True
+
+
+def clean_dir_graph(graph_path, dest_path, mode):
+	with open(graph_path, 'rb') as infile:
+		difriend_graph = cPickle.load(infile)
+	unique_edges = set(difriend_graph.edges())
+	for user_1, user_2 in unique_edges:
+		both_directions = difriend_graph.has_edge(user_2, user_1)\
+		edge_count = len(difriend_graph[user_1][user_2])
+		if both_directions:
+			edge_count += len(difriend_graph[user_2][user_1])
+			if (mode == 1) and (edge_count < 5):
+				edges_bunch = [(user_1, user_2)] * edge_count
+				difriend_graph.remove_edges_from(edges_bunch)
+			elif (mode == 2) and (edge_count < 10):
+				edges_bunch = [(user_1, user_2)] * edge_count
+				difriend_graph.remove_edges_from(edges_bunch)
+		elif mode == 0:
+			edges_bunch = [(user_1, user_2)] * edge_count
+			difriend_graph.remove_edges_from(edges_bunch)
+	# new_graph = difriend_graph.to_undirected()
+	with open(dest_path, 'wb') as outfile:
+		cPickle.dump(difriend_graph, outfile)
+
+	return difriend_graph
+
 
 
 
@@ -239,11 +262,13 @@ def main():
 	for directory in root_paths:
 		digraph_filename = 'social_digraph.p'
 		niquo_data_root = os.path.join(data_root, directory)
-		data_path = os.path.join(constants.FILTERED_MONTHS, directory + '.csv')
-		dest_path = os.path.join(niquo_data_root, digraph_filename)
-		print 'data path:', data_path
-		print 'output will be stored:', dest_path
-		create_graph_directed(data_path, dest_path, store=True)
+		digraph_path = os.path.join(niquo_data_root, digraph_filename)
+		for mode in range(3):
+			filtered_graph_name = 'filtered_graph_mode_' + str(mode) + '.p'
+			filtered_graph_path = os.path.join(niquo_data_root, filted_graph_name)
+			print 'data path:', digraph_path
+			print 'output will be stored:', filtered_graph_path
+			clean_dir_graph(digraph_path, filtered_graph_path, mode)
 
 
 if __name__ == '__main__':
