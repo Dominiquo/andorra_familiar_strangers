@@ -47,14 +47,13 @@ def split_users_first_call_csv(new_friend_csv):
 def create_encs_df_select_friends(first_call_csv, root_path, dest_filename=constants.PAIRS_CSV):
 	encs_path = os.path.join(root_path, constants.ENCS_DICT)
 	print 'loading all encounter pairs from:', encs_path
-	with open(encs_path, 'rb') as infile:
-		encs_dict = cPickle.load(infile)
-		friend_df = split_users_first_call_csv(first_call_csv)
-		friends_set = set([(user1, user2) for user1,user2 in friend_df[[constants.USER_1, constants.USER_2]].values])
-		intersection_pairs = friend_set.intersection(set(encs_dict.keys))
-		relevant_encs = {k:encs_dict[k] for k in intersection_pairs}
-		print 'deleting encs_dict...'
-		del encs_dict
+	encs_dict = cPickle.load(open(encs_path, 'rb'))
+	friend_df = split_users_first_call_csv(first_call_csv)
+	friends_set = set([(user1, user2) for user1,user2 in friend_df[[constants.USER_1, constants.USER_2]].values])
+	intersection_pairs = friend_set.intersection(set(encs_dict.keys))
+	relevant_encs = {k:encs_dict[k] for k in intersection_pairs}
+	print 'deleting encs_dict...'
+	del encs_dict
 
 	mode_0_path = os.path.join(root_path, constants.MODE_0_GRAPH)
 	print 'loading graph mode 0:', mode_0_path
