@@ -65,10 +65,10 @@ def create_encs_df_select_friends(first_call_csv, root_path, dest_filename=const
 	print 'loading graph mode 2:', mode_2_path
 	mode_2_graph = utils.load_pickle(mode_2_path).to_undirected()
 
-	friend_df[constants.ENCS_COUNT] = df.apply(lambda row: apply_encs(relevant_encs, row), axis=1)
-	friend_df[constants.MODE_0_DIST] = df.apply(lambda row: apply_distance(mode_0_graph, row), axis=1)
-	friend_df[constants.MODE_1_DIST] = df.apply(lambda row: apply_distance(mode_1_graph, row), axis=1)
-	friend_df[constants.MODE_2_DIST] = df.apply(lambda row: apply_distance(mode_2_graph, row), axis=1)
+	friend_df[constants.ENCS_COUNT] = friend_df.apply(lambda row: apply_encs(relevant_encs, row), axis=1)
+	friend_df[constants.MODE_0_DIST] = friend_df.apply(lambda row: apply_distance(mode_0_graph, row), axis=1)
+	friend_df[constants.MODE_1_DIST] = friend_df.apply(lambda row: apply_distance(mode_1_graph, row), axis=1)
+	friend_df[constants.MODE_2_DIST] = friend_df.apply(lambda row: apply_distance(mode_2_graph, row), axis=1)
 
 	friend_df = friend_df[friend_df[constants.ENCS_COUNT] >= 0]
 	dest_path = os.path.join(root_path, dest_filename)
