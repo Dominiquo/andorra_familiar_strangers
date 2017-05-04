@@ -47,28 +47,24 @@ def split_users_first_call_csv(new_friend_csv):
 def create_encs_df_select_friends(first_call_csv, root_path, dest_filename=constants.PAIRS_CSV):
 	encs_path = os.path.join(root_path, constants.ENCS_DICT)
 	print 'loading all encounter pairs from:', encs_path
-	encs_dict = cPickle.load(open(encs_path, 'rb'))
+	encs_dict = utils.load_pickle(encs_path)
 	friend_df = split_users_first_call_csv(first_call_csv)
 	friends_set = set([(user1, user2) for user1,user2 in friend_df[[constants.USER_1, constants.USER_2]].values])
 	intersection_pairs = friend_set.intersection(set(encs_dict.keys))
 	relevant_encs = {k:encs_dict[k] for k in intersection_pairs}
 	print 'deleting encs_dict...'
-	del encs_dict
 
 	mode_0_path = os.path.join(root_path, constants.MODE_0_GRAPH)
 	print 'loading graph mode 0:', mode_0_path
-	with open(mode_0_path) as infile:		
-		mode_0_graph = cPickle.load(infile).to_undirected()
+	mode_0_graph = utils.load_pickle(mode_0_path).to_undirected()
 
 	mode_1_path = os.path.join(root_path, constants.MODE_1_GRAPH)
 	print 'loading graph mode 1:', mode_1_path
-	with open(mode_1_path) as infile:
-		mode_1_graph = cPickle.load(infile).to_undirected()
+	mode_1_graph = utils.load_pickle(mode_1_path).to_undirected()
 
 	mode_2_path = os.path.join(root_path, constants.MODE_2_PATH)
 	print 'loading graph mode 2:', mode_2_path
-	with open(mode_2_path) as infile:
-		mode_2_graph = cPickle.load(infile).to_undirected()
+	mode_2_graph = utils.load_pickle(mode_2_path).to_undirected()
 
 	friend_df[constants.ENCS_COUNT] = df.apply(lambda row: apply_encs(relevant_encs, row), axis=1)
 	friend_df[constants.MODE_0_DIST] = df.apply(lambda row: apply_distance(mode_0_graph, row), axis=1)
