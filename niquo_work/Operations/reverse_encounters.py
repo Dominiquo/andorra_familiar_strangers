@@ -61,7 +61,7 @@ def create_encs_df_select_friends(first_call_csv, root_path, dest_filename=const
 	print 'loading graph mode 1:', mode_1_path
 	mode_1_graph = utils.load_pickle(mode_1_path).to_undirected()
 
-	mode_2_path = os.path.join(root_path, constants.MODE_2_PATH)
+	mode_2_path = os.path.join(root_path, constants.MODE_2_GRAPH)
 	print 'loading graph mode 2:', mode_2_path
 	mode_2_graph = utils.load_pickle(mode_2_path).to_undirected()
 
