@@ -97,6 +97,31 @@ def apply_distance(soc_graph, row):
 		pass
 	return distance
 
+
+def create_encs_df_all():
+	root_dirs = ['201507-AndorraTelecom-CDR',
+	'201508-AndorraTelecom-CDR',
+	'201509-AndorraTelecom-CDR',
+	'201510-AndorraTelecom-CDR',
+	'201511-AndorraTelecom-CDR',
+	'201512-AndorraTelecom-CDR',
+	'201601-AndorraTelecom-CDR',
+	'201602-AndorraTelecom-CDR',
+	'201603-AndorraTelecom-CDR',
+	'201604-AndorraTelecom-CDR',
+	'201605-AndorraTelecom-CDR',
+	'201606-AndorraTelecom-CDR',
+	'201607-AndorraTelecom-CDR',
+	'201608-AndorraTelecom-CDR',
+	'201609-AndorraTelecom-CDR']
+
+	data_root = '/home/niquo/niquo_data'
+	for directory in root_dirs:
+		root_path = os.path.join(data_root, directory)
+		create_encs_df_select_friends(constants.FIRST_CALL, root_path)
+
+
+
 def create_maps_for_months():
 	DATA_DIR = '/home/niquo/niquo_data'
 	print 'retreiving friend set from', constants.FIRST_CALL

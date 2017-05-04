@@ -8,7 +8,9 @@ import Main
 
 
 # ge.get_2016_months_encs()
-net.main()
+# net.main()
+
+re.create_encs_df_all()
 
 
 # re.create_maps_for_months()
