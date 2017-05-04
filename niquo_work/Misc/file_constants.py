@@ -36,6 +36,25 @@ ENCS_COUNT = 'ENCS_COUNT'
 SOC_DIST = 'SOC_DIST'
 
 
+# ENCOUNTER AND FRIEND GRAPH FILE NAMES
+PAIRS_CSV = 'new_friend_encs.csv'
+ENCS_DICT = 'encs_count_dict.p'
+BASE_DIGRAPH = 'social_digraph.p'
+MODE_0_GRAPH = 'filtered_graph_mode_0.p'
+MODE_0_DIST = 'mode_0_dist'
+MODE_1_GRAPH = 'filtered_graph_mode_1.p'
+MODE_1_DIST = 'mode_1_dist'
+MODE_2_GRAPH = 'filtered_graph_mode_2.p'
+MODE_2_DIST = 'mode_2_dist'
+
+
+# FIRST CALL COLUMN CONSTANTS
+CALL_LEN = 'call_length'
+CALLS = 'calls'
+FC_DAY = 'day'
+FC_FIRST = 'first'
+TEXTS = 'texts'
+
 
 '''	1 = shoppping
 	2 = nature interests
