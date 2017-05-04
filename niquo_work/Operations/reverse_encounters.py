@@ -50,7 +50,7 @@ def create_encs_df_select_friends(first_call_csv, root_path, dest_filename=const
 	encs_dict = utils.load_pickle(encs_path)
 	friend_df = split_users_first_call_csv(first_call_csv)
 	friends_set = set([(user1, user2) for user1,user2 in friend_df[[constants.USER_1, constants.USER_2]].values])
-	intersection_pairs = friends_set.intersection(set(encs_dict.keys))
+	intersection_pairs = friends_set.intersection(set(encs_dict.keys()))
 	relevant_encs = {k:encs_dict[k] for k in intersection_pairs}
 
 	mode_0_path = os.path.join(root_path, constants.MODE_0_GRAPH)
