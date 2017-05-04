@@ -50,9 +50,8 @@ def create_encs_df_select_friends(first_call_csv, root_path, dest_filename=const
 	encs_dict = utils.load_pickle(encs_path)
 	friend_df = split_users_first_call_csv(first_call_csv)
 	friends_set = set([(user1, user2) for user1,user2 in friend_df[[constants.USER_1, constants.USER_2]].values])
-	intersection_pairs = friend_set.intersection(set(encs_dict.keys))
+	intersection_pairs = friends_set.intersection(set(encs_dict.keys))
 	relevant_encs = {k:encs_dict[k] for k in intersection_pairs}
-	print 'deleting encs_dict...'
 
 	mode_0_path = os.path.join(root_path, constants.MODE_0_GRAPH)
 	print 'loading graph mode 0:', mode_0_path
@@ -78,13 +77,14 @@ def create_encs_df_select_friends(first_call_csv, root_path, dest_filename=const
 	return friend_df
 
 def apply_encs(encs_dict, row):
+	NO_ENCS = -1
 	source = row[constants.USER_1]
 	dest = row[constants.USER_2]
 	key = (source, dest)
 	if key in encs_dict:
 		return encs_dict[key]
 	else:
-		return -1
+		return NO_ENCS
 
 def apply_distance(soc_graph, row):
 	NO_PATH = -1
