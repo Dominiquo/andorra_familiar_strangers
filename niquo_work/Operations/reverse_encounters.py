@@ -46,7 +46,7 @@ def split_users_first_call_csv(new_friend_csv):
 
 def create_encs_df_select_friends(first_call_csv, root_path, dest_filename=constants.PAIRS_CSV):
 	encs_path = os.path.join(root_path, constants.ENCS_DICT)
-	print 'loading all encounter pairs from:' encs_path
+	print 'loading all encounter pairs from:', encs_path
 	with open(encs_path, 'rb') as infile:
 		encs_dict = cPickle.load(infile)
 	friend_df = split_users_first_call_csv(first_call_csv)
