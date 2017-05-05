@@ -2,7 +2,7 @@ import pandas as pd
 import Misc.file_constants as constants
 import Misc.utils as utils
 import networkx as nx
-import Social.Netwok as net
+import Social.Network as net
 import Main
 import os
 
