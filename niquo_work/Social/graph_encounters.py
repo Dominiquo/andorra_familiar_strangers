@@ -43,6 +43,56 @@ def get_social_encounters(social_path, encounters_path, dest_path, save_file=Tru
 	return dataframe
 
 
+def get_social_encounters(social_path_0, social_path_1, social_path_2, encounters_path, dest_path, save_file=True):
+	print 'loading social graph:', social_path_0
+	social_graph_0 = utils.load_pickle(social_path_0)
+	print 'loading social graph:', social_path_1
+	social_graph_1 = utils.load_pickle(social_path_1)
+	print 'loading social graph:', social_path_2
+	social_graph_2 = utils.load_pickle(social_path_2)
+
+	print 'loading encounters graph:', encounters_path
+	encs_graph = utils.load_pickle(encounters_path)
+	encs_edges_set = set(encs_graph.edges())
+	df_dict = {constants.USER_1: [], constants.USER_2: [], constants.ENCS_COUNT: [], constants.MODE_0_DIST: [],
+				constants.MODE_1_DIST: [], constants.MODE_2_DIST: []}
+	print 'iterating through', len(encs_edges_set), 'edges.'
+	disconnected_edges = 0
+	count = 0
+	hund = len(encs_edges_set)/100
+	for source, dest in encs_edges_set:
+		count += 1
+		if count % hund == 0:
+			print float(count)/(hund*100)
+		encs_count = len(encs_graph[source][dest])
+		df_dict[constants.USER_1].append(source)
+		df_dict[constants.USER_2].append(dest)
+		df_dict[constants.ENCS_COUNT].append(encs_count)
+		distance_0, _ = nx.path.bidirectional_dijkstra(social_graph_0, source, dest)
+		distance_1, _ = nx.path.bidirectional_dijkstra(social_graph_1, source, dest)
+		distance_2, _ = nx.path.bidirectional_dijkstra(social_graph_2, source, dest)
+		if distance_0:
+			df_dict[constants.MODE_0_DIST].append(distance_0)
+		else:
+			df_dict[constants.MODE_0_DIST].append(NO_PATH)
+
+		if distance_1:
+			df_dict[constants.MODE_1_DIST].append(distance_1)
+		else:
+			df_dict[constants.MODE_1_DIST].append(NO_PATH)
+
+		if distance_2:
+			df_dict[constants.MODE_2_DIST].append(distance_2)
+		else:
+			df_dict[constants.MODE_2_DIST].append(NO_PATH)
+			
+	print 'edges without a social connection:', disconnected_edges
+	dataframe = pd.DataFrame(df_dict)
+	if save_file:
+		dataframe.to_csv(dest_path, index=False)
+	return dataframe
+
+
 def get_encounters_for_pairs(root_path, dest_path):
 	encs_dict = {}
 	root = root_path.split('/')[-1]
