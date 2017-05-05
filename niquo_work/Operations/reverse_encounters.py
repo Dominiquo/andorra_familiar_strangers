@@ -82,6 +82,7 @@ def combine_dataframes(df_paths, months):
 	month_df = zip(months, df_paths)
 
 	for month, df_p in month_df:
+		print 'getting df from', df_p
 		df = pd.read_csv(df_p)
 		rename_dict = {constants.MODE_0_DIST: 'soc0_' + str(month), constants.MODE_1_DIST: 'soc1_' + str(month),
 						constants.MODE_2_DIST: 'soc2_' + str(month), constants.ENCS_COUNT: 'encs_' + str(month)}
