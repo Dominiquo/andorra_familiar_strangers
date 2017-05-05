@@ -88,7 +88,7 @@ def combine_dataframes(df_paths, months):
 						constants.MODE_2_DIST: 'soc2_' + str(month), constants.ENCS_COUNT: 'encs_' + str(month)}
 		df = df.rename(columns=rename_dict)
 		dfs_list.append(df)
-	combined_df = reduce(lambda x, y: pd.merge(x, y, how='outer', on=combine_cols), dfList)
+	combined_df = reduce(lambda x, y: pd.merge(x, y, how='outer', on=combine_cols), dfs_list)
 	return combined_df
 
 def apply_encs(encs_dict, row):
