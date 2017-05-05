@@ -73,14 +73,14 @@ def pair_users_single_file(destination_path, single_tower_data, tower_id, enc_wi
 		gb_end = time.time()
 
 		add_curr_prev = time.time()
-		add_current_time_chunk_network(encs_obj, current_block_data, user_pair_set)
+		add_current_time_chunk_network(encs_obj, current_block_data)
 		add_curr_time = time.time() - add_curr_prev
 
 		add_adj_start = time.time()
 		next_block = time_block + enc_window
 		if next_block in usable_blocks:
 			next_block_data = single_tower_data[(single_tower_data[constants.TIME_BLOCK]==next_block)]
-			add_adjacent_block_encounters(encs_obj, window_secs, current_block_data, next_block_data, user_pair_set)
+			add_adjacent_block_encounters(encs_obj, window_secs, current_block_data, next_block_data)
 		add_adj_time = time.time() - add_adj_start
 
 		# TIMING #
