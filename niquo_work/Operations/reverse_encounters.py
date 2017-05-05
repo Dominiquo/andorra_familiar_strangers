@@ -73,7 +73,7 @@ def create_encs_df_select_friends(first_call_csv, root_path, dest_filename=const
 	friend_df = friend_df[friend_df[constants.ENCS_COUNT] >= 0]
 	dest_path = os.path.join(root_path, dest_filename)
 	print 'storing dataframe at ', dest_path
-	friend_df.to_csv(dest_path)
+	friend_df.to_csv(dest_path, index=False)
 	return friend_df
 
 def apply_encs(encs_dict, row):
