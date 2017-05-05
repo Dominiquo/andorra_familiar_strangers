@@ -21,7 +21,7 @@ class TowersPartitioned(object):
 		self.condensed_path = condensed_df_path
 		self.destination_path = destination_path
 
-	def pair_users_from_towers(self, lower=0, upper=0, enc_window=10, threshold=float('inf'), thresh_compare=operator.lt):
+	def pair_users_from_towers(self, lower=0, upper=0, enc_window=10, threshold=float('inf'), thresh_compare=operator.lt, user_pair_set=None):
 		print 'beginning pairing users...'
 		print 'condensed_data from:', self.condensed_path
 		condensed_data = pd.read_csv(self.condensed_path).sort_values([constants.MIN_TIME])
@@ -38,7 +38,7 @@ class TowersPartitioned(object):
 					print 'current tower_size:', size
 					tower_df = tower_grouped.get_group(tower_id)
 					print 'beginning pairing for tower:', tower_id
-					pair_users_single_file(date_dir, tower_df, tower_id, enc_window)
+					pair_users_single_file(date_dir, tower_df, tower_id, enc_window, user_pair_set)
 		return True
 
 	def pair_users_specific_tower(self, tower_id, day, enc_window=10):
@@ -54,12 +54,11 @@ class TowersPartitioned(object):
 
 
 # PARALLEL FUNCTIONS THAT CAN'T BE A PART OF THE CLASS
-def pair_users_single_file(destination_path, single_tower_data, tower_id, enc_window):
+def pair_users_single_file(destination_path, single_tower_data, tower_id, enc_window, user_pair_set):
 	window_secs = enc_window*60
 	enc_delta = round((enc_window/float(60)), 5)
 	total_values = len(single_tower_data)
 	encs_obj = nx.MultiGraph()
-	# encs_obj = gl.GraphLite()
 	all_time_chunks = single_tower_data[constants.TIME_BLOCK].unique()
 	usable_blocks = set(all_time_chunks)
 	i = 1
@@ -74,26 +73,20 @@ def pair_users_single_file(destination_path, single_tower_data, tower_id, enc_wi
 		gb_end = time.time()
 
 		add_curr_prev = time.time()
-		add_current_time_chunk_network(encs_obj, current_block_data)
+		add_current_time_chunk_network(encs_obj, current_block_data, user_pair_set)
 		add_curr_time = time.time() - add_curr_prev
 
 		add_adj_start = time.time()
 		next_block = time_block + enc_window
 		if next_block in usable_blocks:
 			next_block_data = single_tower_data[(single_tower_data[constants.TIME_BLOCK]==next_block)]
-			add_adjacent_block_encounters(encs_obj, window_secs, current_block_data, next_block_data)
+			add_adjacent_block_encounters(encs_obj, window_secs, current_block_data, next_block_data, user_pair_set)
 		add_adj_time = time.time() - add_adj_start
 
 		# TIMING #
-
 		now = time.time()
 		gb_time = gb_end - gb_prev
 		gb_prev = time.time()
-		# print '*************************'
-		# print 'current time block:', time_block
-		# print 'grouped in:', gb_time
-		# print 'current block added in:', add_curr_time
-		# print 'adjecent blocks added in:', add_adj_time
 		print 'progress:', i ,'/', len(all_time_chunks)
 		print 'completed last block in:', now-prev,'seconds'
 		prev = now
@@ -102,6 +95,7 @@ def pair_users_single_file(destination_path, single_tower_data, tower_id, enc_wi
 		i += 1
 
 	print 'finished tower of ', total_values, 'rows in: ', time.time()-start
+	filter_object(encs_obj, user_pair_set)
 	store_encounters(encs_obj, destination_path, tower_id)
 	return True
 
@@ -134,7 +128,16 @@ def add_current_time_chunk_network(encs_obj, encountered_df):
 		avg_time = np.average([first_time, second_time])
 		encs_obj.add_edge(source_user, other_user, attr_dict={'t':avg_time})
 
-
+def filter_object(encs_obj, user_pair_set):
+	if user_pair_set != None:
+		print 'filtering out edges that are not in pair set...'
+		for u1, u2 in encs_obj.edges():
+			user_1 = max(u1,u2)
+			user_2 = min(u1,u2)
+			pair = (user_1, user_2)
+			if pair not in user_pair_set:
+				encs_obj.remove_edge(user_1, user_2)
+	return None 
 
 def store_encounters(encs_obj, destination_path, tower_id):
 	tower_file_prefix = 'cdr_tower_'

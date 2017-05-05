@@ -36,13 +36,13 @@ def condense_data(root_path, partitioned_data_path, chunk_size=10, just_path=Fal
 	return condensed_file_path
 
 
-def find_encounters(root_path, condensed_data_path, enc_window=10, just_path=False):
+def find_encounters(root_path, condensed_data_path, enc_window=10, just_path=False, user_pair_set=None):
 	destination_path = utils.create_dir(root_path, 'tower_encounters')
 	if just_path:
 		print 'skipping operation to just return path.'
 		return destination_path
 	tpart = TP.TowersPartitioned(condensed_data_path, destination_path)
-	tpart.pair_users_from_towers(enc_window=enc_window)
+	tpart.pair_users_from_towers(enc_window=enc_window, user_pair_set=user_pair_set)
 	return destination_path
 
 def combine_enc_maps(tower_encounters_path):

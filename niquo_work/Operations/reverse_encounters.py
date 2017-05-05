@@ -17,17 +17,19 @@ USE_MONTHS = ['201601-AndorraTelecom-CDR.csv',
  '201609-AndorraTelecom-CDR.csv',
  '201610-AndorraTelecom-CDR.csv']
 
-def get_new_friend_set(new_friend_csv):
-	print 'reading new friend csv..'
-	friend_df = pd.read_csv(new_friend_csv)
-	first_col = friend_df.columns[0]
-	user_list = []
-	print 'iterating through', len(friend_df) , 'values and splitting their pairs'
-	for val in friend_df[first_col].values:
-		s,t = val.split('_')
-		user_list.append(s)
-		user_list.append(t)
-	return set(user_list)
+def get_new_friend_set(new_friend_csv, user_pair_set=None):
+	if user_pair_set == None:
+		user_pair_set = get_new_friend_pair_set(new_friend_csv)
+	all_users = []
+	for u1,u2 in user_pair_set:
+		all_users.append(u1)
+		all_users.append(u2)
+
+	return set(all_users)
+
+def get_new_friend_pair_set(new_friend_csv):
+	full_df = split_users_first_call_csv(new_friend_csv)
+	return set([(u1,u2) for u1,u2 in full_df[[constants.USER_1, constants.USER_2]].values])	
 
 def split_users_first_call_csv(new_friend_csv):
 	print 'reading new friend csv..'
@@ -76,7 +78,7 @@ def create_encs_df_select_friends(first_call_csv, root_path, dest_filename=const
 	friend_df.to_csv(dest_path, index=False)
 	return friend_df
 
-def combine_dataframes(df_paths, months):
+def combine_dataframes(df_paths, months, how='outer'):
 	combine_cols = constants.FIRST_CALL_COLS + [constants.USER_1, constants.USER_2]
 	dfs_list = []
 	month_df = zip(months, df_paths)
@@ -88,7 +90,7 @@ def combine_dataframes(df_paths, months):
 						constants.MODE_2_DIST: 'soc2_' + str(month), constants.ENCS_COUNT: 'encs_' + str(month)}
 		df = df.rename(columns=rename_dict)
 		dfs_list.append(df)
-	combined_df = reduce(lambda x, y: pd.merge(x, y, how='outer', on=combine_cols), dfs_list)
+	combined_df = reduce(lambda x, y: pd.merge(x, y, how=how, on=combine_cols), dfs_list)
 	return combined_df
 
 def apply_encs(encs_dict, row):
@@ -137,10 +139,10 @@ def create_encs_df_all():
 
 
 
-def create_maps_for_months():
-	DATA_DIR = '/home/niquo/niquo_data'
-	print 'retreiving friend set from', constants.FIRST_CALL
-	friend_set = get_new_friend_set(constants.FIRST_CALL)
+def create_maps_for_months(data_dir='/home/niquo/niquo_data',months_paths=USE_MONTHS, new_friend_csv=constants.FIRST_CALL):
+	print 'retreiving friend set from', new_friend_csv
+	pair_set = get_new_friend_pair_set(new_friend_csv)
+	friend_set = get_new_friend_set(new_friend_csv, pair_set)
 	month_filter = lambda row: row[constants.SOURCE] in friend_set
 	chunk_size = 10
 	print 'iterating through months to start encounter process'
@@ -155,6 +157,6 @@ def create_maps_for_months():
 		print 'condensing data...'
 		condense_data_path = Main.condense_data(root_path, partitioned_data_path, chunk_size=10)
 		print 'finding encoutners...'
-		encs_path = Main.find_encounters(root_path, condense_data_path, enc_window=chunk_size)
+		encs_path = Main.find_encounters(root_path, condense_data_path, enc_window=chunk_size, user_pair_set=)
 
 	return True
