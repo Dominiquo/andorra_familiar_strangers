@@ -76,6 +76,22 @@ def create_encs_df_select_friends(first_call_csv, root_path, dest_filename=const
 	friend_df.to_csv(dest_path, index=False)
 	return friend_df
 
+def combine_dataframes(df_paths, months):
+	combine_cols = constants.FIRST_CALL_COLS
+	combine_cols.append(constants.USER_1)
+	combine_cols.append(constants.USER_2)
+	combined_df = pd.DataFrame()
+	month_df = zip(months, df_paths)
+
+	for month, df_p in month_df:
+		df = df.read_csv(df_p)
+		rename_dict = {constants.MODE_0_DIST: 'soc0_' + str(month), constants.MODE_1_DIST: 'soc1_' + str(month),
+						constants.MODE_2_DIST: 'soc2_' + str(month), constants.ENCS_COUNT: 'encs_' + str(month)}
+		df = df.rename(columsn=rename_dict)
+		combined_df = pd.merge(combined_df, df, how='outer', on=combine_cols)
+		
+	return combined_df
+
 def apply_encs(encs_dict, row):
 	NO_ENCS = -1
 	source = row[constants.USER_1]

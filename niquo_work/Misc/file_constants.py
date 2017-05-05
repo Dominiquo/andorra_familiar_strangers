@@ -54,6 +54,7 @@ CALLS = 'calls'
 FC_DAY = 'day'
 FC_FIRST = 'first'
 TEXTS = 'texts'
+FIRST_CALL_COLS = [CALL_LEN, CALLS, FC_DAY, FC_FIRST, TEXTS]
 
 
 '''	1 = shoppping
