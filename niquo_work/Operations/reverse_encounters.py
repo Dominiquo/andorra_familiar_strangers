@@ -87,7 +87,7 @@ def combine_dataframes(df_paths, months):
 		df = pd.read_csv(df_p)
 		rename_dict = {constants.MODE_0_DIST: 'soc0_' + str(month), constants.MODE_1_DIST: 'soc1_' + str(month),
 						constants.MODE_2_DIST: 'soc2_' + str(month), constants.ENCS_COUNT: 'encs_' + str(month)}
-		df = df.rename(columsn=rename_dict)
+		df = df.rename(columns=rename_dict)
 		combined_df = pd.merge(combined_df, df, how='outer', on=combine_cols)
 
 	return combined_df
