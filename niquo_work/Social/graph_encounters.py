@@ -68,23 +68,20 @@ def get_social_encounters(social_path_0, social_path_1, social_path_2, encounter
 		df_dict[constants.USER_1].append(source)
 		df_dict[constants.USER_2].append(dest)
 		df_dict[constants.ENCS_COUNT].append(encs_count)
-		has_distance_0 = nx.has_path(social_graph_0, source, dest)
-		has_distance_1 = nx.has_path(social_graph_1, source, dest)
-		has_distance_2 = nx.has_path(social_graph_2, source, dest)
 
-		if has_distance_0:
+		if (source in social_graph_0) and (dest in social_graph_0) and (nx.has_path(social_graph_0, source, dest)):
 			distance_0 = nx.shortest_path_length(social_graph_0, source, dest)
 			df_dict[constants.MODE_0_DIST].append(distance_0)
 		else:
 			df_dict[constants.MODE_0_DIST].append(NO_PATH)
 
-		if has_distance_1:
+		if (source in social_graph_1) and (dest in social_graph_1) and (nx.has_path(social_graph_1, source, dest)):
 			distance_1 = nx.shortest_path_length(social_graph_1, source, dest)
 			df_dict[constants.MODE_1_DIST].append(distance_1)
 		else:
 			df_dict[constants.MODE_1_DIST].append(NO_PATH)
 
-		if has_distance_2:
+		if (source in social_graph_2) and (dest in social_graph_2) and (nx.has_path(social_graph_2, source, dest)):
 			distance_2 = nx.shortest_path_length(social_graph_2, source, dest)
 			df_dict[constants.MODE_2_DIST].append(distance_2)
 		else:
