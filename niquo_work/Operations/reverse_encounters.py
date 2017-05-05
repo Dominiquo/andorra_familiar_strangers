@@ -2,20 +2,21 @@ import pandas as pd
 import Misc.file_constants as constants
 import Misc.utils as utils
 import networkx as nx
+import Social.Netwok as net
 import Main
 import os
 
 
-USE_MONTHS = ['201601-AndorraTelecom-CDR.csv',
- '201602-AndorraTelecom-CDR.csv',
- '201603-AndorraTelecom-CDR.csv',
- '201604-AndorraTelecom-CDR.csv',
- '201605-AndorraTelecom-CDR.csv',
- '201606-AndorraTelecom-CDR.csv',
- '201607-AndorraTelecom-CDR.csv',
- '201608-AndorraTelecom-CDR.csv',
- '201609-AndorraTelecom-CDR.csv',
- '201610-AndorraTelecom-CDR.csv']
+USE_MONTHS = ['201601-AndorraTelecom-CDR',
+ '201602-AndorraTelecom-CDR',
+ '201603-AndorraTelecom-CDR',
+ '201604-AndorraTelecom-CDR',
+ '201605-AndorraTelecom-CDR',
+ '201606-AndorraTelecom-CDR',
+ '201607-AndorraTelecom-CDR',
+ '201608-AndorraTelecom-CDR',
+ '201609-AndorraTelecom-CDR',
+ '201610-AndorraTelecom-CDR']
 
 def get_new_friend_set(new_friend_csv, user_pair_set=None):
 	if user_pair_set == None:
@@ -146,9 +147,9 @@ def create_maps_for_months(data_dir='/home/niquo/niquo_data',months_paths=USE_MO
 	month_filter = lambda row: row[constants.SOURCE] in friend_set
 	chunk_size = 10
 	print 'iterating through months to start encounter process'
-	for month in USE_MONTHS:
-		dir_str = month.split('.')[0]
-		root_path = utils.create_dir(DATA_DIR, dir_str)
+	for dir_str in USE_MONTHS:
+		month = dir_str + '.csv'
+		root_path = utils.create_dir(data_dir, dir_str)
 		print 'current month root path:', root_path
 		csv_month = os.path.join(constants.FILTERED_MONTHS, month)
 		print 'current data path:', csv_month
@@ -157,6 +158,14 @@ def create_maps_for_months(data_dir='/home/niquo/niquo_data',months_paths=USE_MO
 		print 'condensing data...'
 		condense_data_path = Main.condense_data(root_path, partitioned_data_path, chunk_size=10)
 		print 'finding encoutners...'
-		encs_path = Main.find_encounters(root_path, condense_data_path, enc_window=chunk_size, user_pair_set=)
+		encs_path = Main.find_encounters(root_path, condense_data_path, enc_window=chunk_size, user_pair_set=pair_set)
+		digraph_base_store_path = os.path.join(root_path, constants.BASE_DIGRAPH)
+		print 'creating base directed graph to be stored at', digraph_base_store_path
+		net.create_graph_directed(csv_month, digraph_base_store_path)
+		for mode in range(3):
+			filtered_graph_name = 'filtered_graph_mode_' + str(mode) + '.p'
+			filt_graph_store_path = os.path.join(root_path, filtered_graph_name)
+			print 'creating graph for mode', i, 'to be stored at ', filtered_graph_name
+			net.clean_dir_graph(digraph_base_store_path, filt_graph_store_path, mode)
 
 	return True

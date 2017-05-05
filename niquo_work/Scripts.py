@@ -10,7 +10,9 @@ import Main
 # ge.get_2016_months_encs()
 # net.main()
 
-re.create_encs_df_all()
+# re.create_encs_df_all()
+months_paths = ['201601-AndorraTelecom-CDR']
+re.create_maps_for_months(data_dir='/home/niquo/niquo_data/NEW_VERSION', months_paths=months_paths)
 
 
 # re.create_maps_for_months()
