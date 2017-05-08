@@ -11,8 +11,8 @@ import Main
 # net.main()
 
 # re.create_encs_df_all()
-months_paths = ['201601-AndorraTelecom-CDR']
-re.create_maps_for_months(data_dir='/home/niquo/niquo_data/NEW_VERSION', months_paths=months_paths)
+new_friend_csv = '/home/workspace/yleng/first_call_largerThan10_flag_next3_last.csv'
+re.create_maps_for_months(data_dir='/home/niquo/niquo_data/New_run_05072017', new_friend_csv=new_friend_csv)
 
 
 # re.create_maps_for_months()

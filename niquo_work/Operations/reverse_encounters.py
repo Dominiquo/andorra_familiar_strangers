@@ -7,16 +7,21 @@ import Main
 import os
 
 
-USE_MONTHS = ['201601-AndorraTelecom-CDR',
- '201602-AndorraTelecom-CDR',
- '201603-AndorraTelecom-CDR',
- '201604-AndorraTelecom-CDR',
- '201605-AndorraTelecom-CDR',
- '201606-AndorraTelecom-CDR',
- '201607-AndorraTelecom-CDR',
- '201608-AndorraTelecom-CDR',
- '201609-AndorraTelecom-CDR',
- '201610-AndorraTelecom-CDR']
+USE_MONTHS = ['201507-AndorraTelecom-CDR',
+	'201508-AndorraTelecom-CDR',
+	'201509-AndorraTelecom-CDR',
+	'201510-AndorraTelecom-CDR',
+	'201511-AndorraTelecom-CDR',
+	'201512-AndorraTelecom-CDR',
+	'201601-AndorraTelecom-CDR',
+	'201602-AndorraTelecom-CDR',
+	'201603-AndorraTelecom-CDR',
+	'201604-AndorraTelecom-CDR',
+	'201605-AndorraTelecom-CDR',
+	'201606-AndorraTelecom-CDR',
+	'201607-AndorraTelecom-CDR',
+	'201608-AndorraTelecom-CDR',
+	'201609-AndorraTelecom-CDR']
 
 def get_new_friend_set(new_friend_csv, user_pair_set=None):
 	if user_pair_set == None:
@@ -165,7 +170,7 @@ def create_maps_for_months(data_dir='/home/niquo/niquo_data',months_paths=USE_MO
 		for mode in range(3):
 			filtered_graph_name = 'filtered_graph_mode_' + str(mode) + '.p'
 			filt_graph_store_path = os.path.join(root_path, filtered_graph_name)
-			print 'creating graph for mode', i, 'to be stored at ', filtered_graph_name
+			print 'creating graph for mode', mode, 'to be stored at ', filtered_graph_name
 			net.clean_dir_graph(digraph_base_store_path, filt_graph_store_path, mode)
 
 	return True
