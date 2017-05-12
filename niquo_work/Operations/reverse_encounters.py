@@ -148,12 +148,25 @@ def create_encs_df_all():
 def combine_maps_for_months(data_dir='/home/niquo/niquo_data',months_paths=USE_MONTHS):
 	print 'combing interactin graphs for data from:', data_dir
 	TOWER_ENCS = 'tower_encounters'
+	master_graph_filename = 'MASTER_GRAPH.p'
+	month_master_paths = []
 	for dir_str in months_paths:
 		month_path = os.path.join(data_dir, dir_str)
-		print 'combing for month path:', month_path
-		inter_map_obj = imap.InteractionMap(month_path)
+		# print 'combing for month path:', month_path
+		# inter_map_obj = imap.InteractionMap(month_path)
 		tower_data_path = os.path.join(month_path, TOWER_ENCS)
-		inter_map_obj.combine_all_graphs(tower_data_path)
+		month_master = os.path.join(tower_data_path, master_graph_filename)
+		month_master_paths.append(month_master)
+		# inter_map_obj.combine_all_graphs(tower_data_path)
+
+	general_imap = imap.InteractionMap(data_dir)
+	print 'made a general imap object for:', data_dir
+	dest_filename = os.path.join(data_dir, master_graph_filename)
+	for m_mast in month_master_paths:
+		print 'combing map from:', m_mast
+		general_imap.combine_maps(m_mast)
+	print 'storing data:', dest_filename
+	general_imap.store_data(dest_filename)
 	print 'complete.'
 	return True
 
