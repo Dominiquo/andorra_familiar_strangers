@@ -18,8 +18,7 @@ class InteractionMap(object):
 		self.directory = root_path
 		self.master_graph = nx.MultiGraph()
 		self.master_filename = 'MASTER_GRAPH.p'
-
-
+		
 
 	def combine_all_graphs(self, tower_data_path, delete_old=False):
 		for date_path in self.get_day_directories(tower_data_path):

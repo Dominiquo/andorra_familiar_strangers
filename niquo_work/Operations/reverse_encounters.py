@@ -3,27 +3,18 @@ import Misc.file_constants as constants
 import Misc.utils as utils
 import networkx as nx
 import Social.Network as net
+import Structures.InteractionMap as imap
 import Main
 import os
 
 
-# USE_MONTHS = ['201507-AndorraTelecom-CDR',
-# 	'201508-AndorraTelecom-CDR',
-# 	'201509-AndorraTelecom-CDR',
-# 	'201510-AndorraTelecom-CDR',
-# 	'201511-AndorraTelecom-CDR',
-# 	'201512-AndorraTelecom-CDR',
-# 	'201601-AndorraTelecom-CDR',
-# 	'201602-AndorraTelecom-CDR',
-# 	'201603-AndorraTelecom-CDR',
-# 	'201604-AndorraTelecom-CDR',
-# 	'201605-AndorraTelecom-CDR',
-# 	'201606-AndorraTelecom-CDR',
-# 	'201607-AndorraTelecom-CDR',
-# 	'201608-AndorraTelecom-CDR',
-# 	'201609-AndorraTelecom-CDR']
-
-USE_MONTHS = ['201601-AndorraTelecom-CDR',
+USE_MONTHS = ['201507-AndorraTelecom-CDR',
+	'201508-AndorraTelecom-CDR',
+	'201509-AndorraTelecom-CDR',
+	'201510-AndorraTelecom-CDR',
+	'201511-AndorraTelecom-CDR',
+	'201512-AndorraTelecom-CDR',
+	'201601-AndorraTelecom-CDR',
 	'201602-AndorraTelecom-CDR',
 	'201603-AndorraTelecom-CDR',
 	'201604-AndorraTelecom-CDR',
@@ -154,6 +145,17 @@ def create_encs_df_all():
 		create_encs_df_select_friends(constants.FIRST_CALL, root_path)
 
 
+def combine_maps_for_months(data_dir='/home/niquo/niquo_data',months_paths=USE_MONTHS):
+	print 'combing interactin graphs for data from:', data_dir
+	TOWER_ENCS = 'tower_encounters'
+	for dir_str in months_paths:
+		month_path = os.path.join(data_dir, dir_str)
+		print 'combing for month path:', month_path
+		inter_map_obj = imap.InteractionMap(month_path)
+		tower_data_path = os.path.join(month_path, TOWER_ENCS)
+		inter_map_obj.combine_all_graphs(tower_data_path)
+	print 'complete.'
+	return True
 
 def create_maps_for_months(data_dir='/home/niquo/niquo_data',months_paths=USE_MONTHS, new_friend_csv=constants.FIRST_CALL):
 	print 'retreiving friend set from', new_friend_csv
@@ -162,7 +164,7 @@ def create_maps_for_months(data_dir='/home/niquo/niquo_data',months_paths=USE_MO
 	month_filter = lambda row: row[constants.SOURCE] in friend_set
 	chunk_size = 10
 	print 'iterating through months to start encounter process'
-	for dir_str in USE_MONTHS:
+	for dir_str in months_paths:
 		month = dir_str + '.csv'
 		root_path = utils.create_dir(data_dir, dir_str)
 		print 'current month root path:', root_path

@@ -12,7 +12,9 @@ import Main
 
 # re.create_encs_df_all()
 new_friend_csv = '/home/workspace/yleng/first_call_largerThan10_flag_next3_last.csv'
-re.create_maps_for_months(data_dir='/home/niquo/niquo_data/New_run_05072017', new_friend_csv=new_friend_csv)
+data_dir = '/home/niquo/niquo_data/New_run_05072017'
+# re.create_maps_for_months(data_dir='/home/niquo/niquo_data/New_run_05072017', new_friend_csv=new_friend_csv)
+re.combine_maps_for_months(data_dir=data_dir)
 
 
 # re.create_maps_for_months()
