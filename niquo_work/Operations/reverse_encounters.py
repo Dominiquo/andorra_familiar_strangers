@@ -3,6 +3,7 @@ import Misc.file_constants as constants
 import Misc.utils as utils
 import networkx as nx
 import Social.Network as net
+import cPickle
 import Structures.InteractionMap as imap
 import Main
 import os
@@ -164,7 +165,8 @@ def combine_maps_for_months(data_dir='/home/niquo/niquo_data',months_paths=USE_M
 	dest_filename = os.path.join(data_dir, master_graph_filename)
 	for m_mast in month_master_paths:
 		print 'combing map from:', m_mast
-		general_imap.combine_maps(m_mast)
+		month_graph = utils.load_pickle(m_mast)
+		general_imap.combine_maps(month_graph)
 	print 'storing data:', dest_filename
 	general_imap.store_data(dest_filename)
 	print 'complete.'
