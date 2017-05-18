@@ -153,12 +153,12 @@ def combine_maps_for_months(data_dir='/home/niquo/niquo_data',months_paths=USE_M
 	month_master_paths = []
 	for dir_str in months_paths:
 		month_path = os.path.join(data_dir, dir_str)
-		# print 'combing for month path:', month_path
-		# inter_map_obj = imap.InteractionMap(month_path)
+		print 'combing for month path:', month_path
+		inter_map_obj = imap.InteractionMap(month_path)
 		tower_data_path = os.path.join(month_path, TOWER_ENCS)
 		month_master = os.path.join(tower_data_path, master_graph_filename)
 		month_master_paths.append(month_master)
-		# inter_map_obj.combine_all_graphs(tower_data_path)
+		inter_map_obj.combine_all_graphs(tower_data_path)
 
 	general_imap = imap.InteractionMap(data_dir)
 	print 'made a general imap object for:', data_dir
