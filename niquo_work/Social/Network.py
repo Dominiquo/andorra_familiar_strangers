@@ -110,35 +110,6 @@ def get_graph_distance(user1, user2, friend_graph):
 			return -1
 	return -2
 
-def main():
-	root_paths = ['201507-AndorraTelecom-CDR',
-	'201508-AndorraTelecom-CDR',
-	'201509-AndorraTelecom-CDR',
-	'201510-AndorraTelecom-CDR',
-	'201511-AndorraTelecom-CDR',
-	'201512-AndorraTelecom-CDR',
-	'201601-AndorraTelecom-CDR',
-	'201602-AndorraTelecom-CDR',
-	'201603-AndorraTelecom-CDR',
-	'201604-AndorraTelecom-CDR',
-	'201605-AndorraTelecom-CDR',
-	'201606-AndorraTelecom-CDR',
-	'201607-AndorraTelecom-CDR',
-	'201608-AndorraTelecom-CDR',
-	'201609-AndorraTelecom-CDR']
-
-	data_root = '/home/niquo/niquo_data'
-	for directory in root_paths:
-		digraph_filename = 'social_digraph.p'
-		niquo_data_root = os.path.join(data_root, directory)
-		digraph_path = os.path.join(niquo_data_root, digraph_filename)
-		for mode in range(3):
-			filtered_graph_name = 'filtered_graph_mode_' + str(mode) + '.p'
-			filtered_graph_path = os.path.join(niquo_data_root, filtered_graph_name)
-			print 'data path:', digraph_path
-			print 'output will be stored:', filtered_graph_path
-			clean_dir_graph(digraph_path, filtered_graph_path, mode)
-
 
 if __name__ == '__main__':
     main()

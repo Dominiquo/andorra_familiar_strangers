@@ -3,6 +3,47 @@
 This code is used to generate encounter networks for CDR data. We define an encounter when two users are connected to the same tower within an n minute window. The pipline for producing these networks involves several intermediate steps to reduce RAM usage. Running data full pipeline can be done more efficiently from Main. There also exists operations which is used for more specific tasks like creating graphs from a select set of users and creating random samples of user pairs.
 
 
+# Scripts 
+
+Run months for selected pairs of users. This will create encounter maps as well as corresponding
+social graphs and combine the produced encounter graphs. 
+
+```
+import Structures.active_user_map as aum
+import Social.Network as net
+import Social.graph_encounters as ge
+import Structures.InteractionMap as imap
+import Operations.reverse_encounters as re
+import Main
+
+# RUN month to generate encounters where months are the filename of the months in 
+# '/home/workspace/yleng/filtered/'
+
+#csv of user pairs where column 0 has users of the form user1_user2
+new_friend_csv = '/home/niquo/niquo_data/sampled_pairs/100k_rand_0518.csv'
+# directory where these generated files should be stored
+data_dir = '/home/niquo/niquo_data/sampled_pairs/0518'
+# list of months for which to generate this data
+months = ['201607-AndorraTelecom-CDR']
+re.create_maps_for_months(data_dir,months_paths=months, new_friend_csv=new_friend_csv)
+# combines all tower encounter maps for all months and generates copies in process: only used if storage permits.
+re.combine_maps_for_months(data_dir, months=months)
+```
+
+
+Create encounter graphs for all data for all data that returns True on the filter. This **does not** immediately generate social graph or combine encounters graphs since data may be much larger than selected users creation
+```
+import Main
+
+
+root_path = '/home/where_all_the_data_will_be_stored'
+source_data = '/home/source_data_rawcdr.csv'
+filtering = lambda row: row['column_name'] == Some_row_condition
+
+Main.Main(root_path, source_data, filter_func=filtering)
+```
+
+
 ### Structures
 
 ##### RawCRDData

@@ -7,39 +7,15 @@ import Main
 
 
 
-# ge.get_2016_months_encs()
-# net.main()
+# RUN month to generate encounters where months are the filename of the months in 
+# '/home/workspace/yleng/filtered/'
 
-# re.create_encs_df_all()
+#csv of user pairs where column 0 has users of the form user1_user2
 new_friend_csv = '/home/niquo/niquo_data/sampled_pairs/100k_rand_0518.csv'
+# directory where these generated files should be stored
 data_dir = '/home/niquo/niquo_data/sampled_pairs/0518'
+# list of months for which to generate this data
 months = ['201607-AndorraTelecom-CDR']
 re.create_maps_for_months(data_dir,months_paths=months, new_friend_csv=new_friend_csv)
-
-
-# re.create_maps_for_months()
-
-
-# aum.quick_script_generate()
-
-# def create_net():
-# 	part_path = '../niquo_data/spring_data/partitioned_data/'
-# 	dest_path = '../niquo_data/small_range/friend_net_July_part_data.p'
-# 	net.create_graph(part_path, dest_path)
-# 	return True
-
-# create_net()
-
-
-# soc_path = '/home/niquo/niquo_data/small_range/friend_net_July_part_data_LT_100.p'
-# encs_5_10 = '/home/niquo/niquo_data/small_range/tower_encounters_REDUCED_V2/counts_5_10/MASTER_GRAPH.p'
-# encs_11_20 = '/home/niquo/niquo_data/small_range/tower_encounters_REDUCED_V2/counts_11_20/MASTER_GRAPH.p'
-# encs_21_50 = '/home/niquo/niquo_data/small_range/tower_encounters_REDUCED_V2/counts_21_50/MASTER_GRAPH.p'
-# dest_5_10 =  '/home/niquo/niquo_data/small_range/tower_encounters_REDUCED_V2/counts_5_10/results_df_LT_100.csv'
-# dest_11_20 = '/home/niquo/niquo_data/small_range/tower_encounters_REDUCED_V2/counts_11_20/results_df_LT_100.csv'
-# dest_21_50 = '/home/niquo/niquo_data/small_range/tower_encounters_REDUCED_V2/counts_21_50/results_df_LT_100.csv'
-
-# encs = [encs_5_10, encs_11_20, encs_21_50]
-# dests = [dest_5_10, dest_11_20, dest_21_50]
-# for i in range(3):
-# 	ge.get_social_encounters(soc_path, encs[i], dests[i])
+# combines all tower encounter maps for all months and generates copies in process: only used if storage permits.
+re.combine_maps_for_months(data_dir, months=months)

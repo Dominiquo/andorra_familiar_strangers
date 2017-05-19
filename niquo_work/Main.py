@@ -8,8 +8,8 @@ import Misc.file_constants as constants
 import Misc.utils as utils
 
 
-def Main(root_path = '../niquo_data/spring_data/', all_data_path=constants.JULY_DATA_FILTERED):
-	partitioned_data_path = partition_data(root_path, all_data_path)
+def Main(root_path = '../niquo_data/spring_data/', all_data_path=constants.JULY_DATA_FILTERED, filter_func=utils.remove_foreigners):
+	partitioned_data_path = partition_data(root_path, all_data_path, filter_func=filter_func)
 	condense_data_path = condense_data(root_path, partitioned_data_path)
 	encs_path = find_encounters(root_path, condense_data_path)
 	return True
