@@ -1,6 +1,6 @@
 # CDR Encounter: Familiar Strangers
 
-This code is used to generate encounter networks for CDR data. We define an encounter when two users are connected to the same tower within an n minute window. The pipline for producing these networks involves several intermediate steps to reduce RAM usage. 
+This code is used to generate encounter networks for CDR data. We define an encounter when two users are connected to the same tower within an n minute window. The pipline for producing these networks involves several intermediate steps to reduce RAM usage. Running data full pipeline can be done more efficiently from Main. There also exists operations which is used for more specific tasks like creating graphs from a select set of users and creating random samples of user pairs.
 
 
 ### Structures
