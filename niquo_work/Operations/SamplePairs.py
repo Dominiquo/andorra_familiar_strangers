@@ -24,7 +24,7 @@ class SamplePairs(object):
 		random.seed(random_seed)
 		for i in range(num_pairs):
 			user1, user2 = random.sample(self.users, 2)
-			u_pair = user1 + '_' + u2
+			u_pair = user1 + '_' + user2
 			self.pairs.append(u_pair)
 		print 'created list of', num_pairs, 'pairs of randomly sampled users'
 
