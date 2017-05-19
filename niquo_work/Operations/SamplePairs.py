@@ -23,7 +23,7 @@ class SamplePairs(object):
 	def generate_random_pairs(self, num_pairs, random_seed=42):
 		random.seed(random_seed)
 		for i in range(num_pairs):
-			user1, user2 = random.sample(self.pairs, 2)
+			user1, user2 = random.sample(self.users, 2)
 			u_pair = user1 + '_' + u2
 			self.pairs.append(u_pair)
 		print 'created list of', num_pairs, 'pairs of randomly sampled users'
@@ -36,10 +36,10 @@ class SamplePairs(object):
 		print 'stored pairs at', store_path, 'with column name', pairs_row
 		return True
 
-	def generate_and_store(self, pair_count, store_path, filter_func=None, random_seed=42):
+	def generate_and_store(self, num_pairs, store_path, filter_func=None, random_seed=42):
 		print 'getting unique users from', self.data_path
 		self.get_unique_users(filter_func=filter_func)
-		print 'generating', pair_count, 'random pairs'
+		print 'generating', num_pairs, 'random pairs'
 		self.generate_random_pairs(num_pairs, random_seed)
 		print 'storing pairs in df:', store_path
 		self.store_pairs_df(store_path)
