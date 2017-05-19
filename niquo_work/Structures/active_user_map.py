@@ -32,7 +32,7 @@ def get_active_users(data_path, lower_range=0, upper_range=float('inf'), date_lo
 
 
 def change_labels_dir(dir_name):
-	with open('/home/niquo/niquo_data/small_range/user_hash_map.p', 'rb') as infile:
+	with open(dir_name, 'rb') as infile:
 		user_key_map = cPickle.load(infile)
 	reverse_map = {v:k for k,v in user_key_map.iteritems()}
 	for map_file in os.listdir(dir_name):
