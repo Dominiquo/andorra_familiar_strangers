@@ -13,10 +13,10 @@ class SamplePairs(object):
 		self.users = []
 		self.pairs = []
 
-	def get_unique_users(self, chunksize=10**6, filter_func=lambda x: True):
+	def get_unique_users(self, chunksize=10**6, filter_func=None):
 		for data_chunk in pd.read_csv(self.data_path, usecols=constants.USEFUL_ROWS, chunksize=chunksize):
-			data_chunk = data_chunk.mask(filter_func)
-			data_chunk = data_chunk.dropna()
+			if filter_func != None:
+				data_chunk = data_chunk.where(filter_func).dropna()
 			self.users += set(data_chunk[constants.SOURCE].unique())
 		self.users = list(set(self.users))
 
