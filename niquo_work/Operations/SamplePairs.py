@@ -32,7 +32,7 @@ class SamplePairs(object):
 		pairs_row = 'USER_PAIRS'
 		pairs_dict = {pairs_row: self.pairs}
 		df = pd.DataFrame(pairs_dict)
-		df.to_csv(df, index=False)
+		df.to_csv(store_path, index=False)
 		print 'stored pairs at', store_path, 'with column name', pairs_row
 		return True
 

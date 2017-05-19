@@ -14,7 +14,7 @@ import Main
 new_friend_csv = '/home/niquo/niquo_data/sampled_pairs/100k_rand_0518.csv'
 data_dir = '/home/niquo/niquo_data/sampled_pairs/0518'
 months = ['201607-AndorraTelecom-CDR']
-re.create_maps_for_months(data_dir,months_paths=USE_MONTHS, new_friend_csv=new_friend_csv)
+re.create_maps_for_months(data_dir,months_paths=months, new_friend_csv=new_friend_csv)
 
 
 # re.create_maps_for_months()
